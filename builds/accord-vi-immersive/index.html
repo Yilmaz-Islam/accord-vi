@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Accord VI · Two nights, one scroll</title>
+<meta name="description" content="Accord VI: a two-night celebration of music at Beaconhouse Cantt Campus, Multan. Live Concert on 18 October, Qawwali Night on 19 October.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230e0f12'/></svg>">
+<link rel="stylesheet" href="scrollcraft.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sc-grain" aria-hidden="true"></div>
+<div class="av-glow" data-sc-spotlight aria-hidden="true"></div>
+
+<!-- Custom cursor: a brass ring and dot standing in for the system pointer,
+     fine-pointer only (see app.js and the CSS guard below). Ring lags the
+     dot slightly — the same "interpolate toward the pointer" rule the
+     tilt/magnet/spotlight devices already use, so it reads as weighted
+     rather than glued to the mouse. -->
+<div class="av-cursor" id="avCursor" aria-hidden="true">
+  <span class="av-cursor__ring"></span>
+  <span class="av-cursor__dot"></span>
+</div>
+
+<!-- Folio nav (chaptered editorial's own chrome: chapter number + title,
+     no fixed bar). Doubles as the page's only persistent way to reach
+     Register/Sponsor without scrolling the whole page first — a design
+     critique flagged that both CTAs only exist in the very last chapter. -->
+<nav class="av-folio" aria-label="Chapter">
+  <a class="av-folio__link" href="#register" aria-label="Jump to Register">
+    <span class="av-folio__num" id="avFolioNum">01</span>
+    <span class="av-folio__title" id="avFolioTitle">Countdown</span>
+  </a>
+</nav>
+
+<!-- Signature move: the Resonance mark, fixed, drawing itself arc by arc
+     across the WHOLE page's scroll (see app.js). Six arcs for the sixth
+     edition; fully resonant only at the close. pathLength="1" on every
+     stroke makes the 0-to-1 dash math exact regardless of arc length. -->
+<svg class="av-mark" viewBox="0 0 120 120" aria-hidden="true" data-complete="false">
+  <line x1="60" y1="8" x2="60" y2="112" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" pathLength="1"></line>
+  <path d="M66.8,41.2 A20,20 0 0 1 66.8,78.8" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" pathLength="1"></path>
+  <path d="M53.2,41.2 A20,20 0 0 0 53.2,78.8" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" pathLength="1"></path>
+  <path d="M71.6,28.1 A34,34 0 0 1 71.6,91.9" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" pathLength="1"></path>
+  <path d="M48.4,28.1 A34,34 0 0 0 48.4,91.9" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" pathLength="1"></path>
+  <path d="M76.4,14.9 A48,48 0 0 1 76.4,105.1" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" pathLength="1"></path>
+  <path d="M43.6,14.9 A48,48 0 0 0 43.6,105.1" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" pathLength="1"></path>
+  <circle cx="60" cy="60" r="5" fill="currentColor"></circle>
+</svg>
+
+<main id="top">
+
+  <!-- ============ CHAPTER 01 · COUNTDOWN ============
+       Chaptered-editorial hero: a title page, type on its own ground, no
+       media above the fold. flow + in is the device (ordinary section,
+       reveal on entry) — the grammar forbids a full-bleed scrub hero here. -->
+  <section class="av-hero" data-sc-act="flow" data-chapter="01" data-chapter-title="Countdown">
+    <div class="av-hero__inner sc-stack" data-sc-in data-sc-stagger="80">
+      <p class="av-hero__eyebrow">Sixth edition</p>
+      <h1 class="av-hero__title">Two nights.<br>One <em>Accord</em></h1>
+      <p class="av-hero__sub">A two-night celebration of music at Beaconhouse Cantt Campus, Multan. Live Concert on 18 October. Qawwali Night on 19 October.</p>
+
+      <!-- Flip-clock countdown: each unit is a 3D card whose inner face
+           rotates 180deg to reveal the next value on change, rather than
+           the number just swapping in place. The back face is pre-rotated
+           180deg so it lands upright once the flip completes — see
+           app.js for the flip-then-swap-then-reset sequence. -->
+      <div class="av-countdown" aria-label="Time remaining until Accord VI">
+        <div class="av-flip">
+          <div class="av-flip__card" id="avDaysCard">
+            <div class="av-flip__inner">
+              <div class="av-flip__face av-flip__face--front"><span class="av-flip__num" id="avDays">–</span></div>
+              <div class="av-flip__face av-flip__face--back"><span class="av-flip__num" id="avDaysBack">–</span></div>
+            </div>
+          </div>
+          <span class="av-countdown__label">Days</span>
+        </div>
+        <div class="av-flip">
+          <div class="av-flip__card" id="avHoursCard">
+            <div class="av-flip__inner">
+              <div class="av-flip__face av-flip__face--front"><span class="av-flip__num" id="avHours">–</span></div>
+              <div class="av-flip__face av-flip__face--back"><span class="av-flip__num" id="avHoursBack">–</span></div>
+            </div>
+          </div>
+          <span class="av-countdown__label">Hours</span>
+        </div>
+        <div class="av-flip">
+          <div class="av-flip__card" id="avMinsCard">
+            <div class="av-flip__inner">
+              <div class="av-flip__face av-flip__face--front"><span class="av-flip__num" id="avMins">–</span></div>
+              <div class="av-flip__face av-flip__face--back"><span class="av-flip__num" id="avMinsBack">–</span></div>
+            </div>
+          </div>
+          <span class="av-countdown__label">Mins</span>
+        </div>
+        <div class="av-flip">
+          <div class="av-flip__card" id="avSecsCard">
+            <div class="av-flip__inner">
+              <div class="av-flip__face av-flip__face--front"><span class="av-flip__num" id="avSecs">–</span></div>
+              <div class="av-flip__face av-flip__face--back"><span class="av-flip__num" id="avSecsBack">–</span></div>
+            </div>
+          </div>
+          <span class="av-countdown__label">Secs</span>
+        </div>
+      </div>
+
+      <p class="av-hero__meta"><strong>18–19 October</strong> · Beaconhouse Cantt Campus, Multan</p>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 02 · THE TWO NIGHTS (the peak) ============
+       pin, the largest span on the page. The screen tears into two full
+       columns: Night 1 (Live Concert) and Night 2 (Qawwali Night). reveal
+       does the tear, parallax gives each photo depth. One-value final cue
+       on the intro line only holds within its own window (it fades before
+       the tear, per the cue contract: only the LAST act may hold). -->
+  <section data-sc-act="pin" data-sc-span="4" data-chapter="02" data-chapter-title="The Two Nights">
+    <div data-sc-stage class="av-split-stage">
+      <!-- Sibling scrim, not a child of the cued copy element: the harness
+           hides the copy element itself to measure the frame underneath, so
+           a scrim nested inside it is invisible to that measurement. -->
+      <!-- Delayed slightly past 0 (not a bare greet): the stage already has
+           its own solid background, satisfying "ground or greet" without an
+           instant-visible cue, which under reduced motion (no kinetic
+           slide-in delay) would otherwise land squarely on the transitional
+           frame where the outgoing act's tail is still on screen. -->
+      <div class="av-split-intro__scrim" aria-hidden="true" data-sc-cue="0.05 0.42"></div>
+      <div class="av-split-intro">
+        <h2 data-sc-cue="0.05 0.4" data-sc-kinetic="lines">One event, two completely different nights</h2>
+      </div>
+
+      <div class="av-panel av-panel--left" data-sc-reveal="right" data-sc-reveal-at="0.22 0.68">
+        <img data-sc-parallax="0.5" src="assets/gallery/gallery-4.jpg" alt="A concert crowd raising hands under warm stage lighting" width="1600" height="2000">
+        <div class="av-panel__scrim" aria-hidden="true"></div>
+        <div class="av-panel__label">
+          <span class="av-panel__name" data-av-type style="--chars:12">Live Concert</span>
+        </div>
+      </div>
+
+      <div class="av-panel av-panel--right" data-sc-reveal="left" data-sc-reveal-at="0.22 0.68">
+        <img data-sc-parallax="-0.5" src="assets/gallery/gallery-1.jpg" alt="A crowd silhouetted under cool blue and teal stage lights" width="1600" height="2000">
+        <div class="av-panel__scrim" aria-hidden="true"></div>
+        <div class="av-panel__label">
+          <span class="av-panel__name" data-av-type style="--chars:13">Qawwali Night</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 03 · PROOF ============
+       Two ordinary sections: a pan rail (breadth — "look at the energy"),
+       then a flow section with real counters (trust — "here are the
+       numbers"). Hard cut into its own ground, no drift, per chaptered
+       editorial. -->
+  <section data-sc-act="pan" data-sc-span="4.4" data-chapter="03" data-chapter-title="Proof" data-act-id="proof-photos" style="background:var(--sc-canvas)">
+    <div data-sc-stage class="av-rail-stage">
+      <div class="av-rail" data-sc-pan="0.06">
+        <div class="av-rail-heading">
+          <h2>Six years of nights like these.</h2>
+          <p class="sc-body">Real energy from real crowds. Standing in until Accord's own photography replaces these.</p>
+        </div>
+        <div class="av-frame" data-sc-tilt="5"><img src="assets/gallery/gallery-2.jpg" alt="A live band performing under red stage lights" width="1200" height="1500"><span class="av-frame__tag">Stock photo</span></div>
+        <div class="av-frame" data-sc-tilt="5"><img src="assets/gallery/gallery-3.jpg" alt="Fireworks bursting over a festival crowd" width="1200" height="1500"><span class="av-frame__tag">Stock photo</span></div>
+        <div class="av-frame" data-sc-tilt="5"><img src="assets/gallery/gallery-5.jpg" alt="Red flares raised by hands in a night crowd" width="1200" height="1500"><span class="av-frame__tag">Stock photo</span></div>
+        <div class="av-frame" data-sc-tilt="5"><img src="assets/gallery/gallery-6.jpg" alt="A crowd silhouetted against bright stage lights" width="1200" height="1500"><span class="av-frame__tag">Stock photo</span></div>
+        <div class="av-rail-note">
+          <p class="sc-body">And more, once Accord VI happens.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sc-section" data-sc-act="flow" data-chapter="03b" data-chapter-title="Proof" style="background:var(--sc-canvas)">
+    <div class="sc-wrap">
+      <div class="sc-stack" data-sc-in data-sc-stagger="70" style="margin-bottom:var(--sc-8)">
+        <p class="sc-label" style="color:var(--sc-accent)">Six editions in</p>
+        <p class="sc-body" style="max-width:38ch;color:var(--sc-ink);font-size:var(--sc-t-lg)">Accord V featured Bayaan live and sold over one thousand tickets.</p>
+      </div>
+      <div class="av-stats" data-sc-in data-sc-stagger="60">
+        <div class="av-stat"><span class="av-stat__num" data-sc-count="0 6">0</span><span class="av-stat__label">Years running</span></div>
+        <div class="av-stat"><span class="av-stat__num" data-sc-count="0 1,300">0</span><span class="av-stat__label">Live attendees, peak edition</span></div>
+        <div class="av-stat"><span class="av-stat__num" data-sc-count="0 50,000">0</span><span class="av-stat__label">Instagram reach, peak edition</span></div>
+        <div class="av-stat"><span class="av-stat__num" data-sc-count="0 1,000">0</span><span class="av-stat__label">Tickets sold at Accord V</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 04 · THE ACCORD TEAM (teaser) ============
+       flow: an ordinary revealing section, not a pin — this chapter
+       introduces, it doesn't stage a set piece (and the expand-in-place
+       roster below needs normal document flow, not a fixed pinned height).
+       Four rank cards in the brand's own approved colourways, deliberately
+       unequal in size and vertical offset (never a plain identical-card
+       grid, per taste.md). A button expands the rest of the hierarchy
+       inline, grouped by rank and tinted with that rank's colourway,
+       rather than repeating the card treatment for every seat. No real
+       names yet: role-title cards and blank photo slots throughout.
+       Flash, on request: each card tilts toward the pointer, and a soft
+       accent glow tracks the pointer across the row. -->
+  <section class="sc-section av-team-section" data-sc-act="flow" data-chapter="04" data-chapter-title="The Accord Team" style="background:var(--sc-canvas)">
+    <svg class="av-team__mark" viewBox="0 0 120 120" aria-hidden="true">
+      <line x1="60" y1="8" x2="60" y2="112" fill="none" stroke="currentColor" stroke-width="2"></line>
+      <path d="M66.8,41.2 A20,20 0 0 1 66.8,78.8" fill="none" stroke="currentColor" stroke-width="2"></path>
+      <path d="M53.2,41.2 A20,20 0 0 0 53.2,78.8" fill="none" stroke="currentColor" stroke-width="2"></path>
+      <path d="M71.6,28.1 A34,34 0 0 1 71.6,91.9" fill="none" stroke="currentColor" stroke-width="2"></path>
+      <path d="M48.4,28.1 A34,34 0 0 0 48.4,91.9" fill="none" stroke="currentColor" stroke-width="2"></path>
+      <path d="M76.4,14.9 A48,48 0 0 1 76.4,105.1" fill="none" stroke="currentColor" stroke-width="2"></path>
+      <path d="M43.6,14.9 A48,48 0 0 0 43.6,105.1" fill="none" stroke="currentColor" stroke-width="2"></path>
+      <circle cx="60" cy="60" r="5" fill="currentColor"></circle>
+    </svg>
+    <div class="sc-wrap">
+      <div class="sc-stack" data-sc-in data-sc-stagger="70" style="margin-bottom:var(--sc-8)">
+        <p class="sc-label" style="color:var(--sc-accent)">Meet our team</p>
+        <h2 class="av-team__title">The Accord Team.</h2>
+        <p class="sc-body">Names aren't locked in yet. Here's the shape of who's in charge, colour-coded by rank.</p>
+      </div>
+
+      <div class="av-team" data-sc-in data-sc-stagger="80">
+        <article class="av-team-card av-team-card--president" data-sc-tilt="6">
+          <span class="av-team-card__photo" aria-hidden="true"></span>
+          <span class="av-team-card__role">President</span>
+        </article>
+        <article class="av-team-card av-team-card--vp" data-sc-tilt="6">
+          <span class="av-team-card__photo" aria-hidden="true"></span>
+          <span class="av-team-card__role">Vice President</span>
+        </article>
+        <article class="av-team-card av-team-card--dg" data-sc-tilt="6">
+          <span class="av-team-card__photo" aria-hidden="true"></span>
+          <span class="av-team-card__role">Director General</span>
+        </article>
+        <article class="av-team-card av-team-card--sg" data-sc-tilt="6">
+          <span class="av-team-card__photo" aria-hidden="true"></span>
+          <span class="av-team-card__role">Secretary General</span>
+        </article>
+      </div>
+
+      <button type="button" class="av-team__toggle" id="avTeamToggle" aria-expanded="false" aria-controls="avTeamMore">
+        <span class="av-team__toggle-label">See the rest of the team</span>
+        <svg class="av-team__toggle-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6L8 10.5L12.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="av-team__more" id="avTeamMore" hidden>
+        <div class="av-team__group av-team__group--red">
+          <h3>Module Heads &amp; Directors</h3>
+          <p class="sc-body">Nine director seats, plus module heads once this year's modules are finalised.</p>
+          <div class="av-director-grid">
+            <article class="av-director-card"><span class="av-director-card__photo" aria-hidden="true"></span><span class="av-director-card__role">Stage</span></article>
+            <article class="av-director-card"><span class="av-director-card__photo" aria-hidden="true"></span><span class="av-director-card__role">Registrations</span></article>
+            <article class="av-director-card"><span class="av-director-card__photo" aria-hidden="true"></span><span class="av-director-card__role">Media</span></article>
+            <article class="av-director-card"><span class="av-director-card__photo" aria-hidden="true"></span><span class="av-director-card__role">Security</span></article>
+            <article class="av-director-card"><span class="av-director-card__photo" aria-hidden="true"></span><span class="av-director-card__role">Marketing</span></article>
+            <article class="av-director-card"><span class="av-director-card__photo" aria-hidden="true"></span><span class="av-director-card__role">External</span></article>
+            <article class="av-director-card"><span class="av-director-card__photo" aria-hidden="true"></span><span class="av-director-card__role">Internal</span></article>
+            <article class="av-director-card"><span class="av-director-card__photo" aria-hidden="true"></span><span class="av-director-card__role">Arts &amp; Decor</span></article>
+            <article class="av-director-card"><span class="av-director-card__photo" aria-hidden="true"></span><span class="av-director-card__role">Social</span></article>
+          </div>
+        </div>
+        <div class="av-team__group">
+          <h3>Members</h3>
+          <p class="sc-body">The rest of the crew that makes both nights run. Roster to come.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 05 · REGISTER (colophon close) ============
+       pin, short span, one-value cue that holds (the only act allowed to).
+       CTA set as running text, not a button island, per chaptered
+       editorial's own close pattern. Links out to the existing Accord VI
+       site's real registration and sponsorship pages rather than
+       duplicating that form here. -->
+  <section id="register" data-sc-act="pin" data-sc-span="1.2" data-chapter="05" data-chapter-title="Register" style="background:var(--sc-canvas)">
+    <div data-sc-stage class="av-close">
+      <h2 class="av-close__title" data-sc-cue="0 1 0 0" data-sc-kinetic="lines">The two nights are waiting.</h2>
+      <p class="av-close__sub">Pick one, or come for both.</p>
+      <div class="av-close__links" data-sc-cue="0.18">
+        <a href="../../../Accord website/register.html">Register for Accord VI &#8594;</a>
+        <a href="../../../Accord website/sponsor.html">Sponsor Accord VI &#8594;</a>
+      </div>
+      <p class="av-close__meta" data-sc-cue="0.28">18-19 October, Beaconhouse Cantt Campus, Multan, Accord VI</p>
+    </div>
+  </section>
+
+</main>
+
+<script src="scrollcraft.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

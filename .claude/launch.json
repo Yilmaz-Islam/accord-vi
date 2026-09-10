@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "accord-vi-immersive",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "C:/Users/HP/OneDrive - UTS/Desktop/Accord website/scroll-craft/plugins/nateherk-design/skills/scroll-craft/scripts/serve.mjs",
+        "--root", "C:/Users/HP/OneDrive - UTS/Desktop/Accord VI - Immersive/builds/accord-vi-immersive",
+        "--port", "4501"
+      ],
+      "port": 4501
+    }
+  ]
+}
