@@ -55,6 +55,22 @@
 html { background: var(--sc-canvas); }
 body { font-family: var(--sc-font-text); }
 
+/* ---------- Skip link (keyboard/screen-reader users only; invisible otherwise) ---------- */
+.av-skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--sc-4);
+  z-index: 99999;
+  background: var(--sc-accent);
+  color: var(--sc-accent-ink);
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  font-family: var(--sc-font-display);
+  font-weight: 600;
+  transition: top 0.15s ease;
+}
+.av-skip-link:focus { top: var(--sc-4); }
+
 /* ---------- Folio nav (chaptered editorial's own chrome) ---------- */
 /* Right-aligned, opposite every left-anchored copy block on the page, so it
    can never collide with a chapter's own content regardless of how tall

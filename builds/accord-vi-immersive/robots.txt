@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yilmaz-islam.github.io/accord-vi/sitemap.xml
