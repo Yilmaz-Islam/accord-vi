@@ -839,6 +839,11 @@ body { font-family: var(--sc-font-text); }
 }
 @media (max-width: 480px) {
   .av-team { grid-template-columns: 1fr; }
+  /* Below ~480px each .av-panel is under 200px wide; the 700px-step size
+     still overflows "Qawwali Night" past the panel's own overflow:hidden
+     and gets truncated. Shrink further and claw back gutter space. */
+  .av-panel__label { left: var(--sc-4); right: var(--sc-4); }
+  .av-panel__name { font-size: clamp(1rem, 4.5vw, 1.3rem); }
 }
 
 @media (prefers-reduced-motion: reduce) {
