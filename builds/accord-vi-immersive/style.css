@@ -451,6 +451,10 @@ body { font-family: var(--sc-font-text); }
 .av-rail-heading {
   max-width: 22rem;
   flex: 0 0 auto;
+  /* Chapter 02's panels are still clearing the top of the viewport when this
+     chapter's pinned stage first appears — nudging the heading down gives it
+     breathing room instead of butting straight up against them. */
+  margin-top: var(--sc-8);
 }
 .av-rail-heading h2 {
   font-family: var(--sc-font-display);
