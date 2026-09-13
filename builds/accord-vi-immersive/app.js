@@ -139,8 +139,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mark) mark.setAttribute('data-complete', p >= 1 ? 'true' : 'false');
   }
   updateScrollProgress();
-  window.addEventListener('scroll', updateScrollProgress, { passive: true });
-  window.addEventListener('resize', updateScrollProgress);
+  // rAF-throttled, same as the engine's own scroll handler: an unthrottled
+  // 'scroll' listener runs getBoundingClientRect (a forced layout read) on
+  // every fired event, and phones fire scroll far more often than desktop
+  // during momentum scrolling — cheap on its own, but one more source of
+  // main-thread work competing with the engine's per-frame pin/pan math on
+  // exactly the low-powered devices where that math is already tightest.
+  let scrollProgressTicking = false;
+  window.addEventListener('scroll', () => {
+    if (scrollProgressTicking) return;
+    scrollProgressTicking = true;
+    requestAnimationFrame(() => { updateScrollProgress(); scrollProgressTicking = false; });
+  }, { passive: true });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth === railLastW && isRailMobile()) return;
+    updateScrollProgress();
+  });
 
   // ---- The Two Nights: typewriter reveal on the two panel names, timed
   // to land just after the screen finishes tearing open. Fires once. ----
@@ -195,7 +209,26 @@ document.addEventListener('DOMContentLoaded', () => {
     railEl.appendChild(spacer);
   }
   ensureRailOverflow();
-  window.addEventListener('resize', ensureRailOverflow);
+  // Same guard as the engine's own resize handler, and for the same reason:
+  // iOS/Android fire 'resize' when the URL bar collapses or expands during
+  // an ordinary scroll gesture (width unchanged, only height moves). This
+  // handler destructively removes and re-creates a DOM node, which is
+  // exactly the kind of layout-invalidating write that must never happen
+  // mid-scroll — the very next engine tick reads the rail's now-briefly-
+  // different scrollWidth and the pan rail visibly jumps under the
+  // reader's thumb. Without this guard, that jump fires on essentially
+  // every scroll on a phone, which read as constant glitching through the
+  // "Two Nights" and "Proof" pan/parallax chapters specifically, since
+  // those are the only sections whose per-frame math depends on rail width.
+  const railMobileMQ = window.matchMedia('(hover: none) and (pointer: coarse)');
+  const railSmallMQ = window.matchMedia('(max-width: 860px)');
+  const isRailMobile = () => railMobileMQ.matches || railSmallMQ.matches;
+  let railLastW = window.innerWidth;
+  window.addEventListener('resize', () => {
+    if (window.innerWidth === railLastW && isRailMobile()) return;
+    railLastW = window.innerWidth;
+    ensureRailOverflow();
+  });
 
   // ---- Folio nav: chapter number + title, updating as chapters pass ----
   const folioNum = document.getElementById('avFolioNum');
