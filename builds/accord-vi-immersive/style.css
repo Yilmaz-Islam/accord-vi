@@ -696,6 +696,42 @@ body { font-family: var(--sc-font-text); }
 }
 .av-team-card--dg, .av-team-card--sg { background: var(--av-k3-ground); color: var(--av-k3-ink); }
 
+.av-team__group-label {
+  font-family: var(--sc-font-display);
+  font-size: var(--sc-t-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--sc-track-wide);
+  color: var(--sc-ink-soft);
+  margin-bottom: var(--sc-3);
+}
+
+/* Faint by design — a secondary action that shouldn't compete with the
+   role label, matching every other "reveal more" affordance on this page. */
+.av-team-card__info-toggle {
+  align-self: flex-start;
+  background: none;
+  border: 1px solid color-mix(in oklab, currentColor 30%, transparent);
+  color: inherit;
+  opacity: 0.6;
+  font-family: var(--sc-font-body);
+  font-size: var(--sc-t-xs);
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 160ms var(--sc-ease-out), border-color 160ms var(--sc-ease-out);
+}
+.av-team-card__info-toggle:hover,
+.av-team-card__info-toggle:focus-visible,
+.av-team-card__info-toggle[aria-expanded="true"] {
+  opacity: 1;
+  border-color: currentColor;
+}
+.av-team-card__info {
+  font-size: var(--sc-t-sm);
+  opacity: 0.85;
+  margin: 0;
+}
+
 .av-team__toggle-icon {
   width: 0.9em;
   height: 0.9em;

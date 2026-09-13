@@ -228,6 +228,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Executive council "more info" reveals — each card's button toggles
+  // only its own sibling paragraph.
+  document.querySelectorAll('.av-team-card__info-toggle').forEach((btn) => {
+    const info = btn.nextElementSibling;
+    if (!info) return;
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      info.hidden = open;
+      btn.textContent = open ? 'More info' : 'Less info';
+    });
+  });
+
   // ---- Mount the engine last, once the page's own state is wired up ----
   if (window.ScrollCraft) window.ScrollCraft.mount(document.body);
 });
