@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PROTOTYPE: Real Lineup, Sparkle Backdrop</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  @font-face {
+    font-family: 'Sora';
+    src: url('assets/fonts/Sora-Variable.ttf') format('truetype-variations');
+    font-weight: 100 800; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/Inter-Variable.ttf') format('truetype-variations');
+    font-weight: 100 900; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('assets/fonts/Fraunces-Variable.ttf') format('truetype-variations');
+    font-weight: 300 700; font-style: normal; font-display: swap;
+  }
+
+  :root {
+    --ink: #efece6;
+    --ink-soft: #a9a6a0;
+    --canvas: #0b0b0d;
+    --canvas-deep: #060607;
+    --gold: #e0b455;
+    --gold-bright: #f3d38a;
+    --gold-dim: #6b5527;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100svh;
+    padding: 8rem 1.5rem 6rem;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in oklab, var(--gold) 10%, transparent), transparent 70%);
+  }
+
+  .proto-banner {
+    max-width: 40rem;
+    margin: 0 auto 3rem;
+    text-align: center;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--gold-dim);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+  .proto-banner strong { color: var(--gold); }
+
+  .lineup-head {
+    text-align: center;
+    max-width: 34rem;
+    margin: 0 auto 3.5rem;
+  }
+  .lineup-kicker {
+    font-family: 'Sora', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.72rem;
+    color: var(--gold);
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+  .lineup-kicker::before, .lineup-kicker::after {
+    content: '';
+    width: 2rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim));
+  }
+  .lineup-kicker::after { background: linear-gradient(90deg, var(--gold-dim), transparent); }
+  .lineup-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    margin: 0 0 0.9rem;
+    letter-spacing: -0.01em;
+  }
+  .lineup-sub {
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .stage {
+    position: relative;
+    max-width: 56rem;
+    margin: 0 auto;
+    border-radius: 20px;
+    border: 1px solid var(--gold-dim);
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklab, var(--gold) 6%, transparent), transparent 70%),
+      linear-gradient(180deg, #000 0%, var(--canvas-deep) 55%, #050506 100%);
+    overflow: hidden;
+    padding: 3.5rem 3.5rem 1rem;
+  }
+  .stage::after {
+    content: '';
+    position: absolute;
+    left: 8%; right: 8%; bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+
+  /* Ambient sparkle layer — sits behind everything in the stage, never
+     interactive, never moves position (only twinkles opacity) so it reads
+     as dust in stage lighting rather than a distraction competing with the
+     figures for attention. */
+  .stage-sparkle {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .stage-figures {
+    position: relative;
+    z-index: 1;
+    height: clamp(280px, 42vw, 460px);
+    margin: 0 auto;
+    padding-bottom: 5.5rem;
+  }
+
+  .figure {
+    position: absolute;
+    bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  /* Eye-level alignment: each artist's eyes land on the same horizontal
+     line (1/3 down the stage) regardless of the figure's own height or
+     where the eyes sit within that specific photo. Anchored from the top
+     (top: SFH * (1/3 - heightFrac * eyeFrac)) instead of the bottom, so
+     feet no longer share one exact floor line — normal tradeoff for
+     face/eye-aligned lineup composition. eyeFrac per photo was read off
+     the actual cutouts (~23% down for Hassan, ~20% for Nehaal, ~16% for
+     Sabaat, whose sunglasses sit higher on their face) — verified live in
+     a browser: Hassan's eyes sat noticeably lower in the photo than the
+     initial 20% guess, so his top % was corrected from 16.3% to 13.8%. */
+  .figure--center {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 13.8%;
+    bottom: auto;
+    height: 85%;
+    z-index: 3;
+  }
+  .figure--left {
+    left: 25%;
+    transform: translateX(-62%);
+    top: 18.1%;
+    bottom: auto;
+    height: 80%;
+    z-index: 1;
+  }
+  .figure--right {
+    left: 79.3%;
+    transform: translateX(-38%);
+    top: 19.4%;
+    bottom: auto;
+    height: 87%;
+    z-index: 2;
+  }
+  /* Hovered figure clips in front of the other two regardless of their
+     stacking order. */
+  .figure:hover, .figure:focus-visible {
+    z-index: 10;
+  }
+
+  /* Single shared overhead light instead of one glow per figure — a child
+     of .stage itself (not .stage-figures), top:0 against the real box, so
+     it starts at the stage's actual top edge instead of being pushed down
+     by .stage-figures' own top offset inside the stage's padding. */
+  .stage-spot {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 78%;
+    height: 67%;
+    background: radial-gradient(ellipse 45% 100% at 50% 0%, color-mix(in oklab, var(--gold) 16%, transparent), transparent 75%);
+    opacity: 0.3;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .stage.is-revealed .stage-spot { opacity: 0.85; }
+
+  .figure__cutout {
+    position: relative;
+    height: 100%;
+    width: auto;
+    display: block;
+    filter: brightness(0);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease, opacity 0.4s ease, clip-path 0.4s ease;
+  }
+  .figure--left .figure__cutout, .figure--right .figure__cutout { opacity: 0.8; }
+  .figure--left .figure__cutout {
+    clip-path: polygon(0% 0%, 97.3% 0%, 94.0% 10%, 96.1% 20%, 97.7% 30%, 74.7% 40%, 65.6% 50%, 61.5% 60%, 59.4% 70%, 57.8% 80%, 57.8% 90%, 57.8% 100%, 0% 100%);
+  }
+  .figure:hover .figure__cutout,
+  .figure:focus-visible .figure__cutout {
+    transform: scale(1.045) translateY(-3px);
+    opacity: 1;
+    filter: brightness(0) drop-shadow(0 0 22px color-mix(in oklab, var(--gold) 55%, transparent));
+  }
+  /* Nehaal's clip-path (above) permanently cuts away the part of her photo
+     that ducks behind Hassan at rest. Without relaxing it on hover, raising
+     her z-index alone does nothing visible — there's no image data left in
+     that region to bring forward. Clear the clip so her full photo shows. */
+  .figure--left:hover .figure__cutout,
+  .figure--left:focus-visible .figure__cutout {
+    clip-path: none;
+  }
+
+  .figure__meta {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.9rem;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .figure__numeral {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    transition: color 0.35s ease;
+  }
+  .figure:hover .figure__numeral, .figure:focus-visible .figure__numeral { color: var(--gold); }
+  .figure__label {
+    display: block;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+    color: var(--gold);
+    margin-top: 0.2rem;
+  }
+  .figure__cta {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--ink-soft);
+    margin-top: 0.3rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .figure:hover .figure__cta, .figure:focus-visible .figure__cta { opacity: 1; }
+  .figure:focus-visible { outline: none; }
+  .figure:focus-visible .figure__numeral { text-decoration: underline; }
+
+  @media (max-width: 760px) {
+    /* .stage clips overflow, and the figures' top%/height% (tuned for
+       eye-alignment — see figure--right above) push a couple of them past
+       100% of .stage-figures' own box on purpose. .stage-figures'
+       padding-bottom doesn't defend against that: percentage sizing on an
+       absolutely positioned child resolves against the containing block's
+       full padding-box regardless of ITS padding, so that reserved space
+       never actually existed. The real fix is real room on .stage itself,
+       sized for the worst case (figure--right's ~15% overshoot) plus the
+       numeral/label stack below it (~item was clipped to nothing before). */
+    .stage { padding: 3.9rem 2.2rem 4.5rem; border-radius: 14px; }
+    .stage-figures { height: 62vw; padding-bottom: 3.2rem; }
+    .figure--left { left: 25%; }
+    .figure--right { left: 79.3%; }
+    .figure__numeral { font-size: 0.6rem; }
+    /* Real names ("Nehaal Naseem", "Hasan Raheem") are wider than the
+       "Artist I/II/III" placeholder that sized this — nowrap made them
+       overlap the neighboring figure's label once revealed. Capping the
+       width and letting it wrap keeps each name inside its own column. */
+    .figure__meta { white-space: normal; max-width: 28vw; }
+    .figure__label { font-size: 0.78rem; line-height: 1.2; }
+    .figure__cta { display: none; }
+  }
+
+  .reveal-toggle {
+    display: block;
+    margin: 0 auto 2.5rem;
+    padding: 0.7rem 1.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  .reveal-toggle:hover { background: var(--gold); color: #1a1305; }
+
+  .stage.is-revealed .figure__cutout {
+    filter: none !important;
+    opacity: 1 !important;
+  }
+  .stage.is-revealed .figure__numeral,
+  .stage.is-revealed .figure__label { color: var(--gold-bright); }
+  .stage.is-revealed .figure__cta { display: none; }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="resonance-mark" viewBox="0 0 120 120">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+      <line x1="60" y1="8" x2="60" y2="112"></line>
+      <path d="M66.8,41.2 A20,20 0 0 1 66.8,78.8"></path>
+      <path d="M53.2,41.2 A20,20 0 0 0 53.2,78.8"></path>
+      <path d="M71.6,28.1 A34,34 0 0 1 71.6,91.9"></path>
+      <path d="M48.4,28.1 A34,34 0 0 0 48.4,91.9"></path>
+      <path d="M76.4,14.9 A48,48 0 0 1 76.4,105.1"></path>
+      <path d="M43.6,14.9 A48,48 0 0 0 43.6,105.1"></path>
+    </g>
+    <circle cx="60" cy="60" r="4" fill="currentColor"></circle>
+  </symbol>
+</svg>
+
+<!-- ============ NAV ============ -->
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
+      <span class="logo-text">Accord <span>VI</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="info.html" class="nav-link">Info</a>
+      <a href="sponsor.html" class="nav-link">Sponsors</a>
+      <a href="privacy-policy.html" class="nav-link">Privacy</a>
+      <a href="register.html" class="nav-cta">Register</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<p class="proto-banner" id="main">PROTOTYPE, not linked from the live site. <strong>Same real confirmed lineup</strong> as proto-lineup-real.html, with an added ambient sparkle backdrop (Mobbin/Figma research: dark event sites use subtle particle motion behind the hero). Internal names kept out of the markup.</p>
+
+<div class="lineup-head">
+  <p class="lineup-kicker">Accord VI · Lineup</p>
+  <h1 class="lineup-title" id="lineupTitle">Three names. The lights aren't on yet.</h1>
+  <p class="lineup-sub" id="lineupSub">Hover to catch a glimpse. Click one to start guessing, the spotlight comes on once it's confirmed.</p>
+</div>
+
+<button type="button" class="reveal-toggle" id="revealToggle">Reveal now (preview only)</button>
+
+<div class="stage" id="stage">
+  <canvas class="stage-sparkle" id="stageSparkle" aria-hidden="true"></canvas>
+  <span class="stage-spot" aria-hidden="true"></span>
+  <div class="stage-figures">
+
+    <!-- Left -->
+    <a href="proto-hint.html?artist=2&from=sparkle" class="figure figure--left" data-artist="2" aria-label="Mystery artist one, tap for hints">
+      <img class="figure__cutout" src="assets/lineup-real/nehaal-naseem.png" alt="">
+      <span class="figure__meta">
+        <span class="figure__numeral">II</span>
+        <span class="figure__label" data-mystery="Artist II" data-real="Nehaal Naseem">Artist II</span>
+        <span class="figure__cta">Tap for hints →</span>
+      </span>
+    </a>
+
+    <!-- Center, the hero -->
+    <a href="proto-hint.html?artist=1&from=sparkle" class="figure figure--center" data-artist="1" aria-label="Mystery artist two, tap for hints">
+      <img class="figure__cutout" src="assets/lineup-real/hassan-raheem.png" alt="">
+      <span class="figure__meta">
+        <span class="figure__numeral">I</span>
+        <span class="figure__label" data-mystery="Artist I" data-real="Hasan Raheem">Artist I</span>
+        <span class="figure__cta">Tap for hints →</span>
+      </span>
+    </a>
+
+    <!-- Right -->
+    <a href="proto-hint.html?artist=3&from=sparkle" class="figure figure--right" data-artist="3" aria-label="Mystery artist three, tap for hints">
+      <img class="figure__cutout" src="assets/lineup-real/sabaat-batin.png" alt="">
+      <span class="figure__meta">
+        <span class="figure__numeral">III</span>
+        <span class="figure__label" data-mystery="Artist III" data-real="Sabaat Batin">Artist III</span>
+        <span class="figure__cta">Tap for hints →</span>
+      </span>
+    </a>
+
+  </div>
+</div>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+  }
+
+  const toggle = document.getElementById('revealToggle');
+  const stage = document.getElementById('stage');
+  const title = document.getElementById('lineupTitle');
+  const sub = document.getElementById('lineupSub');
+  const labels = document.querySelectorAll('.figure__label');
+  let revealed = false;
+
+  // Each figure links to the mystery hints page pre-reveal, and to that
+  // artist's own custom reveal page (bio + real-song player) post-reveal.
+  document.querySelectorAll('.figure').forEach((fig) => {
+    fig.dataset.hintHref = fig.getAttribute('href');
+    const n = fig.dataset.artist;
+    fig.dataset.revealHref = 'proto-artist.html?artist=' + n + '&from=sparkle';
+  });
+
+  toggle.addEventListener('click', () => {
+    revealed = !revealed;
+    stage.classList.toggle('is-revealed', revealed);
+    labels.forEach((el) => { el.textContent = revealed ? el.dataset.real : el.dataset.mystery; });
+    document.querySelectorAll('.figure').forEach((fig) => {
+      fig.setAttribute('href', revealed ? fig.dataset.revealHref : fig.dataset.hintHref);
+    });
+    if (revealed) {
+      title.textContent = 'The lights are on.';
+      sub.textContent = 'Three confirmed for Accord VI. More on each once the full profiles are ready.';
+      toggle.textContent = 'Back to mystery (preview only)';
+    } else {
+      title.textContent = "Three names. The lights aren't on yet.";
+      sub.textContent = 'Hover to catch a glimpse. Click one to start guessing, the spotlight comes on once it\'s confirmed.';
+      toggle.textContent = 'Reveal now (preview only)';
+    }
+  });
+
+  // Ambient sparkle: a fixed field of small gold dots that only twinkle
+  // (opacity oscillation), never drift — keeps it read as dust in stage
+  // lighting rather than motion competing with the figures for attention.
+  const canvas = document.getElementById('stageSparkle');
+  const ctx = canvas.getContext('2d');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let sparkles = [];
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  function seedSparkles(w, h) {
+    const count = Math.round((w * h) / 9000);
+    sparkles = Array.from({ length: count }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h * 0.85,
+      r: Math.random() * 1.3 + 0.4,
+      phase: Math.random() * Math.PI * 2,
+      speed: Math.random() * 0.6 + 0.3,
+      baseAlpha: Math.random() * 0.35 + 0.15,
+    }));
+  }
+
+  function resize() {
+    const rect = stage.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    seedSparkles(rect.width, rect.height);
+  }
+
+  function draw(t) {
+    const rect = stage.getBoundingClientRect();
+    ctx.clearRect(0, 0, rect.width, rect.height);
+    for (const s of sparkles) {
+      const twinkle = prefersReducedMotion ? 1 : (Math.sin(t * 0.001 * s.speed + s.phase) + 1) / 2;
+      const alpha = s.baseAlpha * (0.4 + twinkle * 0.6);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(224, 180, 85, ${alpha.toFixed(3)})`;
+      ctx.fill();
+    }
+    if (!prefersReducedMotion) requestAnimationFrame(draw);
+  }
+
+  const ro = new ResizeObserver(resize);
+  ro.observe(stage);
+  resize();
+  requestAnimationFrame(draw);
+  if (prefersReducedMotion) draw(0);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sponsor Accord VI — Partnership Tiers, 18–19 October, Multan</title>
+<meta name="description" content="Sponsor Accord VI: reach 1,000+ students live and 25-50K on Instagram. Bronze through Platinum partnership tiers, Beaconhouse Cantt Campus, Multan.">
+<link rel="canonical" href="https://yilmaz-islam.github.io/accord-vi/sponsor.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sponsor Accord VI — Partnership Tiers, 18–19 October, Multan">
+<meta property="og:description" content="Sponsor Accord VI: reach 1,000+ students live and 25-50K on Instagram. Bronze through Platinum partnership tiers, Beaconhouse Cantt Campus, Multan.">
+<meta property="og:url" content="https://yilmaz-islam.github.io/accord-vi/sponsor.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sponsor Accord VI — Partnership Tiers, 18–19 October, Multan">
+<meta name="twitter:description" content="Sponsor Accord VI: reach 1,000+ students live and 25-50K on Instagram. Bronze through Platinum partnership tiers, Beaconhouse Cantt Campus, Multan.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  :root { --status-available: #7cc17a; }
+
+  /* hero-glow clipping: mixing overflow-x:hidden with overflow-y:visible on
+     the same box doesn't work — per spec, when one axis is visible and the
+     other isn't, the visible one computes to auto instead, which turned
+     .page-hero into its own tiny scroll container (a second scrollbar).
+     Plain overflow:hidden + shrinking the glow itself (this page's hero is
+     shorter than register.html's, no countdown) fixes the clipping. */
+  .page-hero { overflow: hidden; }
+  .hero-glow { width: 480px; height: 480px; }
+
+  /* every tier reads as available — no manufactured scarcity. */
+  .tier-status {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    font-family: var(--font-display);
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-lg) 0 var(--radius-md) 0;
+    background: var(--status-available);
+    color: #0d2b0c;
+  }
+  .tier-card { padding-top: 2.9rem; }
+
+  /* per-tier color identity + animated spinning border + a slow flashing
+     glow behind each card, staggered so they don't pulse in unison. */
+  .tier-card {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .tier-card[data-tier="bronze"]   { --tier-accent: #c17a45; }
+  .tier-card[data-tier="silver"]   { --tier-accent: #b9c2cc; }
+  .tier-card[data-tier="gold"]     { --tier-accent: #e0b455; }
+  .tier-card[data-tier="diamond"]  { --tier-accent: #7fd9e8; }
+  .tier-card[data-tier="platinum"] { --tier-accent: #f2f0ea; }
+
+  .tier-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(from var(--tier-beam-angle),
+      transparent 0deg, transparent 250deg,
+      color-mix(in oklab, var(--tier-accent) 55%, transparent) 290deg,
+      var(--tier-accent) 325deg,
+      color-mix(in oklab, var(--tier-accent) 55%, transparent) 350deg,
+      transparent 360deg);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: tier-beam-spin 6s linear infinite;
+    pointer-events: none;
+  }
+  .tier-card::before {
+    content: "";
+    position: absolute;
+    inset: -15%;
+    z-index: 0;
+    background: radial-gradient(circle at 50% 0%, color-mix(in oklab, var(--tier-accent) 30%, transparent), transparent 70%);
+    opacity: 0;
+    animation: tier-flash 4.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .tier-card:nth-of-type(1)::before { animation-delay: 0s; }
+  .tier-card:nth-of-type(2)::before { animation-delay: 0.7s; }
+  .tier-card:nth-of-type(3)::before { animation-delay: 1.4s; }
+  .tier-card:nth-of-type(4)::before { animation-delay: 2.1s; }
+  .tier-card:nth-of-type(5)::before { animation-delay: 2.8s; }
+  @keyframes tier-flash { 0%, 100% { opacity: 0; } 50% { opacity: 0.55; } }
+  @media (prefers-reduced-motion: reduce) {
+    .tier-card::after, .tier-card::before { animation: none; }
+  }
+
+  .tier-name, .tier-price, .tier-blurb, .tier-list {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* the dead grid cell (3-col desktop layout leaves one empty slot on the
+     last row) becomes a CTA into the sponsor-specific registration path
+     instead of empty space. */
+  .tier-cta-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 0.9rem;
+    background: linear-gradient(160deg, var(--color-surface), var(--color-bg-alt));
+    border: 1px dashed var(--color-primary);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+  }
+  .tier-cta-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+  .tier-cta-card p { color: var(--color-text-dim); font-size: 0.9rem; line-height: 1.5; }
+
+  /* audience/history stat strip */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0 2.5rem;
+  }
+  .stat-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    text-align: center;
+  }
+  .stat-card strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 0.2rem;
+  }
+  .stat-card span { font-size: 0.8rem; color: var(--color-text-dim); }
+
+  /* slower marquee — logos aren't in yet, but the pace was too quick to
+     actually read names either. */
+  .sponsor-track { animation-duration: 55s !important; }
+
+  @media (min-width: 768px) {
+    .tier-cta-card { grid-column: span 1; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="resonance-mark" viewBox="0 0 120 120">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+      <line x1="60" y1="8" x2="60" y2="112"></line>
+      <path d="M66.8,41.2 A20,20 0 0 1 66.8,78.8"></path>
+      <path d="M53.2,41.2 A20,20 0 0 0 53.2,78.8"></path>
+      <path d="M71.6,28.1 A34,34 0 0 1 71.6,91.9"></path>
+      <path d="M48.4,28.1 A34,34 0 0 0 48.4,91.9"></path>
+      <path d="M76.4,14.9 A48,48 0 0 1 76.4,105.1"></path>
+      <path d="M43.6,14.9 A48,48 0 0 0 43.6,105.1"></path>
+    </g>
+    <circle cx="60" cy="60" r="4" fill="currentColor"></circle>
+  </symbol>
+</svg>
+
+<!-- ============ NAV ============ -->
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
+      <span class="logo-text">Accord <span>VI</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="info.html" class="nav-link">Info</a>
+      <a href="sponsor.html" class="nav-link">Sponsors</a>
+      <a href="privacy-policy.html" class="nav-link">Privacy</a>
+      <a href="register.html" class="nav-cta">Register</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ PAGE HERO ============ -->
+<section class="page-hero" id="main">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="container page-hero-inner">
+    <div class="hero-mark" aria-hidden="true" data-aos="zoom-in">
+      <svg class="logo-mark logo-mark-hero" viewBox="0 0 120 120"><use href="#resonance-mark"></use></svg>
+    </div>
+    <p class="eyebrow" data-aos="fade-up" data-aos-delay="100">Partner with us</p>
+    <h1 class="page-title" data-aos="fade-up" data-aos-delay="200">Put your brand in front of thousands of students</h1>
+    <p class="hero-tagline" data-aos="fade-up" data-aos-delay="300">
+      Accord reaches a highly engaged student audience across Multan, now in its sixth year
+      as a Beaconhouse Cantt Campus tradition.
+    </p>
+  </div>
+</section>
+
+<!-- ============ SPONSORSHIP ============ -->
+<section class="section">
+  <div class="container">
+
+    <!-- audience + history -->
+    <div class="stat-strip" data-aos="fade-up">
+      <div class="stat-card"><strong>1,000-1,300</strong><span>Live attendees per edition</span></div>
+      <div class="stat-card"><strong>25K-50K</strong><span>Instagram reach per edition</span></div>
+      <div class="stat-card"><strong>6th</strong><span>Edition of Accord</span></div>
+      <div class="stat-card"><strong>2</strong><span>Nights of programming</span></div>
+    </div>
+
+    <div class="tier-grid">
+      <div class="tier-card" data-tier="bronze" data-aos="fade-up" data-aos-delay="0">
+        <span class="tier-status">Available</span>
+        <span class="tier-name">Bronze</span>
+        <span class="tier-price">PKR 150,000</span>
+        <p class="tier-blurb">Marketing entitlements only.</p>
+        <ul class="tier-list">
+          <li>Small logo on banners & backdrop</li>
+          <li>Logo on event website & social media posts</li>
+          <li>2 complimentary all-access event passes</li>
+        </ul>
+      </div>
+
+      <div class="tier-card" data-tier="silver" data-aos="fade-up" data-aos-delay="100">
+        <span class="tier-status">Available</span>
+        <span class="tier-name">Silver</span>
+        <span class="tier-price">PKR 250,000</span>
+        <p class="tier-blurb">Marketing entitlements only.</p>
+        <ul class="tier-list">
+          <li>Medium logo on backdrops & banners</li>
+          <li>Dedicated social media feature post</li>
+          <li>Product showcase slot (5 mins)</li>
+          <li>4 complimentary all-access event passes</li>
+          <li>Flyer insert in delegate welcome kits</li>
+        </ul>
+      </div>
+
+      <div class="tier-card tier-featured" data-tier="gold" data-aos="fade-up" data-aos-delay="200">
+        <span class="tier-badge animate__animated animate__pulse animate__infinite animate__slower">Most popular</span>
+        <span class="tier-status">Available</span>
+        <span class="tier-name">Gold</span>
+        <span class="tier-price">PKR 350,000</span>
+        <p class="tier-blurb">Marketing entitlements only.</p>
+        <ul class="tier-list">
+          <li>Prime logo on stage backdrop, photobooth & entrance arch</li>
+          <li>Dedicated social media video campaign spotlight</li>
+          <li>Exclusive promotional booth space (10×10 ft)</li>
+          <li>6 VIP all-access passes with reserved seating</li>
+          <li>5-minute brand presentation during Opening Ceremony</li>
+        </ul>
+      </div>
+
+      <div class="tier-card" data-tier="diamond" data-aos="fade-up" data-aos-delay="300">
+        <span class="tier-status">Available</span>
+        <span class="tier-name">Diamond</span>
+        <span class="tier-price">PKR 500,000</span>
+        <p class="tier-blurb">Marketing & on-stage recognition.</p>
+        <ul class="tier-list">
+          <li>Logo on all banners & panaflex standees at the venue</li>
+          <li>Exclusive branding on the event's online page + dedicated post</li>
+          <li>Commemorative shield presented on stage</li>
+          <li>Mention in Opening & Closing Ceremony speeches</li>
+          <li>8 VIP all-access passes with reserved seating</li>
+          <li>Promotional booth space at the venue</li>
+        </ul>
+      </div>
+
+      <div class="tier-card tier-title" data-tier="platinum" data-aos="fade-up" data-aos-delay="0">
+        <span class="tier-badge tier-badge-title animate__animated animate__pulse animate__infinite animate__slower">Title sponsor</span>
+        <span class="tier-status">Available</span>
+        <span class="tier-name">Platinum</span>
+        <span class="tier-price">PKR 750,000</span>
+        <p class="tier-blurb">"Accord VI Presented by [Your Brand]"</p>
+        <ul class="tier-list">
+          <li>Top-tier logo placement across all media (print, digital, broadcast)</li>
+          <li>Keynote speaker slot during Closing Ceremony & Award Presentation</li>
+          <li>10 VIP all-access passes with front-row seating & VIP lounge</li>
+          <li>Prime 15×15 ft interactive exhibition booth at the entrance</li>
+        </ul>
+      </div>
+
+      <!-- CTA fills the old dead grid cell; replaces the standalone banner further down the page -->
+      <div class="tier-cta-card" data-aos="fade-up" data-aos-delay="100">
+        <h3>Ready to sponsor Accord VI?</h3>
+        <p>Tell us a bit about your brand and pick a tier — we'll follow up with a full sponsorship deck.</p>
+        <a href="register.html?path=sponsor" class="btn btn-primary btn-block">Become a Sponsor</a>
+      </div>
+    </div>
+
+    <!-- logo marquee, with real Accord 5.0 sponsors (from the accord___5.0
+         Instagram "Sponsored by" posts, Nov 2025) — labeled as past
+         editions, not implying they're confirmed for VI. -->
+    <p class="brands-label" style="margin: 2.5rem 0 0.75rem;" data-aos="fade-up">Brands that backed past editions</p>
+    <div class="sponsor-marquee" aria-label="Sponsors of past Accord editions">
+      <div class="sponsor-track">
+        <span class="sponsor-chip">Fertiscience</span>
+        <span class="sponsor-chip">Haris Industries</span>
+        <span class="sponsor-chip">Pepsi</span>
+        <span class="sponsor-chip">Volka Food International</span>
+        <span class="sponsor-chip">HQ Events</span>
+        <span class="sponsor-chip">M.Y.K Traders</span>
+        <span class="sponsor-chip">Zong 4G</span>
+        <span class="sponsor-chip">Karobar Pakistan</span>
+        <span class="sponsor-chip">Ahmed Hassan Spinning Ltd.</span>
+        <span class="sponsor-chip">Holsun Chemicals</span>
+        <span class="sponsor-chip">Servo Motor-Oil</span>
+        <span class="sponsor-chip">Ashkaf Clothing</span>
+        <span class="sponsor-chip">Bar-B-Q Tonight</span>
+        <span class="sponsor-chip">Gulshan Banaspati</span>
+        <span class="sponsor-chip">Rizwan Associates</span>
+        <span class="sponsor-chip">Nuchem</span>
+        <span class="sponsor-chip">Mukhtar Traders</span>
+        <span class="sponsor-chip">Buraq Agro Chemicals</span>
+        <span class="sponsor-chip">County</span>
+        <span class="sponsor-chip">Agrica Group</span>
+        <span class="sponsor-chip">Parbat Flour Mills</span>
+        <span class="sponsor-chip">Cell Laboratories Pakistan</span>
+        <span class="sponsor-chip">Rise AG Pakistan</span>
+        <span class="sponsor-chip" aria-hidden="true">Fertiscience</span>
+        <span class="sponsor-chip" aria-hidden="true">Haris Industries</span>
+        <span class="sponsor-chip" aria-hidden="true">Pepsi</span>
+        <span class="sponsor-chip" aria-hidden="true">Volka Food International</span>
+        <span class="sponsor-chip" aria-hidden="true">HQ Events</span>
+        <span class="sponsor-chip" aria-hidden="true">M.Y.K Traders</span>
+        <span class="sponsor-chip" aria-hidden="true">Zong 4G</span>
+        <span class="sponsor-chip" aria-hidden="true">Karobar Pakistan</span>
+        <span class="sponsor-chip" aria-hidden="true">Ahmed Hassan Spinning Ltd.</span>
+        <span class="sponsor-chip" aria-hidden="true">Holsun Chemicals</span>
+        <span class="sponsor-chip" aria-hidden="true">Servo Motor-Oil</span>
+        <span class="sponsor-chip" aria-hidden="true">Ashkaf Clothing</span>
+        <span class="sponsor-chip" aria-hidden="true">Bar-B-Q Tonight</span>
+        <span class="sponsor-chip" aria-hidden="true">Gulshan Banaspati</span>
+        <span class="sponsor-chip" aria-hidden="true">Rizwan Associates</span>
+        <span class="sponsor-chip" aria-hidden="true">Nuchem</span>
+        <span class="sponsor-chip" aria-hidden="true">Mukhtar Traders</span>
+        <span class="sponsor-chip" aria-hidden="true">Buraq Agro Chemicals</span>
+        <span class="sponsor-chip" aria-hidden="true">County</span>
+        <span class="sponsor-chip" aria-hidden="true">Agrica Group</span>
+        <span class="sponsor-chip" aria-hidden="true">Parbat Flour Mills</span>
+        <span class="sponsor-chip" aria-hidden="true">Cell Laboratories Pakistan</span>
+        <span class="sponsor-chip" aria-hidden="true">Rise AG Pakistan</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ SPONSOR FORM ============ -->
+<section id="sponsor-form" class="section section-alt">
+  <div class="container contact-grid">
+    <div class="contact-copy" data-aos="fade-right">
+      <p class="section-kicker">Become a sponsor</p>
+      <h2 class="section-title">Tell us about your brand</h2>
+      <p class="section-lead">
+        Prefer the full guided flow? Use <a href="register.html?path=sponsor" class="text-link">sponsor registration →</a> above instead. It walks through tier and payment options one step at a time. This form still works too.
+      </p>
+
+      <ul class="contact-details">
+        <li>
+          <span class="contact-label">Email</span>
+          <a href="mailto:hello@accordvi.example" class="contact-value">hello@accordvi.example</a>
+          <span class="ph-tag">placeholder</span>
+        </li>
+        <li>
+          <span class="contact-label">Venue</span>
+          <span class="contact-value">Beaconhouse Cantt Campus, Multan</span>
+          <a href="https://www.google.com/maps/search/?api=1&query=Beaconhouse+Cantt+Campus+Multan" target="_blank" rel="noopener" class="text-link" style="margin-left:0.5rem; font-size:0.85rem;">Get directions →</a>
+        </li>
+      </ul>
+
+      <p class="section-lead">Looking to attend instead? Head to our <a href="register.html" class="text-link">registration page →</a></p>
+    </div>
+
+    <form class="contact-form" id="sponsorForm" data-aos="fade-left">
+      <input type="hidden" name="form_type" value="Sponsorship Inquiry">
+      <input type="hidden" name="details" id="sponsorDetails">
+      <div id="sponsorStage1">
+        <div class="form-row">
+          <label for="sponsorName">Name</label>
+          <input type="text" id="sponsorName" name="name" required placeholder="Your name">
+        </div>
+        <div class="form-row">
+          <label for="sponsorEmail">Email</label>
+          <input type="email" id="sponsorEmail" name="email" required placeholder="you@example.com">
+        </div>
+        <div class="form-row">
+          <label for="company">Company / Brand name</label>
+          <input type="text" id="company" name="company" required placeholder="e.g. Acme Inc.">
+        </div>
+        <div class="form-row">
+          <label for="tier">Tier you're interested in</label>
+          <select id="tier" name="tier">
+            <option value="">Not sure yet</option>
+            <option value="bronze">Bronze — PKR 150,000</option>
+            <option value="silver">Silver — PKR 250,000</option>
+            <option value="gold">Gold — PKR 350,000</option>
+            <option value="diamond">Diamond — PKR 500,000</option>
+            <option value="platinum">Platinum — PKR 750,000</option>
+            <option value="custom">Custom / à la carte</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="sponsorMessage">Message</label>
+          <textarea id="sponsorMessage" name="message" rows="4" placeholder="Tell us a little about your brand and what you're looking for"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Send verification code</button>
+      </div>
+      <div id="sponsorStage2" hidden>
+        <div class="form-row">
+          <label for="sponsorCode">Enter the 6-digit code we emailed you</label>
+          <input type="text" id="sponsorCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456">
+        </div>
+        <button type="button" id="sponsorVerifyBtn" class="btn btn-primary btn-block">Verify &amp; submit</button>
+      </div>
+      <p class="form-note" id="sponsorFormNote" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span class="logo footer-logo">
+      <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
+      <span class="logo-text">Accord <span>VI</span></span>
+    </span>
+    <p class="footer-tag">18–19 October · Beaconhouse Cantt Campus, Multan</p>
+    <a href="https://instagram.com/" target="_blank" rel="noopener" class="footer-ig">Instagram</a>
+    <p class="footer-legal"><a href="privacy-policy.html" class="text-link">Privacy Policy</a> · <a href="terms.html" class="text-link">Terms</a></p>
+    <p class="footer-copy">© <span id="year"></span> Accord VI. All rights reserved.</p>
+  </div>
+</footer>
+
+<div class="sticky-mobile-cta">
+  <a href="register.html?path=sponsor" class="btn btn-primary btn-block">Become a Sponsor</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

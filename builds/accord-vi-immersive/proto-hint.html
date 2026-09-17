@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PROTOTYPE — Guess the Artist</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  @font-face {
+    font-family: 'Sora';
+    src: url('assets/fonts/Sora-Variable.ttf') format('truetype-variations');
+    font-weight: 100 800; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/Inter-Variable.ttf') format('truetype-variations');
+    font-weight: 100 900; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('assets/fonts/Fraunces-Variable.ttf') format('truetype-variations');
+    font-weight: 300 700; font-style: normal; font-display: swap;
+  }
+
+  :root {
+    --ink: #efece6;
+    --ink-soft: #a9a6a0;
+    --canvas: #0b0b0d;
+    --canvas-deep: #060607;
+    --gold: #e0b455;
+    --gold-bright: #f3d38a;
+    --gold-dim: #6b5527;
+    --sc-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8rem 1.5rem 5rem;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in oklab, var(--gold) 10%, transparent), transparent 70%);
+  }
+
+  .proto-banner {
+    max-width: 40rem;
+    margin: 0 auto 2.5rem;
+    text-align: center;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--gold-dim);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .proto-banner strong { color: var(--gold); }
+
+  .back-link {
+    align-self: flex-start;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .back-link:hover { color: var(--gold); }
+
+  .numeral {
+    font-family: 'Fraunces', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+  .hint-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    margin: 0.3rem 0 0.6rem;
+    text-align: center;
+  }
+  .hint-sub {
+    color: var(--ink-soft);
+    text-align: center;
+    max-width: 28rem;
+    margin: 0 0 2.2rem;
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  /* Card — a static, non-flipping prop here (flipping it would spoil the
+     guess before the real reveal, which lives on the after-reveal page).
+     Same visual design language as the after-reveal card so the two feel
+     like one continuous object across BR -> AR. */
+  .card-scene {
+    width: clamp(9.5rem, 40vw, 12.5rem);
+    aspect-ratio: 5 / 7;
+    margin-bottom: 1.7rem;
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+    animation: cardArrive 0.7s var(--sc-ease-out) forwards;
+    animation-delay: 0.05s;
+  }
+  @keyframes cardArrive {
+    60% { opacity: 1; transform: translateY(0) scale(1.015); filter: drop-shadow(0 0 22px color-mix(in oklab, var(--gold) 55%, transparent)); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 transparent); }
+  }
+  .card-face {
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    background: linear-gradient(180deg, var(--canvas-deep) 0%, #000 100%);
+    border: 1px solid var(--gold-dim);
+    box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
+    padding: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .card-corner {
+    display: flex;
+    align-items: center;
+    gap: 0.22rem;
+    font-family: 'Fraunces', serif;
+    color: var(--gold);
+    font-size: 1.05rem;
+    line-height: 1;
+    flex: none;
+  }
+  .card-corner svg { width: 0.8rem; height: 0.8rem; fill: var(--gold); }
+  .card-corner--tl { align-self: flex-start; }
+  .card-corner--br { align-self: flex-end; transform: rotate(180deg); }
+  .card-mark { flex: 1; display: flex; align-items: center; justify-content: center; opacity: 0.85; color: var(--gold); }
+  .card-mark svg { width: 58%; }
+  .card-rank-word {
+    text-align: center;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin: 0;
+  }
+
+  .hint-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 26rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .hint-list li {
+    border: 1px solid var(--gold-dim);
+    border-radius: 10px;
+    padding: 0.85rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: color-mix(in oklab, var(--canvas-deep) 70%, transparent);
+  }
+  .hint-list .hint-num {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    border-radius: 999px;
+    width: 1.7rem;
+    height: 1.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .hint-list .hint-text {
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    font-style: italic;
+  }
+
+  .lineup-nav {
+    margin-top: 2.2rem;
+    display: flex;
+    gap: 0.6rem;
+  }
+  .lineup-nav a {
+    width: 2.4rem; height: 2.4rem;
+    border-radius: 999px;
+    border: 1px solid var(--gold-dim);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-family: 'Fraunces', serif;
+    font-size: 0.85rem;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .lineup-nav a:hover { border-color: var(--gold); color: var(--gold); }
+  .lineup-nav a[aria-current="true"] { border-color: var(--gold); color: var(--gold); background: color-mix(in oklab, var(--gold) 12%, transparent); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-scene { animation: none; opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="resonance-mark" viewBox="0 0 120 120">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+      <line x1="60" y1="8" x2="60" y2="112"></line>
+      <path d="M66.8,41.2 A20,20 0 0 1 66.8,78.8"></path>
+      <path d="M53.2,41.2 A20,20 0 0 0 53.2,78.8"></path>
+      <path d="M71.6,28.1 A34,34 0 0 1 71.6,91.9"></path>
+      <path d="M48.4,28.1 A34,34 0 0 0 48.4,91.9"></path>
+      <path d="M76.4,14.9 A48,48 0 0 1 76.4,105.1"></path>
+      <path d="M43.6,14.9 A48,48 0 0 0 43.6,105.1"></path>
+    </g>
+    <circle cx="60" cy="60" r="4" fill="currentColor"></circle>
+  </symbol>
+</svg>
+
+<!-- ============ NAV ============ -->
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
+      <span class="logo-text">Accord <span>VI</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="info.html" class="nav-link">Info</a>
+      <a href="sponsor.html" class="nav-link">Sponsors</a>
+      <a href="privacy-policy.html" class="nav-link">Privacy</a>
+      <a href="register.html" class="nav-cta">Register</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<p class="proto-banner" id="main">PROTOTYPE — <strong>these hints are real and true</strong>, drawn from each artist's actual public bio and discography, worded to avoid naming them outright.</p>
+
+<a href="proto-lineup-sparkle.html" class="back-link" id="backLink">← Back to the lineup</a>
+
+<div class="card-scene">
+  <div class="card-face">
+    <span class="card-corner card-corner--tl" id="cardCornerTl"></span>
+    <div class="card-mark" id="cardMark"></div>
+    <p class="card-rank-word" id="cardRankWord"></p>
+    <span class="card-corner card-corner--br" id="cardCornerBr"></span>
+  </div>
+</div>
+
+<p class="numeral" id="numeral">Artist I</p>
+<h1 class="hint-title">Who could this be?</h1>
+<p class="hint-sub">Three clues, no name yet. The full reveal lands once it's confirmed.</p>
+
+<ul class="hint-list" id="hintList"></ul>
+
+<nav class="lineup-nav" aria-label="Other mystery artists">
+  <a href="proto-hint.html?artist=1" data-n="1">I</a>
+  <a href="proto-hint.html?artist=2" data-n="2">II</a>
+  <a href="proto-hint.html?artist=3" data-n="3">III</a>
+</nav>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+  }
+
+  // Real, true, vague-on-purpose hints — worded to avoid the name itself
+  // so the guessing game stays hard. Source-checked against Wikipedia /
+  // Apple Music / Spotify for Hasan Raheem, Nehaal Naseem, Sabat Batin.
+  // Numbering matches the confirmed lineup: 1=Hasan(King, stage numeral
+  // I), 2=Nehaal(Queen, numeral II), 3=Sabaat(Jack, numeral III).
+  const HINTS = {
+    '1': [
+      'Trained for a completely different career before music took over.',
+      'One breakout single put a whole new sound on the map.',
+      'Blends a language most listeners won’t recognize into the verses.'
+    ],
+    '2': [
+      'Was already performing online before most of tonight’s crowd owned a phone.',
+      'One single of hers held its ground on the charts for weeks.',
+      'Has voiced more than just her own songs — some of it was written for the screen.'
+    ],
+    '3': [
+      'One duet raced past tens of millions of plays.',
+      'Writes and performs in more than one language, often in the same breath.',
+      'Known for pairing heavy, modern production with raw, emotional writing.'
+    ]
+  };
+  const CARD_META = {
+    '1': {
+      letter: 'K', numeral: 'I', rank: 'King',
+      motif: '<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 66 L25 34 L38 54 L52 20 L68 54 L80 36 L95 66"/><path d="M14 100 v-14 M26 100 v-24 M38 100 v-10 M50 100 v-30 M62 100 v-16 M74 100 v-22 M86 100 v-12"/></svg>',
+    },
+    '2': {
+      letter: 'Q', numeral: 'II', rank: 'Queen',
+      motif: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="50" cy="50" r="7"/><path d="M50 41 C41 22 31 17 21 22 C27 32 36 39 43 44"/><path d="M58 41 C67 22 77 17 87 22 C81 32 72 39 65 44"/><path d="M43 56 C22 61 17 71 22 81 C32 75 39 66 44 59"/><path d="M58 56 C79 61 84 71 79 81 C69 75 62 66 57 59"/><path d="M50 57 L50 78"/></svg>',
+    },
+    '3': {
+      letter: 'J', numeral: 'III', rank: 'Jack',
+      motif: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M50 6 L72 50 L50 94 L28 50 Z"/><path d="M50 6 L50 94 M28 50 L72 50" stroke-width="1.5" opacity="0.55"/><path d="M50 28 L61 50 L50 72 L39 50 Z"/></svg>',
+    }
+  };
+
+  const params = new URLSearchParams(location.search);
+  const n = params.get('artist') || '1';
+  const from = params.get('from');
+
+  const lineupPages = { real: 'proto-lineup-real.html', sparkle: 'proto-lineup-sparkle.html' };
+  document.getElementById('backLink').href = lineupPages[from] || 'proto-lineup-sparkle.html';
+
+  const meta = CARD_META[n] || CARD_META['1'];
+  document.getElementById('cardCornerTl').textContent = meta.letter;
+  document.getElementById('cardCornerBr').textContent = meta.letter;
+  document.getElementById('cardMark').innerHTML = meta.motif;
+  document.getElementById('cardRankWord').textContent = meta.rank;
+
+  document.getElementById('numeral').textContent = 'Artist ' + meta.numeral;
+
+  const hintList = document.getElementById('hintList');
+  (HINTS[n] || HINTS['1']).forEach((text, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = '<span class="hint-num">' + (i + 1) + '</span><span class="hint-text">' + text + '</span>';
+    hintList.appendChild(li);
+  });
+
+  document.querySelectorAll('.lineup-nav a').forEach((a) => {
+    if (a.dataset.n === n) a.setAttribute('aria-current', 'true');
+    if (from) a.href += '&from=' + from;
+  });
+</script>
+
+</body>
+</html>

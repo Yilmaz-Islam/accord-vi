@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PROTOTYPE — Artist Reveal</title>
+<meta name="robots" content="noindex">
+<style>
+  @font-face {
+    font-family: 'Sora';
+    src: url('assets/fonts/Sora-Variable.ttf') format('truetype-variations');
+    font-weight: 100 800; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/Inter-Variable.ttf') format('truetype-variations');
+    font-weight: 100 900; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('assets/fonts/Fraunces-Variable.ttf') format('truetype-variations');
+    font-weight: 300 700; font-style: normal; font-display: swap;
+  }
+
+  :root {
+    --ink: #efece6;
+    --ink-soft: #a9a6a0;
+    --canvas: #0b0b0d;
+    --canvas-deep: #060607;
+    --gold: #e0b455;
+    --gold-bright: #f3d38a;
+    --gold-dim: #6b5527;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100svh;
+    padding: 4rem 1.5rem 6rem;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in oklab, var(--gold) 10%, transparent), transparent 70%);
+  }
+
+  .proto-banner {
+    max-width: 40rem;
+    margin: 0 auto 3rem;
+    text-align: center;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--gold-dim);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+  .proto-banner strong { color: var(--gold); }
+
+  .lineup-head {
+    text-align: center;
+    max-width: 34rem;
+    margin: 0 auto 3.5rem;
+  }
+  .lineup-kicker {
+    font-family: 'Sora', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.72rem;
+    color: var(--gold);
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+  .lineup-kicker::before, .lineup-kicker::after {
+    content: '';
+    width: 2rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim));
+  }
+  .lineup-kicker::after { background: linear-gradient(90deg, var(--gold-dim), transparent); }
+  .lineup-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    margin: 0 0 0.9rem;
+    letter-spacing: -0.01em;
+  }
+  .lineup-sub {
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ---------- The stage: one dark room, three figures standing in it, lights not yet on ---------- */
+  .stage {
+    position: relative;
+    max-width: 56rem;
+    margin: 0 auto;
+    border-radius: 20px;
+    border: 1px solid var(--gold-dim);
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklab, var(--gold) 6%, transparent), transparent 70%),
+      linear-gradient(180deg, #000 0%, var(--canvas-deep) 55%, #050506 100%);
+    overflow: hidden;
+    padding: 3.5rem 2rem 1rem;
+  }
+  /* faint floor line the figures stand on */
+  .stage::after {
+    content: '';
+    position: absolute;
+    left: 8%; right: 8%; bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+
+  /* Fixed-height stage floor the three figures stand on, positioned by eye
+     rather than flex — the hero stands full-height and centered, the other
+     two are shorter (farther back) and pulled in close enough that the
+     hero's own silhouette overlaps and hides part of them, like they're
+     stepping out just behind his shoulders. */
+  .stage-figures {
+    position: relative;
+    height: clamp(280px, 42vw, 460px);
+    margin: 0 auto;
+    padding-bottom: 5.5rem;
+  }
+
+  .figure {
+    position: absolute;
+    bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .figure--center {
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    z-index: 3;
+  }
+  .figure--left {
+    left: 34%;
+    transform: translateX(-68%);
+    height: 76%;
+    z-index: 1;
+  }
+  .figure--right {
+    left: 66%;
+    transform: translateX(-32%);
+    height: 76%;
+    z-index: 1;
+  }
+
+  /* the dormant spotlight — barely there until hovered, foreshadowing the real reveal */
+  .figure__spot {
+    position: absolute;
+    top: -2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 55%;
+    background: radial-gradient(ellipse 50% 100% at 50% 0%, color-mix(in oklab, var(--gold) 16%, transparent), transparent 75%);
+    opacity: 0.3;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+  .figure--left .figure__spot, .figure--right .figure__spot { opacity: 0.18; }
+  .figure:hover .figure__spot,
+  .figure:focus-visible .figure__spot {
+    opacity: 1;
+  }
+
+  .figure__cutout {
+    position: relative;
+    height: 100%;
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 0 0 transparent);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
+  }
+  .figure--left .figure__cutout, .figure--right .figure__cutout { filter: brightness(0.82); }
+  .figure:hover .figure__cutout,
+  .figure:focus-visible .figure__cutout {
+    transform: scale(1.045) translateY(-3px);
+    filter: drop-shadow(0 0 22px color-mix(in oklab, var(--gold) 45%, transparent)) brightness(1);
+  }
+
+  .figure__meta {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.9rem;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .figure__numeral {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    transition: color 0.35s ease;
+  }
+  .figure:hover .figure__numeral, .figure:focus-visible .figure__numeral { color: var(--gold); }
+  .figure__label {
+    display: block;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+    color: var(--gold);
+    margin-top: 0.2rem;
+  }
+  .figure__cta {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--ink-soft);
+    margin-top: 0.3rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .figure:hover .figure__cta, .figure:focus-visible .figure__cta { opacity: 1; }
+  .figure:focus-visible { outline: none; }
+  .figure:focus-visible .figure__numeral { text-decoration: underline; }
+
+  @media (max-width: 760px) {
+    .stage { padding: 2.5rem 0.5rem 0; border-radius: 14px; }
+    .stage-figures { height: 62vw; padding-bottom: 3.2rem; }
+    .figure--left { left: 30%; }
+    .figure--right { left: 70%; }
+    .figure__numeral { font-size: 0.6rem; }
+    .figure__label { font-size: 0.78rem; }
+    .figure__cta { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<p class="proto-banner">PROTOTYPE — not linked from the live site, for review only. <strong>Stand-in poses for testing only</strong> — shaped after 3 well-known artists so the silhouettes read as distinct poses, not the real lineup. No names are shown; the mystery/hint mechanic stays intact.</p>
+
+<div class="lineup-head">
+  <p class="lineup-kicker">Accord VI · Lineup</p>
+  <h1 class="lineup-title">Three names. The lights aren't on yet.</h1>
+  <p class="lineup-sub">Hover to catch a glimpse. Click one to start guessing — the spotlight comes on once it's confirmed.</p>
+</div>
+
+<div class="stage">
+  <div class="stage-figures">
+
+    <!-- Left, tucked behind the hero's left shoulder -->
+    <a href="proto-hint.html?artist=1" class="figure figure--left" aria-label="Mystery artist one — tap for hints">
+      <span class="figure__spot" aria-hidden="true"></span>
+      <img class="figure__cutout" src="assets/lineup-proto/figure-left.png" alt="">
+      <span class="figure__meta">
+        <span class="figure__numeral">I</span>
+        <span class="figure__label">Artist I</span>
+        <span class="figure__cta">Tap for hints →</span>
+      </span>
+    </a>
+
+    <!-- Center, the hero -->
+    <a href="proto-hint.html?artist=2" class="figure figure--center" aria-label="Mystery artist two — tap for hints">
+      <span class="figure__spot" aria-hidden="true"></span>
+      <img class="figure__cutout" src="assets/lineup-proto/figure-center.png" alt="">
+      <span class="figure__meta">
+        <span class="figure__numeral">II</span>
+        <span class="figure__label">Artist II</span>
+        <span class="figure__cta">Tap for hints →</span>
+      </span>
+    </a>
+
+    <!-- Right, tucked behind the hero's right shoulder -->
+    <a href="proto-hint.html?artist=3" class="figure figure--right" aria-label="Mystery artist three — tap for hints">
+      <span class="figure__spot" aria-hidden="true"></span>
+      <img class="figure__cutout" src="assets/lineup-proto/figure-right.png" alt="">
+      <span class="figure__meta">
+        <span class="figure__numeral">III</span>
+        <span class="figure__label">Artist III</span>
+        <span class="figure__cta">Tap for hints →</span>
+      </span>
+    </a>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -954,10 +954,14 @@
                                'inset(0 0 ' + pct + '% 0)';
         }
 
-        // counters
+        // counters — once a counter reaches its target it latches there:
+        // scrolling back up must not rewind a finished count (same "no
+        // re-hiding on scroll-up" rule data-sc-in already follows).
         for (var ct = 0; ct < a.counts.length; ct++) {
           var K = a.counts[ct];
+          if (K.done) continue;
           var kt = smooth((a.p - K.from) / Math.max(K.to - K.from, 0.001));
+          if (kt >= 1) K.done = true;
           var val = lerp(K.a, K.b, kt);
           var out = formatNum(val, K.tpl);
           if (out !== K.last) { K.el.textContent = out; K.last = out; }

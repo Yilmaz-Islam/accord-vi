@@ -55,6 +55,13 @@
 html { background: var(--sc-canvas); }
 body { font-family: var(--sc-font-text); }
 
+/* ---------- Desktop/mobile build switch ---------- */
+/* .is-mobile/.is-desktop is set once, synchronously, in index.html's own
+   inline bootstrap script — see the comment there for why three chapters
+   (Two Nights, Proof, Register) carry two versions in the DOM. */
+.is-mobile .chapter-desktop-only { display: none !important; }
+.is-desktop .chapter-mobile-only { display: none !important; }
+
 /* ---------- Skip link (keyboard/screen-reader users only; invisible otherwise) ---------- */
 .av-skip-link {
   position: absolute;
@@ -271,10 +278,45 @@ body { font-family: var(--sc-font-text); }
   margin: var(--sc-5) 0 0;
   text-wrap: pretty;
 }
+/* Countdown + register CTA share one row so the primary conversion action
+   sits right where a reader's eye already is, rather than waiting until
+   the colophon close at the very bottom of the page. */
+.av-hero__countdown-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sc-6);
+  margin-top: var(--sc-7);
+}
 .av-countdown {
   display: flex;
   gap: var(--sc-4);
-  margin-top: var(--sc-7);
+}
+.av-hero__cta {
+  font-family: var(--sc-font-display);
+  font-weight: 700;
+  font-size: var(--sc-t-sm);
+  letter-spacing: var(--sc-track-wide);
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--sc-canvas);
+  background: var(--sc-accent);
+  border-radius: var(--sc-r-pill);
+  padding: var(--sc-4) var(--sc-6);
+  transition: transform 160ms var(--sc-ease-out), box-shadow 160ms var(--sc-ease-out), background 160ms var(--sc-ease-out);
+}
+.av-hero__cta:hover {
+  background: color-mix(in oklab, var(--sc-accent) 88%, white);
+  transform: translateY(-1px);
+  box-shadow: var(--sc-e2);
+}
+.av-hero__cta:focus-visible {
+  outline: 2px solid var(--sc-accent);
+  outline-offset: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .av-hero__cta:hover { transform: none; }
 }
 .av-flip {
   display: flex;
@@ -459,6 +501,33 @@ body { font-family: var(--sc-font-text); }
 @media (prefers-reduced-motion: reduce) {
   .av-panel__name { width: auto; border: 0; }
 }
+/* ---------- Chapter 2 (mobile): stacked cards, no pin/tear ---------- */
+.av-nights-mobile { display: flex; flex-direction: column; gap: var(--sc-5); }
+.av-night-card {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--sc-r-lg);
+  overflow: hidden;
+}
+.av-night-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.av-night-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0) 55%);
+}
+.av-night-card figcaption {
+  position: absolute;
+  left: var(--sc-5);
+  bottom: var(--sc-5);
+  z-index: 1;
+  font-family: var(--sc-font-display);
+  font-weight: 700;
+  font-size: var(--sc-t-2xl);
+  color: #fff;
+}
+
 /* ---------- Chapter 3: Proof (pan rail + real stats) ---------- */
 /* Not a [data-sc-stage] position/height override — background only, and
    only to guarantee this act's own ground is opaque so nothing from the
@@ -524,6 +593,19 @@ body { font-family: var(--sc-font-text); }
   color: var(--sc-ink-soft);
   font-size: var(--sc-t-sm);
 }
+/* ---------- Chapter 3 (mobile): native horizontal scroll, no pan math ---------- */
+/* Reuses .av-frame/.av-frame__tag as-is — only the container differs:
+   free browser momentum-scroll + snap instead of a scroll-scrubbed pan. */
+.av-rail-mobile {
+  display: flex;
+  gap: var(--sc-4);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0 var(--sc-gutter) var(--sc-2);
+  margin-bottom: var(--sc-4);
+}
+.av-rail-mobile .av-frame { width: 68vw; scroll-snap-align: start; }
+.av-rail-mobile .av-frame:last-child { scroll-snap-align: end; }
 .av-stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -669,17 +751,18 @@ body { font-family: var(--sc-font-text); }
   font-weight: 700;
   font-size: var(--sc-t-lg);
 }
-/* President: the beam runs ink-dark to gold instead of the bone default
-   (bone-on-bone was invisible against this card's own light ground), plus
-   an exclusive extra — a shimmer sweeps across the card every few
-   seconds, like light catching foil. The one rank that gets a second
-   effect on top of the shared beam. */
+/* President/VP cards swapped looks: the restrained dark-ground-plus-gold-
+   outline card (previously VP's) reads more refined and "royal", so it's
+   the President's now. It also inherits the one rank-exclusive extra — a
+   shimmer sweep across the card every few seconds, like light catching
+   foil — which moves here with it rather than staying on the card that
+   lost this look. No beam-colour override needed: this ground is the
+   same dark canvas as the page itself, so the shared beam's bone-on-gold
+   default already shows up fine against it (same as DG/SG below). */
 .av-team-card--president {
-  background: var(--av-k5-ground);
-  color: var(--av-k5-ink);
-  border: 2px solid var(--sc-accent);
-  --av-beam-c1: var(--av-k5-ink);
-  --av-beam-c2: var(--sc-accent);
+  background: var(--sc-canvas);
+  color: var(--sc-accent);
+  border: 1px solid var(--sc-accent);
   overflow: hidden;
 }
 .av-team-card--president::before {
@@ -705,10 +788,16 @@ body { font-family: var(--sc-font-text); }
 @media (prefers-reduced-motion: reduce) {
   .av-team-card--president::before { animation: none; display: none; }
 }
+/* VP now carries the card President used to have — light bone ground,
+   no shimmer. The beam still needs its ink+gold override here: this
+   ground is the same bone tone as the shared beam's own default colour,
+   so left un-overridden the beam would vanish against its own card. */
 .av-team-card--vp {
-  background: var(--sc-canvas);
-  color: var(--sc-accent);
-  border: 1px solid var(--sc-accent);
+  background: var(--av-k5-ground);
+  color: var(--av-k5-ink);
+  border: 2px solid var(--sc-accent);
+  --av-beam-c1: var(--av-k5-ink);
+  --av-beam-c2: var(--sc-accent);
 }
 .av-team-card--dg, .av-team-card--sg { background: var(--av-k3-ground); color: var(--av-k3-ink); }
 
@@ -834,7 +923,22 @@ body { font-family: var(--sc-font-text); }
   font-size: var(--sc-t-sm);
 }
 
-/* ---------- Chapter 5: Register (colophon close) ---------- */
+/* ---------- Chapter 5: Lineup (teaser, links out to the reveal) ---------- */
+/* The mystery-card reveal itself is its own full experience
+   (proto-lineup-real.html) — this chapter only teases it and hands off,
+   the same "link out, don't duplicate" pattern the Register close chapter
+   already uses for register.html/sponsor.html. */
+.av-lineup__title {
+  font-family: var(--sc-font-display);
+  font-weight: 700;
+  font-size: var(--sc-t-3xl);
+  color: var(--sc-ink);
+  max-width: 26ch;
+  text-wrap: balance;
+  margin: var(--sc-3) 0;
+}
+
+/* ---------- Chapter 6: Register (colophon close) ---------- */
 /* This element also becomes .sc-stage at mount time — no height here for
    the same reason as .av-split-stage above. It already gets 100vh from the
    engine, so the flex column centers within that automatically. */
@@ -883,12 +987,28 @@ body { font-family: var(--sc-font-text); }
   color: var(--sc-ink-soft);
   font-size: var(--sc-t-sm);
 }
+.av-close__legal {
+  margin-top: var(--sc-2);
+  color: var(--sc-ink-soft);
+  font-size: var(--sc-t-sm);
+}
+.av-close__legal a {
+  color: var(--sc-ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.av-close__legal a:hover { color: var(--sc-ink); }
+.av-close__legal a:focus-visible {
+  outline: 2px solid var(--sc-accent);
+  outline-offset: 3px;
+}
 
 /* ---------- Responsive: step the hero down below ~700px, per taste.md ---------- */
 @media (max-width: 700px) {
   .av-hero__title { font-size: var(--sc-t-2xl); }
   .av-close__title, .av-split-intro h2 { font-size: var(--sc-t-2xl); }
   .av-countdown { flex-wrap: wrap; }
+  .av-hero__cta { width: 100%; text-align: center; }
   .av-stats { grid-template-columns: 1fr; }
   .av-panel__name { font-size: var(--sc-t-xl); }
   .av-team { grid-template-columns: 1fr 1fr; }

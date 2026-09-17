@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PROTOTYPE — Artist Reveal</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  @font-face {
+    font-family: 'Sora';
+    src: url('assets/fonts/Sora-Variable.ttf') format('truetype-variations');
+    font-weight: 100 800; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/Inter-Variable.ttf') format('truetype-variations');
+    font-weight: 100 900; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('assets/fonts/Fraunces-Variable.ttf') format('truetype-variations');
+    font-weight: 300 700; font-style: normal; font-display: swap;
+  }
+
+  :root {
+    --ink: #efece6;
+    --ink-soft: #a9a6a0;
+    --canvas: #0b0b0d;
+    --canvas-deep: #060607;
+    --accent: #e0b455;
+    --accent-bright: #f3d38a;
+    --accent-dim: #6b5527;
+    --sc-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    position: relative;
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100svh;
+    padding: 8rem 1.5rem 5rem;
+    background-image: radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 70%);
+    transition: background-image 0.6s ease;
+  }
+
+  .wrap { max-width: 40rem; margin: 0 auto; }
+
+  /* Timing token borrowed from scrollcraft (--sc-ease-out) so this still
+     moves like the rest of the site, even though each element below now
+     gets its OWN distinct entrance instead of one repeated fade-up:
+       - [data-reveal="wipe"]        text — masked wipe sliding up from
+                                      behind the card, not a plain fade.
+       - [data-reveal="materialize"] the disc player — scales up out of a
+                                      blur, like it's condensing into focus.
+                                      (The portrait photo isn't a separate
+                                      reveal at all — see flyPhotoToPortrait,
+                                      it's the same image flying in from
+                                      the small card, not a second copy.)
+       - .reveal-ring                a ripple that expands outward from
+                                      the card itself at the moment of click. */
+  [data-reveal="wipe"] {
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+    transform: translate3d(0, 22px, 0);
+    transition: opacity 0.5s var(--sc-ease-out), clip-path 0.75s var(--sc-ease-out), transform 0.75s var(--sc-ease-out);
+  }
+  [data-reveal="wipe"].sc-in { opacity: 1; clip-path: inset(0 0 0 0); transform: none; }
+
+  [data-reveal="materialize"] {
+    opacity: 0;
+    transform: scale(0.35) rotate(-18deg);
+    filter: blur(9px);
+    transition: opacity 0.55s var(--sc-ease-out), transform 0.8s var(--sc-ease-out), filter 0.7s var(--sc-ease-out);
+  }
+  [data-reveal="materialize"].sc-in { opacity: 1; transform: none; filter: blur(0); }
+
+  .reveal-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 100%; height: 100%;
+    border-radius: 20px;
+    border: 2px solid var(--accent);
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.85;
+    pointer-events: none;
+    z-index: 3;
+    animation: revealRingExpand 0.9s var(--sc-ease-out) forwards;
+  }
+  @keyframes revealRingExpand {
+    to { transform: translate(-50%, -50%) scale(2.6); opacity: 0; border-width: 0.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal="wipe"], [data-reveal="materialize"] { transform: none; filter: none; clip-path: none; transition-duration: 220ms; }
+    .reveal-ring { display: none; }
+  }
+
+  /* Blocks all input anywhere on the page for the duration of the reveal
+     sequence — clicking the card mid-flight shouldn't let you jump to the
+     nav or back-link before the choreography finishes. */
+  .reveal-lock {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: transparent;
+    cursor: default;
+  }
+
+  .reveal-caption {
+    text-align: center;
+    margin: 0 0 1.6rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 1;
+    transition: opacity 0.45s var(--sc-ease-out);
+  }
+  .reveal-caption.is-hidden { opacity: 0; }
+
+  /* Flip card — one-way. Front is a blank rank/suit face (mystery already
+     resolved by the time you're here; the card is ceremony, not a second
+     guessing game). Clicking flips it to the real photo and never back. */
+  .flip-card-scene {
+    position: relative;
+    width: clamp(9.5rem, 40vw, 12.5rem);
+    aspect-ratio: 5 / 7;
+    margin: 0 auto 2.2rem;
+    perspective: 60rem;
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+    animation: flipCardArrive 0.7s var(--sc-ease-out) forwards;
+    animation-delay: 0.05s;
+  }
+  .intro-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0;
+    font-family: 'Sora', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    font-size: clamp(1.7rem, 9vw, 2.5rem);
+    color: var(--accent-bright);
+    opacity: 0;
+    transition: opacity 0.6s var(--sc-ease-out);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .intro-text.is-visible { opacity: 1; }
+
+  /* Ambient reveal glow — four neon strips laid along the page's own
+     edges (not the viewport: this layer is position:absolute against
+     .body, which is exactly as tall as the page's real content, so the
+     bars sit at the top/bottom of the document and scroll away with it
+     instead of staying pinned to the screen) plus the light they throw
+     onto the page, each in the artist's own accent colour. Breathes
+     brighter/dimmer on a repeating rhythm once revealed. */
+  .ambient-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.1s var(--sc-ease-out);
+  }
+  .ambient-glow.is-active { opacity: 1; }
+  .ambient-glow__bar {
+    position: absolute;
+    background: var(--accent-bright);
+    box-shadow:
+      0 0 8px 1px var(--accent-bright),
+      0 0 34px 8px color-mix(in oklab, var(--accent) 75%, transparent),
+      0 0 90px 26px color-mix(in oklab, var(--accent) 45%, transparent),
+      0 0 160px 50px color-mix(in oklab, var(--accent) 22%, transparent);
+  }
+  .ambient-glow__bar--top { top: 0; left: 0; right: 0; height: 3px; }
+  .ambient-glow__bar--bottom { bottom: 0; left: 0; right: 0; height: 3px; }
+  .ambient-glow__bar--left { top: 0; bottom: 0; left: 0; width: 3px; }
+  .ambient-glow__bar--right { top: 0; bottom: 0; right: 0; width: 3px; }
+  .ambient-glow.is-active .ambient-glow__bar {
+    animation: ambientGlowPulse 3.6s ease-in-out infinite;
+  }
+  @keyframes ambientGlowPulse {
+    0%, 100% { opacity: 0.6; filter: brightness(0.82); }
+    50% { opacity: 1; filter: brightness(1.2); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ambient-glow.is-active .ambient-glow__bar { animation: none; opacity: 0.85; }
+  }
+  @keyframes flipCardArrive {
+    60% { opacity: 1; transform: translateY(0) scale(1.015); filter: drop-shadow(0 0 22px color-mix(in oklab, var(--accent) 55%, transparent)); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 transparent); }
+  }
+  .flip-card-3d {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.8s var(--sc-ease-out);
+  }
+  .flip-card-3d.is-flipped { transform: rotateY(180deg); cursor: default; }
+  .flip-card-3d:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .flip-card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--accent-dim);
+    box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--accent) 35%, transparent);
+  }
+  .flip-card-face--front {
+    background: linear-gradient(180deg, var(--canvas-deep) 0%, #000 100%);
+    padding: 0.7rem;
+    justify-content: space-between;
+  }
+  .flip-card-corner {
+    display: flex;
+    align-items: center;
+    gap: 0.22rem;
+    font-family: 'Fraunces', serif;
+    color: var(--accent);
+    font-size: 1.05rem;
+    line-height: 1;
+    flex: none;
+  }
+  .flip-card-corner svg { width: 0.8rem; height: 0.8rem; fill: var(--accent); }
+  .flip-card-corner--tl { align-self: flex-start; }
+  .flip-card-corner--br { align-self: flex-end; transform: rotate(180deg); }
+  .flip-card-mark { flex: 1; display: flex; align-items: center; justify-content: center; opacity: 0.85; color: var(--accent); }
+  .flip-card-mark svg { width: 58%; }
+  .flip-card-face--back {
+    transform: rotateY(180deg);
+    background: #000;
+  }
+  .flip-card-face--back img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .flip-card-back-scrim {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 0.7rem 0.7rem 0.6rem;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.92) 70%);
+    text-align: center;
+  }
+  .flip-card-back-rank {
+    font-family: 'Sora', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.15rem;
+  }
+  .flip-card-back-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    color: var(--accent-bright);
+    margin: 0;
+  }
+
+  .proto-banner {
+    margin: 0 auto 2.5rem;
+    text-align: center;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--accent-dim);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .proto-banner strong { color: var(--accent); }
+
+  .back-link {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .card {
+    position: relative;
+    border: 1px solid var(--accent-dim);
+    border-radius: 20px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #000 0%, var(--canvas-deep) 55%, #050506 100%);
+    padding: 2.2rem 1.8rem 2.4rem;
+    /* Hidden until the reveal script morphs it open — see revealArtist().
+       Starts sized/positioned like the small flip-card via an inline
+       transform, then animates to its natural size, so the box reads as
+       forming around the card rather than two unrelated things fading in. */
+    opacity: 0;
+    visibility: hidden;
+  }
+  .card.is-forming { transition: transform 0.65s var(--sc-ease-out), opacity 0.45s var(--sc-ease-out); }
+  .card.is-forming-border { transition: border-color 0.4s var(--sc-ease-out); }
+
+  .portrait {
+    position: relative;
+    width: 100%;
+    max-width: 16rem;
+    aspect-ratio: 3/4;
+    margin: 0 auto 1.6rem;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--accent-dim);
+    box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--accent) 45%, transparent);
+  }
+  .portrait img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: saturate(1.05);
+  }
+  .portrait::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 55%, color-mix(in oklab, var(--canvas-deep) 85%, transparent) 100%);
+  }
+
+  .numeral {
+    display: block;
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    color: var(--accent-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .artist-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 6vw, 2.6rem);
+    margin: 0 0 0.6rem;
+    text-align: center;
+    color: var(--accent-bright);
+  }
+  .genre-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.4rem;
+  }
+  .genre-chip {
+    font-family: 'Sora', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+    border-radius: 999px;
+    padding: 0.3rem 0.7rem;
+  }
+  .bio {
+    max-width: 32rem;
+    margin: 0 auto 1.6rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    font-size: 0.95rem;
+    text-align: center;
+  }
+  .bio strong { color: var(--ink); font-weight: 600; }
+  .fact-row {
+    display: flex;
+    justify-content: center;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.4rem;
+  }
+  .fact {
+    text-align: center;
+  }
+  .fact dt {
+    font-family: 'Sora', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    margin-bottom: 0.2rem;
+  }
+  .fact dd {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--ink);
+  }
+  .source-note {
+    text-align: center;
+    font-size: 0.68rem;
+    color: var(--ink-soft);
+    margin-top: 1.6rem;
+  }
+  .source-note a { color: var(--accent); text-decoration: none; }
+  .source-note a:hover { text-decoration: underline; }
+
+  .lineup-nav {
+    margin: 2.5rem auto 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+  .lineup-nav a {
+    width: 2.4rem; height: 2.4rem;
+    border-radius: 999px;
+    border: 1px solid var(--accent-dim);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-family: 'Fraunces', serif;
+    font-size: 0.85rem;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .lineup-nav a:hover { border-color: var(--accent); color: var(--accent); }
+  .lineup-nav a[aria-current="true"] { border-color: var(--accent); color: var(--accent); background: color-mix(in oklab, var(--accent) 12%, transparent); }
+
+  /* Top-right disc player — plays the real track via a plain <audio>
+     element (see artist.audioSrc); everything visible here is a custom
+     vinyl skin wrapped around that element's play/pause state.
+     Idle: just the spinning disc. Hover/focus: expands leftward to reveal
+     title, artist, and the pause/resume button — disc stays anchored top
+     right the whole time, so it never overlaps the portrait below it. */
+  .disc-player {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 6;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 0.5rem;
+    width: 2.9rem;
+    height: 2.9rem;
+    padding: 0.2rem;
+    border-radius: 999px;
+    border: 1px solid var(--accent-dim);
+    background: color-mix(in oklab, var(--canvas-deep) 88%, transparent);
+    backdrop-filter: blur(6px);
+    overflow: hidden;
+    transition: width 0.38s cubic-bezier(0.22, 1, 0.36, 1), padding 0.38s ease;
+  }
+  .disc-player:hover, .disc-player:focus-within {
+    /* Shrink-to-fit, not a fixed target width — .disc-player__body below
+       no longer grows to fill it, so the bar only ever extends as far as
+       the song/artist text (plus disc + toggle) actually needs, capped
+       so a long name can't push the bar off the left edge of the card. */
+    width: auto;
+    max-width: min(72%, 13rem);
+    padding: 0.3rem 0.7rem 0.3rem 0.3rem;
+  }
+  .disc-player__disc {
+    position: relative;
+    width: 2.4rem;
+    height: 2.4rem;
+    flex: none;
+    border-radius: 50%;
+    background:
+      repeating-radial-gradient(circle at 50% 50%, #0c0c0d 0 2px, #1b1b1d 2px 4px),
+      radial-gradient(circle at 40% 35%, rgba(255,255,255,0.12), transparent 60%);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 6px 14px -6px rgba(0,0,0,0.7);
+    animation: discSpin 2.8s linear infinite;
+    animation-play-state: paused;
+  }
+  .disc-player.is-playing .disc-player__disc { animation-play-state: running; }
+  @keyframes discSpin { to { transform: rotate(360deg); } }
+  .disc-player__art {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 42%; height: 42%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #050506;
+  }
+  .disc-player__body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    /* was flex: 1 1 auto — that stretched to fill the bar's old fixed
+       hover width, leaving dead space after short song names. Sized to
+       its own text now; only shrinks (never grows) if max-width above
+       ever has to clip a long name. */
+    flex: 0 1 auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  .disc-player:hover .disc-player__body, .disc-player:focus-within .disc-player__body { opacity: 1; }
+  .disc-player__song {
+    margin: 0;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 0.74rem;
+    color: var(--accent-bright);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .disc-player__artist {
+    margin: 0.1rem 0 0;
+    font-size: 0.64rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .disc-player__toggle {
+    flex: none;
+    width: 1.9rem; height: 1.9rem;
+    border-radius: 50%;
+    border: 1px solid var(--accent-dim);
+    background: transparent;
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+  .disc-player:hover .disc-player__toggle, .disc-player:focus-within .disc-player__toggle { opacity: 1; pointer-events: auto; }
+  .disc-player__toggle:hover { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 14%, transparent); }
+  .disc-player__toggle:disabled { opacity: 0.4 !important; cursor: default; }
+  .disc-player__toggle svg { width: 0.85rem; height: 0.85rem; fill: currentColor; }
+  .disc-player__toggle svg[hidden] { display: none; }
+  .disc-player__note {
+    margin: 0.1rem 0 0;
+    font-size: 0.58rem;
+    color: var(--ink-soft);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .disc-player:hover .disc-player__note, .disc-player:focus-within .disc-player__note { opacity: 1; }
+
+  @media (max-width: 600px) {
+    /* No real hover on touch — keep it always expanded instead of stuck
+       collapsed with no way to reach the button. */
+    .disc-player {
+      position: static;
+      flex-direction: row;
+      width: auto;
+      height: auto;
+      margin: 0 auto 1.6rem;
+      max-width: 15rem;
+      padding: 0.4rem 0.8rem 0.4rem 0.4rem;
+    }
+    .disc-player__body, .disc-player__toggle, .disc-player__note { opacity: 1; pointer-events: auto; }
+    .card { padding-top: 1.6rem; }
+  }
+
+  /* Nav retinted per-artist, same as every other accent surface on this
+     page (card border, portrait border, disc-player, ambient-glow) — the
+     one nav-brand-colour surface that would otherwise stay a mismatched
+     hardcoded gold from css/styles.css regardless of which artist this is. */
+  .site-header .logo span,
+  .site-header .logo-mark { color: var(--accent); }
+  .site-header .nav-cta { background: linear-gradient(135deg, var(--accent), var(--accent-dim)); }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="resonance-mark" viewBox="0 0 120 120">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+      <line x1="60" y1="8" x2="60" y2="112"></line>
+      <path d="M66.8,41.2 A20,20 0 0 1 66.8,78.8"></path>
+      <path d="M53.2,41.2 A20,20 0 0 0 53.2,78.8"></path>
+      <path d="M71.6,28.1 A34,34 0 0 1 71.6,91.9"></path>
+      <path d="M48.4,28.1 A34,34 0 0 0 48.4,91.9"></path>
+      <path d="M76.4,14.9 A48,48 0 0 1 76.4,105.1"></path>
+      <path d="M43.6,14.9 A48,48 0 0 0 43.6,105.1"></path>
+    </g>
+    <circle cx="60" cy="60" r="4" fill="currentColor"></circle>
+  </symbol>
+</svg>
+
+<!-- ============ NAV ============ -->
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
+      <span class="logo-text">Accord <span>VI</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="info.html" class="nav-link">Info</a>
+      <a href="sponsor.html" class="nav-link">Sponsors</a>
+      <a href="privacy-policy.html" class="nav-link">Privacy</a>
+      <a href="register.html" class="nav-cta">Register</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="ambient-glow" id="ambientGlow" aria-hidden="true">
+  <span class="ambient-glow__bar ambient-glow__bar--top"></span>
+  <span class="ambient-glow__bar ambient-glow__bar--bottom"></span>
+  <span class="ambient-glow__bar ambient-glow__bar--left"></span>
+  <span class="ambient-glow__bar ambient-glow__bar--right"></span>
+</div>
+
+<div class="wrap" id="main">
+
+<p class="proto-banner">PROTOTYPE — <strong>real stats, real genre, real song</strong> for each confirmed artist (Wikipedia/Apple Music/Spotify). Audio file to be added. Not linked from the live site yet.</p>
+
+<a href="proto-lineup-sparkle.html" class="back-link" id="backLink">← Back to the lineup</a>
+
+<p class="reveal-caption" id="revealCaption">Click to reveal</p>
+
+<div class="flip-card-scene">
+  <div class="flip-card-3d" id="flipCard" role="button" tabindex="0" aria-label="Click to reveal">
+    <div class="flip-card-face flip-card-face--front">
+      <span class="flip-card-corner flip-card-corner--tl" id="flipCornerTl"></span>
+      <div class="flip-card-mark" id="flipMark"></div>
+      <span class="flip-card-corner flip-card-corner--br" id="flipCornerBr"></span>
+    </div>
+    <div class="flip-card-face flip-card-face--back">
+      <img id="flipBackImg" src="" alt="">
+      <div class="flip-card-back-scrim">
+        <p class="flip-card-back-rank" id="flipBackRank"></p>
+        <p class="flip-card-back-name" id="flipBackName"></p>
+      </div>
+    </div>
+  </div>
+  <p class="intro-text" id="introText">Accord Introduces</p>
+</div>
+
+<div class="card" id="card">
+
+  <div class="disc-player" id="discPlayer" data-reveal="materialize">
+    <div class="disc-player__disc" id="discSpin">
+      <img class="disc-player__art" id="discArt" src="" alt="">
+    </div>
+    <div class="disc-player__body">
+      <p class="disc-player__song" id="discSong">Song</p>
+      <p class="disc-player__artist" id="discArtist">Artist</p>
+      <p class="disc-player__note" id="discNote" hidden>Preview unavailable offline</p>
+    </div>
+    <button type="button" class="disc-player__toggle" id="discToggle" aria-label="Pause">
+      <svg id="discIconPause" viewBox="0 0 24 24"><rect x="5" y="4" width="5" height="16"></rect><rect x="14" y="4" width="5" height="16"></rect></svg>
+      <svg id="discIconPlay" viewBox="0 0 24 24" hidden><path d="M6 4l14 8-14 8z"></path></svg>
+    </button>
+  </div>
+
+  <p class="numeral" id="numeral" data-reveal="wipe">Artist I</p>
+  <div class="portrait"></div>
+  <h1 class="artist-name" id="artistName" data-reveal="wipe">Name</h1>
+  <div class="genre-row" id="genreRow" data-reveal="wipe"></div>
+  <p class="bio" id="bioText" data-reveal="wipe"></p>
+  <dl class="fact-row" id="factRow" data-reveal="wipe"></dl>
+
+</div>
+
+<p class="source-note" id="sourceNote"></p>
+
+<nav class="lineup-nav" aria-label="Other confirmed artists" id="lineupNav"></nav>
+
+</div>
+
+<audio id="trackAudio" preload="none" loop></audio>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+  }
+
+  // Real, source-checked per-artist content — see Wikipedia (Hasan Raheem),
+  // Apple Music + Spotify (Nehaal Naseem, Sabat Batin). No fabricated
+  // names, stats, or quotes. Spotify track IDs point at each artist's own
+  // actual release; playback runs through Spotify's official iFrame API —
+  // a hidden 1x1 embed is the real, licensed audio engine, and everything
+  // visible here (the disc, the pause button) is a custom skin on top of
+  // that controller's state, not a rehosted audio file.
+  const ARTISTS = {
+    '1': {
+      numeral: 'I',
+      rank: 'King', letter: 'K',
+      // Mountains (Gilgit-Baltistan, his hometown) over an EQ-bar line —
+      // his own hometown + his own instrument, not a generic mark.
+      motif: '<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 66 L25 34 L38 54 L52 20 L68 54 L80 36 L95 66"/><path d="M14 100 v-14 M26 100 v-24 M38 100 v-10 M50 100 v-30 M62 100 v-16 M74 100 v-22 M86 100 v-12"/></svg>',
+      name: 'Hasan Raheem',
+      img: 'assets/lineup-real/hasan-raheem-portrait.png',
+      genres: ['R&B', 'Hip Hop', 'Indie'],
+      // Ring-announcer cadence (hometown callout, tale-of-the-tape stats,
+      // name held for the finish) — real numbers only, and "Nashe Mein
+      // Hun" (the song field below) is the track that actually plays,
+      // NOT the breakout single named here — those are two different
+      // songs, don't conflate them again.
+      bio: 'Straight out of Gilgit, Pakistan — a doctor who traded the stethoscope for the mic. Two-point-seven million monthly listeners deep and still counting. The record-breaker behind <strong>"Aisay Kaisay,"</strong> the single that put a whole new sound on the map. Ladies and gentlemen — your King, Hasan Raheem.',
+      facts: [['Hometown', 'Gilgit, Pakistan'], ['Background', 'Medical doctor turned musician'], ['Monthly listeners', '2.7M on Spotify']],
+      song: 'Nashe Mein Hun',
+      // Placeholder path — drop the real audio file here once you send
+      // it (any browser-playable format: mp3/m4a/ogg/wav).
+      audioSrc: 'assets/audio/hasan-raheem.mp3',
+      sourceHref: 'https://en.wikipedia.org/wiki/Hasan_Raheem',
+      sourceLabel: 'Wikipedia',
+      theme: '#b57382', themeBright: '#d8b6bd', themeDim: '#5e313b',
+    },
+    '2': {
+      numeral: 'II',
+      rank: 'Queen', letter: 'Q',
+      // A four-petal bloom — bright, pop, youthful.
+      motif: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="50" cy="50" r="7"/><path d="M50 41 C41 22 31 17 21 22 C27 32 36 39 43 44"/><path d="M58 41 C67 22 77 17 87 22 C81 32 72 39 65 44"/><path d="M43 56 C22 61 17 71 22 81 C32 75 39 66 44 59"/><path d="M58 56 C79 61 84 71 79 81 C69 75 62 66 57 59"/><path d="M50 57 L50 78"/></svg>',
+      name: 'Nehaal Naseem',
+      img: 'assets/lineup-real/nehaal-naseem-portrait.png',
+      genres: ['Urdu Pop', 'OST'],
+      bio: 'Straight out of Islamabad, Pakistan — nearly a million monthly listeners, and she is not finished climbing. One hundred five million streams on the board. Spotify’s first EQUAL Pakistan Ambassador. Ladies and gentlemen — your Queen, Nehaal Naseem.',
+      facts: [['Hometown', 'Islamabad, Pakistan'], ['Sound', 'Bright, hooky mainstream pop'], ['Monthly listeners', '~970K on Spotify'], ['Total streams', '105M+ and counting']],
+      song: 'Sadqay',
+      audioSrc: 'assets/audio/nehaal-naseem.mp3',
+      sourceHref: 'https://music.apple.com/us/artist/nehaal-naseem/1630980641',
+      sourceLabel: 'Apple Music',
+      theme: '#a976b2', themeBright: '#d2b7d7', themeDim: '#55335b',
+    },
+    '3': {
+      numeral: 'III',
+      rank: 'Jack', letter: 'J',
+      // A layered diamond lattice — bold, geometric, hard-hitting.
+      motif: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M50 6 L72 50 L50 94 L28 50 Z"/><path d="M50 6 L50 94 M28 50 L72 50" stroke-width="1.5" opacity="0.55"/><path d="M50 28 L61 50 L50 72 L39 50 Z"/></svg>',
+      name: 'Sabaat Batin',
+      img: 'assets/lineup-real/sabaat-batin-portrait.png',
+      genres: ['Punjabi', 'Urdu/Hindi', 'Indie'],
+      bio: 'Two-point-two million monthly listeners strong. The record-breaker behind <strong>"Gal Sun,"</strong> one hundred forty-six million streams and still climbing, charting on both sides of the border. Ladies and gentlemen — your Jack, Sabaat Batin.',
+      facts: [['Sound', 'Punjabi / Urdu / Hindi indie'], ['Breakout', '"Gal Sun" ft. Rackstar'], ['Monthly listeners', '2.2M on Spotify'], ['"Gal Sun" streams', '146M+']],
+      song: 'Gal Sun',
+      audioSrc: 'assets/audio/sabaat-batin.mp3',
+      sourceHref: 'https://music.apple.com/in/artist/sabat-batin/1815800872',
+      sourceLabel: 'Apple Music',
+      theme: '#76a5b2', themeBright: '#b7d0d7', themeDim: '#33535b',
+    },
+  };
+
+  const params = new URLSearchParams(location.search);
+  const n = params.get('artist') || '2';
+  const from = params.get('from');
+  const artist = ARTISTS[n] || ARTISTS['2'];
+
+  const lineupPages = { real: 'proto-lineup-real.html', sparkle: 'proto-lineup-sparkle.html' };
+  document.getElementById('backLink').href = lineupPages[from] || 'proto-lineup-sparkle.html';
+
+  // Built from ARTISTS itself so the switcher can't drift out of sync with
+  // the numbering again — each link shows that artist's own stage numeral.
+  const lineupNav = document.getElementById('lineupNav');
+  Object.keys(ARTISTS).sort().forEach((key) => {
+    const a = document.createElement('a');
+    a.href = 'proto-artist.html?artist=' + key + (from ? '&from=' + from : '');
+    a.textContent = ARTISTS[key].numeral;
+    if (key === n) a.setAttribute('aria-current', 'true');
+    lineupNav.appendChild(a);
+  });
+
+  // Custom-to-them theming — each artist's page tints toward their own
+  // accent instead of sharing one identical gold treatment.
+  const root = document.documentElement;
+  root.style.setProperty('--accent', artist.theme);
+  root.style.setProperty('--accent-bright', artist.themeBright);
+  root.style.setProperty('--accent-dim', artist.themeDim);
+
+  // Letters only in the corners now (no icon) — the center gets a
+  // hand-authored line-art motif per artist instead of a generic suit
+  // symbol. Note: true AI-illustrated portraits aren't available in this
+  // toolset (Adobe's generative image tools here don't do illustration/
+  // face generation), so these are drawn by hand, keyed to each artist's
+  // real vibe and their own extracted photo color.
+  document.getElementById('flipCornerTl').textContent = artist.letter;
+  document.getElementById('flipCornerBr').textContent = artist.letter;
+  document.getElementById('flipMark').innerHTML = artist.motif;
+  document.getElementById('flipBackImg').src = artist.img;
+  document.getElementById('flipBackImg').alt = artist.name;
+  document.getElementById('flipBackRank').textContent = artist.rank;
+  document.getElementById('flipBackName').textContent = artist.name;
+
+  document.getElementById('numeral').textContent = 'Artist ' + artist.numeral;
+  document.getElementById('artistName').textContent = artist.name;
+  document.title = artist.name + ' — Accord VI Lineup (Prototype)';
+
+  const genreRow = document.getElementById('genreRow');
+  artist.genres.forEach((g) => {
+    const span = document.createElement('span');
+    span.className = 'genre-chip';
+    span.textContent = g;
+    genreRow.appendChild(span);
+  });
+
+  document.getElementById('bioText').innerHTML = artist.bio;
+
+  const factRow = document.getElementById('factRow');
+  artist.facts.forEach(([label, value]) => {
+    const dt = document.createElement('dt'); dt.textContent = label;
+    const dd = document.createElement('dd'); dd.textContent = value;
+    const wrap = document.createElement('div'); wrap.className = 'fact';
+    wrap.appendChild(dt); wrap.appendChild(dd);
+    factRow.appendChild(wrap);
+  });
+
+  document.getElementById('sourceNote').innerHTML =
+    'Bio sourced from <a href="' + artist.sourceHref + '" target="_blank" rel="noopener">' + artist.sourceLabel + '</a>.';
+
+  // Disc player
+  const discPlayer = document.getElementById('discPlayer');
+  const discArt = document.getElementById('discArt');
+  const discSong = document.getElementById('discSong');
+  const discArtist = document.getElementById('discArtist');
+  const discNote = document.getElementById('discNote');
+  const discToggle = document.getElementById('discToggle');
+  const iconPause = document.getElementById('discIconPause');
+  const iconPlay = document.getElementById('discIconPlay');
+
+  discArt.src = artist.img;
+  discArt.alt = artist.name;
+  discSong.textContent = artist.song;
+  discArtist.textContent = artist.name;
+
+  const trackAudio = document.getElementById('trackAudio');
+  trackAudio.src = artist.audioSrc;
+  let audioFailed = false;
+  let revealed = false;
+
+  // SVGElement doesn't reliably reflect the `.hidden` IDL property to a
+  // real attribute in every engine (it's an HTMLElement-only accessor in
+  // spec terms) — setting it silently no-ops on <svg>, leaving the icon
+  // stuck at whatever the static markup had. setAttribute/removeAttribute
+  // touch the actual attribute directly, so the [hidden] CSS rule and the
+  // element's real visibility both update correctly.
+  function setIconHidden(el, hide) {
+    if (hide) el.setAttribute('hidden', ''); else el.removeAttribute('hidden');
+  }
+
+  function setPlayingUI(isPlaying) {
+    discPlayer.classList.toggle('is-playing', isPlaying);
+    setIconHidden(iconPause, !isPlaying);
+    setIconHidden(iconPlay, isPlaying);
+    discToggle.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
+  }
+
+  // Plain <audio> element — simple, reliable play/pause/error events,
+  // no iframe/postMessage cross-origin quirks. Swap artist.audioSrc to
+  // the real file once it's provided; the player logic doesn't change.
+  trackAudio.addEventListener('play', () => setPlayingUI(true));
+  trackAudio.addEventListener('pause', () => setPlayingUI(false));
+  trackAudio.addEventListener('error', () => {
+    audioFailed = true;
+    discToggle.disabled = true;
+    discNote.hidden = false;
+  });
+
+  discToggle.addEventListener('click', () => {
+    if (trackAudio.paused) trackAudio.play().catch(() => {});
+    else trackAudio.pause();
+    // Clicking gives the button real browser focus, which keeps
+    // :focus-within true on the disc-player and holds it open even after
+    // the mouse leaves. Blur it right away so hover is the only thing
+    // that expands it, and it collapses back to just the spinning disc
+    // the instant the pointer moves off.
+    discToggle.blur();
+  });
+
+  // One-way reveal: flipping the card also fades out the "click to reveal"
+  // caption, fades/staggers in the bio card (scrollcraft's own sc-in
+  // pattern), and is what actually starts the music — cause and effect,
+  // not three unrelated things happening on page load.
+  const flipCard = document.getElementById('flipCard');
+  const revealCaption = document.getElementById('revealCaption');
+  const introText = document.getElementById('introText');
+
+  // FLIP technique: size/position #card to exactly match the small
+  // flip-card's current screen rect (via a transform, while still
+  // display:none-free so layout is real), then let it transition to its
+  // natural size — reads as the box forming around/out of the card
+  // instead of two unrelated elements independently fading in.
+  // A PowerPoint-style Push/Glide, not a grow-from-tiny-card morph: pure
+  // vertical translate at natural size the whole time, no scaling. The
+  // box glides down into its resting position like an incoming slide,
+  // while the small card (slide 1) is what's leaving that same spot.
+  function morphCardOpen() {
+    const card = document.getElementById('card');
+    card.style.transition = 'none';
+    card.style.transform = 'translateY(-48px)';
+    card.style.opacity = '0';
+    card.style.borderColor = 'transparent';
+    card.style.visibility = 'visible';
+
+    requestAnimationFrame(() => {
+      card.classList.add('is-forming');
+      requestAnimationFrame(() => {
+        card.style.transform = 'none';
+        card.style.opacity = '1';
+      });
+    });
+
+    // "The outer border forms around the card" — a distinct second beat
+    // after the glide has landed, not part of the same motion.
+    setTimeout(() => {
+      card.classList.add('is-forming-border');
+      card.style.borderColor = '';
+    }, 650);
+  }
+
+  // There is only ever ONE photo of the artist, not two coincidentally
+  // matching images. The exact <img> revealed on the back of the small
+  // card is what flies down and grows into the portrait slot — an
+  // uninterruptible, non-pausable single motion (FLIP technique: capture
+  // both rects, plant a position:fixed traveler at the start rect, then
+  // transition it to the end rect). Once it lands, it's reparented into
+  // .portrait and the traveler is discarded, so nothing is duplicated.
+  function flyPhotoToPortrait() {
+    const sourceImg = document.getElementById('flipBackImg');
+    const portrait = document.querySelector('.portrait');
+    const startRect = sourceImg.getBoundingClientRect();
+
+    portrait.style.visibility = 'hidden';
+    const endRect = portrait.getBoundingClientRect();
+    portrait.style.visibility = 'visible';
+
+    // Transform-based FLIP, not left/top/width/height: animating layout
+    // properties forces a reflow every frame, which is why it looked like
+    // a teleport instead of a glide. Plant the traveler already sized and
+    // positioned at its FINAL rect, but apply an inverse translate+scale
+    // so it visually sits at the start rect — then transition that
+    // transform to none. The browser only has to composite a transform,
+    // which is smooth regardless of frame drops.
+    const scaleX = startRect.width / endRect.width;
+    const scaleY = startRect.height / endRect.height;
+    const dx = (startRect.left + startRect.width / 2) - (endRect.left + endRect.width / 2);
+    const dy = (startRect.top + startRect.height / 2) - (endRect.top + endRect.height / 2);
+
+    const traveler = document.createElement('img');
+    traveler.src = sourceImg.src;
+    traveler.alt = sourceImg.alt;
+    Object.assign(traveler.style, {
+      position: 'fixed',
+      left: endRect.left + 'px',
+      top: endRect.top + 'px',
+      width: endRect.width + 'px',
+      height: endRect.height + 'px',
+      objectFit: 'cover',
+      borderRadius: '16px',
+      zIndex: '50',
+      margin: '0',
+      transformOrigin: 'center center',
+      transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + scaleX + ',' + scaleY + ')',
+      willChange: 'transform',
+      transition: 'transform 0.8s var(--sc-ease-out)',
+    });
+    document.body.appendChild(traveler);
+
+    // The small card (now emptied of its photo) fades away — the photo
+    // itself is what carries on into the box, not a copy of it. Fade
+    // *flipCard* itself, not its parent .flip-card-scene: introText is a
+    // SIBLING inside that same parent, and CSS opacity compounds through
+    // the whole subtree — fading the parent would silently take the
+    // intro text down to invisible with it, no matter what opacity the
+    // text's own rule set.
+    // Glides down slightly as it fades — same direction as the box
+    // gliding in below, like a Push transition where both halves move
+    // the same way instead of the outgoing one just fading in place.
+    // Must keep rotateY(180deg) in the same transform value — an inline
+    // style completely replaces the .is-flipped class's transform for
+    // that property, so setting translateY alone would un-flip the card.
+    flipCard.style.transition = 'opacity 0.4s ease, transform 0.4s var(--sc-ease-out)';
+    flipCard.style.opacity = '0';
+    flipCard.style.transform = 'translateY(24px) rotateY(180deg)';
+
+    requestAnimationFrame(() => {
+      traveler.style.transform = 'none';
+    });
+
+    setTimeout(() => {
+      portrait.appendChild(traveler);
+      Object.assign(traveler.style, {
+        position: 'absolute', inset: '0', left: '', top: '', zIndex: '', transition: '', margin: '',
+        width: '100%', height: '100%', transform: '', willChange: '',
+      });
+      // "Accord Introduces" fills the spot the card just vacated — the
+      // name already appears below, so this doesn't repeat it.
+      introText.classList.add('is-visible');
+    }, 830);
+  }
+
+  // Exact sequence requested: flip + music together, then the box grows
+  // and moves into place, then its border forms as its own beat, then
+  // text, then the music UI, then name/genre — each a distinct motion,
+  // and nothing else on the page is clickable until it's all done.
+  function revealArtist() {
+    if (revealed) return;
+    revealed = true;
+
+    const lock = document.createElement('div');
+    lock.className = 'reveal-lock';
+    document.body.appendChild(lock);
+
+    // The page's own background starts breathing in the artist's accent
+    // color the moment the reveal begins — brighter/bigger, then dimmer/
+    // smaller, looping for as long as the page is open (not a one-off).
+    document.getElementById('ambientGlow').classList.add('is-active');
+
+    // A ripple ring expands outward from the card itself — the "impact"
+    // of the click, separate from anything that flips or fades.
+    const ring = document.createElement('div');
+    ring.className = 'reveal-ring';
+    flipCard.parentElement.appendChild(ring);
+    ring.addEventListener('animationend', () => ring.remove());
+
+    flipCard.classList.add('is-flipped');
+    flipCard.setAttribute('aria-label', artist.name);
+    flipCard.removeAttribute('tabindex');
+    revealCaption.classList.add('is-hidden');
+
+    trackAudio.play().catch(() => {
+      audioFailed = true;
+      discToggle.disabled = true;
+      discNote.hidden = false;
+    });
+
+    // t=820ms: flip has landed — the box grows/moves into place (650ms,
+    // border forms 400ms after that) while, in parallel, the same photo
+    // flies out of the now-empty card and grows into the portrait slot.
+    setTimeout(() => {
+      morphCardOpen();
+      flyPhotoToPortrait();
+    }, 820);
+
+    // t=1870ms: "the text appears" — the announcer bio line.
+    const numeral = document.getElementById('numeral');
+    const bioText = document.getElementById('bioText');
+    numeral.style.transitionDelay = '1870ms';
+    numeral.classList.add('sc-in');
+    bioText.style.transitionDelay = '1960ms';
+    bioText.classList.add('sc-in');
+
+    // t=2100ms: "music UI appears" — the portrait already landed as part
+    // of flyPhotoToPortrait() above; only the disc player is left here.
+    const discPlayerEl = document.getElementById('discPlayer');
+    discPlayerEl.style.transitionDelay = '2100ms';
+    discPlayerEl.classList.add('sc-in');
+
+    // t=2450ms: "his name and genre appears" — last, as the finale.
+    const nameEl = document.getElementById('artistName');
+    const genreEl = document.getElementById('genreRow');
+    const factEl = document.getElementById('factRow');
+    nameEl.style.transitionDelay = '2450ms';
+    nameEl.classList.add('sc-in');
+    genreEl.style.transitionDelay = '2540ms';
+    genreEl.classList.add('sc-in');
+    factEl.style.transitionDelay = '2630ms';
+    factEl.classList.add('sc-in');
+
+    // Everything above has settled by ~3.4s — release the input lock.
+    // Clear the inline transition-delays once the entrance sequence has
+    // settled — left in place, they'd silently delay every *later*
+    // transition on these elements too (e.g. the disc-player's own
+    // hover-expand), since an inline transition-delay overrides the
+    // stylesheet's delay for that element indefinitely, not just once.
+    setTimeout(() => {
+      lock.remove();
+      [numeral, bioText, discPlayerEl, nameEl, genreEl, factEl].forEach((el) => {
+        el.style.transitionDelay = '';
+      });
+    }, 3400);
+  }
+
+  flipCard.addEventListener('click', revealArtist);
+  flipCard.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); revealArtist(); }
+  });
+</script>
+</body>
+</html>

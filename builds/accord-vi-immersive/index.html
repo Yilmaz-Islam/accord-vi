@@ -3,6 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // Desktop/mobile build switch. Decided once, synchronously, before any
+  // markup renders — no flash of the wrong build. Three chapters (Two
+  // Nights, Proof, Register) each carry two versions in the DOM: a pinned
+  // scroll-scrubbed one for desktop, and a plain-flow one for mobile (pin/
+  // pan/parallax math is real per-frame main-thread cost on exactly the
+  // low-powered devices where it's tightest — see app.js's own comments on
+  // this). The other chapters have no pin/pan act at all, so they're
+  // shared unchanged between both builds. 760px matches this codebase's
+  // one existing mobile breakpoint (see style.css).
+  document.documentElement.classList.add(
+    matchMedia('(max-width: 760px)').matches ? 'is-mobile' : 'is-desktop'
+  );
+</script>
 <title>Accord VI · Two nights, one scroll</title>
 <meta name="description" content="Accord VI: a two-night celebration of music at Beaconhouse Cantt Campus, Multan. Live Concert on 18 October, Qawwali Night on 19 October.">
 <link rel="canonical" href="https://yilmaz-islam.github.io/accord-vi/">
@@ -41,7 +55,7 @@
       "name": "Two-night pass",
       "priceCurrency": "PKR",
       "price": "3500",
-      "url": "https://yilmaz-islam.github.io/accord-vi-info/register.html",
+      "url": "https://yilmaz-islam.github.io/accord-vi/register.html",
       "availability": "https://schema.org/InStock"
     },
     {
@@ -49,7 +63,7 @@
       "name": "Live Concert only (18 October)",
       "priceCurrency": "PKR",
       "price": "2500",
-      "url": "https://yilmaz-islam.github.io/accord-vi-info/register.html",
+      "url": "https://yilmaz-islam.github.io/accord-vi/register.html",
       "availability": "https://schema.org/InStock"
     }
   ],
@@ -120,43 +134,47 @@
            the number just swapping in place. The back face is pre-rotated
            180deg so it lands upright once the flip completes — see
            app.js for the flip-then-swap-then-reset sequence. -->
-      <div class="av-countdown" aria-label="Time remaining until Accord VI">
-        <div class="av-flip">
-          <div class="av-flip__card" id="avDaysCard">
-            <div class="av-flip__inner">
-              <div class="av-flip__face av-flip__face--front"><span class="av-flip__num" id="avDays">–</span></div>
-              <div class="av-flip__face av-flip__face--back"><span class="av-flip__num" id="avDaysBack">–</span></div>
+      <div class="av-hero__countdown-row">
+        <div class="av-countdown" aria-label="Time remaining until Accord VI">
+          <div class="av-flip">
+            <div class="av-flip__card" id="avDaysCard">
+              <div class="av-flip__inner">
+                <div class="av-flip__face av-flip__face--front"><span class="av-flip__num" id="avDays">–</span></div>
+                <div class="av-flip__face av-flip__face--back"><span class="av-flip__num" id="avDaysBack">–</span></div>
+              </div>
             </div>
+            <span class="av-countdown__label">Days</span>
           </div>
-          <span class="av-countdown__label">Days</span>
-        </div>
-        <div class="av-flip">
-          <div class="av-flip__card" id="avHoursCard">
-            <div class="av-flip__inner">
-              <div class="av-flip__face av-flip__face--front"><span class="av-flip__num" id="avHours">–</span></div>
-              <div class="av-flip__face av-flip__face--back"><span class="av-flip__num" id="avHoursBack">–</span></div>
+          <div class="av-flip">
+            <div class="av-flip__card" id="avHoursCard">
+              <div class="av-flip__inner">
+                <div class="av-flip__face av-flip__face--front"><span class="av-flip__num" id="avHours">–</span></div>
+                <div class="av-flip__face av-flip__face--back"><span class="av-flip__num" id="avHoursBack">–</span></div>
+              </div>
             </div>
+            <span class="av-countdown__label">Hours</span>
           </div>
-          <span class="av-countdown__label">Hours</span>
-        </div>
-        <div class="av-flip">
-          <div class="av-flip__card" id="avMinsCard">
-            <div class="av-flip__inner">
-              <div class="av-flip__face av-flip__face--front"><span class="av-flip__num" id="avMins">–</span></div>
-              <div class="av-flip__face av-flip__face--back"><span class="av-flip__num" id="avMinsBack">–</span></div>
+          <div class="av-flip">
+            <div class="av-flip__card" id="avMinsCard">
+              <div class="av-flip__inner">
+                <div class="av-flip__face av-flip__face--front"><span class="av-flip__num" id="avMins">–</span></div>
+                <div class="av-flip__face av-flip__face--back"><span class="av-flip__num" id="avMinsBack">–</span></div>
+              </div>
             </div>
+            <span class="av-countdown__label">Mins</span>
           </div>
-          <span class="av-countdown__label">Mins</span>
-        </div>
-        <div class="av-flip">
-          <div class="av-flip__card" id="avSecsCard">
-            <div class="av-flip__inner">
-              <div class="av-flip__face av-flip__face--front"><span class="av-flip__num" id="avSecs">–</span></div>
-              <div class="av-flip__face av-flip__face--back"><span class="av-flip__num" id="avSecsBack">–</span></div>
+          <div class="av-flip">
+            <div class="av-flip__card" id="avSecsCard">
+              <div class="av-flip__inner">
+                <div class="av-flip__face av-flip__face--front"><span class="av-flip__num" id="avSecs">–</span></div>
+                <div class="av-flip__face av-flip__face--back"><span class="av-flip__num" id="avSecsBack">–</span></div>
+              </div>
             </div>
+            <span class="av-countdown__label">Secs</span>
           </div>
-          <span class="av-countdown__label">Secs</span>
         </div>
+
+        <a href="register.html" class="av-hero__cta">Register for Accord VI &#8594;</a>
       </div>
 
       <p class="av-hero__meta"><strong>18–19 October</strong> · Beaconhouse Cantt Campus, Multan</p>
@@ -169,7 +187,7 @@
        does the tear, parallax gives each photo depth. One-value final cue
        on the intro line only holds within its own window (it fades before
        the tear, per the cue contract: only the LAST act may hold). -->
-  <section data-sc-act="pin" data-sc-span="4" data-chapter="02" data-chapter-title="The Two Nights">
+  <section class="chapter-desktop-only" data-sc-act="pin" data-sc-span="4" data-chapter="02" data-chapter-title="The Two Nights">
     <div data-sc-stage class="av-split-stage">
       <!-- Sibling scrim, not a child of the cued copy element: the harness
            hides the copy element itself to measure the frame underneath, so
@@ -202,12 +220,35 @@
     </div>
   </section>
 
+  <!-- ============ CHAPTER 02 · THE TWO NIGHTS (mobile) ============
+       No pin, no parallax, no scroll-scrubbed reveal: plain flow, two
+       stacked cards. Same two photos/labels as the desktop tear, just
+       not staged as a pinned set piece — see the build-switch comment
+       in <head>. -->
+  <section class="sc-section chapter-mobile-only" data-sc-act="flow" data-chapter="02" data-chapter-title="The Two Nights" style="background:var(--sc-canvas)">
+    <div class="sc-wrap">
+      <div class="sc-stack" data-sc-in style="margin-bottom:var(--sc-6)">
+        <h2 class="av-lineup__title">One event, two completely different nights</h2>
+      </div>
+      <div class="av-nights-mobile" data-sc-in data-sc-stagger="90">
+        <figure class="av-night-card">
+          <img src="assets/gallery/gallery-4.jpg" alt="A concert crowd raising hands under warm stage lighting" width="1600" height="2000">
+          <figcaption>Live Concert</figcaption>
+        </figure>
+        <figure class="av-night-card">
+          <img src="assets/gallery/gallery-1.jpg" alt="A crowd silhouetted under cool blue and teal stage lights" width="1600" height="2000">
+          <figcaption>Qawwali Night</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ CHAPTER 03 · PROOF ============
        Two ordinary sections: a pan rail (breadth — "look at the energy"),
        then a flow section with real counters (trust — "here are the
        numbers"). Hard cut into its own ground, no drift, per chaptered
        editorial. -->
-  <section data-sc-act="pan" data-sc-span="4.4" data-chapter="03" data-chapter-title="Proof" data-act-id="proof-photos" style="background:var(--sc-canvas)">
+  <section class="chapter-desktop-only" data-sc-act="pan" data-sc-span="4.4" data-chapter="03" data-chapter-title="Proof" data-act-id="proof-photos" style="background:var(--sc-canvas)">
     <div data-sc-stage class="av-rail-stage">
       <div class="av-rail" data-sc-pan="0.06">
         <div class="av-rail-heading">
@@ -222,6 +263,29 @@
           <p class="sc-body">And more, once Accord VI happens.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 03 · PROOF (mobile) ============
+       Same four photos, same real-crowds copy, no scroll-linked pan
+       math: a native horizontally-scrolling strip (free momentum
+       scroll/snap from the browser, zero per-frame JS cost) instead of
+       a scrubbed pin. Reuses .av-frame/.av-frame__tag as-is. -->
+  <section class="sc-section chapter-mobile-only" data-sc-act="flow" data-chapter="03" data-chapter-title="Proof" style="background:var(--sc-canvas)">
+    <div class="sc-wrap">
+      <div class="sc-stack" data-sc-in style="margin-bottom:var(--sc-5)">
+        <h2 class="av-lineup__title">Six years of nights like these.</h2>
+        <p class="sc-body">Real energy from real crowds. Standing in until Accord's own photography replaces these.</p>
+      </div>
+    </div>
+    <div class="av-rail-mobile" data-sc-in>
+      <div class="av-frame"><img src="assets/gallery/gallery-2.jpg" alt="A live band performing under red stage lights" width="1200" height="1500"><span class="av-frame__tag">Stock photo</span></div>
+      <div class="av-frame"><img src="assets/gallery/gallery-3.jpg" alt="Fireworks bursting over a festival crowd" width="1200" height="1500"><span class="av-frame__tag">Stock photo</span></div>
+      <div class="av-frame"><img src="assets/gallery/gallery-5.jpg" alt="Red flares raised by hands in a night crowd" width="1200" height="1500"><span class="av-frame__tag">Stock photo</span></div>
+      <div class="av-frame"><img src="assets/gallery/gallery-6.jpg" alt="A crowd silhouetted against bright stage lights" width="1200" height="1500"><span class="av-frame__tag">Stock photo</span></div>
+    </div>
+    <div class="sc-wrap">
+      <p class="sc-body" style="margin-top:var(--sc-5)">And more, once Accord VI happens.</p>
     </div>
   </section>
 
@@ -327,23 +391,62 @@
     </div>
   </section>
 
-  <!-- ============ CHAPTER 05 · REGISTER (colophon close) ============
-       pin, short span, one-value cue that holds (the only act allowed to).
-       CTA set as running text, not a button island, per chaptered
-       editorial's own close pattern. Links out to the existing Accord VI
-       site's real registration and sponsorship pages rather than
-       duplicating that form here. -->
-  <section id="register" data-sc-act="pin" data-sc-span="1.2" data-chapter="05" data-chapter-title="Register" style="background:var(--sc-canvas)">
-    <div data-sc-stage class="av-close">
-      <h2 class="av-close__title" data-sc-cue="0 1 0 0" data-sc-kinetic="lines">The two nights are waiting.</h2>
-      <p class="av-close__sub">Pick one, or come for both.</p>
-      <div class="av-close__links" data-sc-cue="0.18">
-        <a href="https://yilmaz-islam.github.io/accord-vi-info/register.html">Register for Accord VI &#8594;</a>
-        <a href="https://yilmaz-islam.github.io/accord-vi-info/sponsor.html">Sponsor Accord VI &#8594;</a>
+  <!-- ============ CHAPTER 05 · LINEUP (teaser, links out) ============
+       flow: an ordinary revealing section, not a pin — same reasoning as
+       Chapter 04. The mystery-card reveal (King/Queen/Jack, hints, the
+       flip-to-full-bio experience) is its own full page; this chapter
+       teases it and hands off rather than duplicating any of it here. -->
+  <section class="sc-section" data-sc-act="flow" data-chapter="05" data-chapter-title="Lineup" style="background:var(--sc-canvas)">
+    <div class="sc-wrap">
+      <div class="sc-stack" data-sc-in data-sc-stagger="70">
+        <p class="sc-label" style="color:var(--sc-accent)">Three artists, kept under wraps</p>
+        <h2 class="av-lineup__title">A King, a Queen and a Jack. Who are they?</h2>
+        <p class="sc-body" style="max-width:38ch;color:var(--sc-ink);font-size:var(--sc-t-lg)">Real artists, hidden behind hints — tap each card to reveal who's actually playing Accord VI.</p>
+        <a href="proto-lineup-sparkle.html" class="av-hero__cta" style="display:inline-block;margin-top:var(--sc-6)">See the Lineup &#8594;</a>
       </div>
-      <p class="av-close__meta" data-sc-cue="0.28">18-19 October, Beaconhouse Cantt Campus, Multan, Accord VI</p>
     </div>
   </section>
+
+  <!-- ============ CHAPTER 06 · REGISTER (colophon close) ============
+       pin, short span, one-value cue that holds (the only act allowed to).
+       CTA set as running text, not a button island, per chaptered
+       editorial's own close pattern. register.html/sponsor.html now live
+       alongside this page (same site, same repo) rather than on the old
+       separate accord-vi-info deployment. -->
+  <!-- Shared jump target for the folio nav's "Jump to Register" link:
+       lives on a plain wrapper (never display:none) rather than on either
+       variant below, so the link still works regardless of which build's
+       section is actually visible. -->
+  <div id="register">
+    <section class="chapter-desktop-only" data-sc-act="pin" data-sc-span="1.2" data-chapter="06" data-chapter-title="Register" style="background:var(--sc-canvas)">
+      <div data-sc-stage class="av-close">
+        <h2 class="av-close__title" data-sc-cue="0 1 0 0" data-sc-kinetic="lines">The two nights are waiting.</h2>
+        <p class="av-close__sub">Pick one, or come for both.</p>
+        <div class="av-close__links" data-sc-cue="0.18">
+          <a href="register.html">Register for Accord VI &#8594;</a>
+          <a href="sponsor.html">Sponsor Accord VI &#8594;</a>
+        </div>
+        <p class="av-close__meta" data-sc-cue="0.28">18-19 October, Beaconhouse Cantt Campus, Multan, Accord VI</p>
+        <p class="av-close__legal" data-sc-cue="0.34"><a href="info.html">Info</a> · <a href="privacy-policy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
+      </div>
+    </section>
+
+    <!-- ============ CHAPTER 06 · REGISTER (mobile close) ============
+         No pin, no held cue: plain flow with a staggered fade-in. Same
+         copy/links as the desktop close. -->
+    <section class="chapter-mobile-only" data-sc-act="flow" data-chapter="06" data-chapter-title="Register" style="background:var(--sc-canvas)">
+      <div class="av-close" data-sc-in data-sc-stagger="90">
+        <h2 class="av-close__title">The two nights are waiting.</h2>
+        <p class="av-close__sub">Pick one, or come for both.</p>
+        <div class="av-close__links">
+          <a href="register.html">Register for Accord VI &#8594;</a>
+          <a href="sponsor.html">Sponsor Accord VI &#8594;</a>
+        </div>
+        <p class="av-close__meta">18-19 October, Beaconhouse Cantt Campus, Multan, Accord VI</p>
+        <p class="av-close__legal"><a href="info.html">Info</a> · <a href="privacy-policy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
+      </div>
+    </section>
+  </div>
 
 </main>
 

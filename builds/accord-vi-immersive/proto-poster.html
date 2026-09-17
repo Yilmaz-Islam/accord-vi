@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PROTOTYPE — Lineup Poster</title>
+<meta name="robots" content="noindex">
+<style>
+  @font-face {
+    font-family: 'Sora';
+    src: url('assets/fonts/Sora-Variable.ttf') format('truetype-variations');
+    font-weight: 100 800; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/Inter-Variable.ttf') format('truetype-variations');
+    font-weight: 100 900; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('assets/fonts/Fraunces-Variable.ttf') format('truetype-variations');
+    font-weight: 300 700; font-style: normal; font-display: swap;
+  }
+
+  :root {
+    --ink: #efece6;
+    --ink-soft: #a9a6a0;
+    --canvas: #0b0b0d;
+    --canvas-deep: #060607;
+    --gold: #e0b455;
+    --gold-bright: #f3d38a;
+    --gold-dim: #6b5527;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100svh;
+    padding: 3rem 1.5rem 4rem;
+  }
+
+  .proto-banner {
+    max-width: 40rem;
+    margin: 0 auto 2.5rem;
+    text-align: center;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--gold-dim);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .proto-banner strong { color: var(--gold); }
+
+  .poster {
+    position: relative;
+    max-width: 34rem;
+    margin: 0 auto;
+    border-radius: 20px;
+    border: 1px solid var(--gold-dim);
+    background: radial-gradient(ellipse 120% 70% at 50% 8%, color-mix(in oklab, var(--gold) 14%, transparent), transparent 60%), #000;
+    overflow: hidden;
+    padding: 1.8rem 1.6rem 2.2rem;
+  }
+
+  .poster-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+  }
+  .poster-eyebrow {
+    font-family: 'Sora', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.65rem;
+    color: var(--gold);
+  }
+  .poster-date {
+    text-align: right;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .poster-date strong { display: block; color: var(--gold-bright); font-size: 0.85rem; }
+
+  .poster-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 8vw, 2.6rem);
+    letter-spacing: -0.01em;
+    margin: 0.2rem 0 1.4rem;
+    line-height: 1;
+  }
+  .poster-title em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  /* ---------- Photo collage ---------- */
+  .collage {
+    position: relative;
+    height: clamp(220px, 52vw, 300px);
+    margin-bottom: 1.6rem;
+  }
+  .collage-glow {
+    position: absolute;
+    inset: -10% -5% auto -5%;
+    height: 130%;
+    background:
+      radial-gradient(circle at 50% 35%, color-mix(in oklab, var(--gold) 55%, transparent), transparent 62%);
+    filter: blur(6px);
+    opacity: 0.55;
+  }
+  .performer {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .performer--center { left: 50%; transform: translateX(-50%); height: 100%; z-index: 3; }
+  .performer--left { left: 32%; transform: translateX(-72%); height: 74%; z-index: 2; }
+  .performer--right { left: 68%; transform: translateX(-28%); height: 74%; z-index: 2; }
+
+  .performer-photo {
+    height: 100%;
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 10px 24px rgba(0,0,0,0.6));
+  }
+  .performer--left .performer-photo, .performer--right .performer-photo {
+    filter: drop-shadow(0 8px 18px rgba(0,0,0,0.6)) brightness(0.92);
+  }
+
+  .performer-name {
+    margin-top: 0.5rem;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    color: var(--gold-bright);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .performer-role {
+    font-size: 0.62rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .poster-lineup {
+    text-align: center;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+    padding: 1rem 0;
+    border-top: 1px solid var(--gold-dim);
+    border-bottom: 1px solid var(--gold-dim);
+    margin-bottom: 1.4rem;
+  }
+  .poster-lineup strong { color: var(--gold-bright); }
+  .poster-lineup .sep { color: var(--gold-dim); margin: 0 0.5rem; }
+
+  .poster-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+  .poster-venue {
+    font-size: 0.82rem;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .poster-venue strong { display: block; color: var(--gold); font-family: 'Sora', sans-serif; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.2rem; }
+  .poster-ticket {
+    text-align: right;
+    flex: none;
+  }
+  .poster-ticket strong {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-size: 1.3rem;
+    color: var(--gold-bright);
+  }
+  .poster-ticket span {
+    font-size: 0.65rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 480px) {
+    .poster { padding: 1.4rem 1.1rem 1.6rem; }
+    .performer-role { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<p class="proto-banner">PROTOTYPE — not linked from the live site. <strong>Placeholder names/photos</strong> — generic stock performers standing in for the real lineup, once confirmed.</p>
+
+<div class="poster">
+  <div class="poster-top">
+    <span class="poster-eyebrow">Accord VI · Live Concert</span>
+    <span class="poster-date"><strong>18 OCT</strong>2026 · 8:00 PM</span>
+  </div>
+  <h1 class="poster-title">The lineup is <em>coming alive.</em></h1>
+
+  <div class="collage">
+    <div class="collage-glow" aria-hidden="true"></div>
+
+    <div class="performer performer--left">
+      <img class="performer-photo" src="assets/poster-proto/figure-left.png" alt="">
+      <span class="performer-name">Artist I</span>
+      <span class="performer-role">To be confirmed</span>
+    </div>
+
+    <div class="performer performer--center">
+      <img class="performer-photo" src="assets/poster-proto/figure-center.png" alt="">
+      <span class="performer-name">Artist II</span>
+      <span class="performer-role">To be confirmed</span>
+    </div>
+
+    <div class="performer performer--right">
+      <img class="performer-photo" src="assets/poster-proto/figure-right.png" alt="">
+      <span class="performer-name">Artist III</span>
+      <span class="performer-role">To be confirmed</span>
+    </div>
+  </div>
+
+  <p class="poster-lineup"><strong>ARTIST I</strong><span class="sep">·</span><strong>ARTIST II</strong><span class="sep">·</span><strong>ARTIST III</strong></p>
+
+  <div class="poster-footer">
+    <p class="poster-venue"><strong>Venue</strong>Beaconhouse Cantt Campus, Multan</p>
+    <p class="poster-ticket"><strong>PKR 3,500</strong><span>Two-night pass</span></p>
+  </div>
+</div>
+
+</body>
+</html>

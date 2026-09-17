@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — Accord VI, 18–19 October, Multan</title>
+<meta name="description" content="Register for Accord VI: Live Concert on 18 October and Qawwali Night on 19 October at Beaconhouse Cantt Campus, Multan.">
+<link rel="canonical" href="https://yilmaz-islam.github.io/accord-vi/register.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Register — Accord VI, 18–19 October, Multan">
+<meta property="og:description" content="Register for Accord VI: Live Concert on 18 October and Qawwali Night on 19 October at Beaconhouse Cantt Campus, Multan.">
+<meta property="og:url" content="https://yilmaz-islam.github.io/accord-vi/register.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Register — Accord VI, 18–19 October, Multan">
+<meta name="twitter:description" content="Register for Accord VI: Live Concert on 18 October and Qawwali Night on 19 October at Beaconhouse Cantt Campus, Multan.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "Accord VI",
+  "startDate": "2026-10-18",
+  "endDate": "2026-10-19",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "location": {
+    "@type": "Place",
+    "name": "Beaconhouse Cantt Campus",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Multan",
+      "addressCountry": "PK"
+    }
+  },
+  "description": "Two-night Beaconhouse student music event: Live Concert on 18 October and Qawwali Night on 19 October.",
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Two-night pass",
+      "priceCurrency": "PKR",
+      "price": "3500",
+      "url": "https://yilmaz-islam.github.io/accord-vi/register.html",
+      "availability": "https://schema.org/InStock"
+    },
+    {
+      "@type": "Offer",
+      "name": "Live Concert only (18 October)",
+      "priceCurrency": "PKR",
+      "price": "2500",
+      "url": "https://yilmaz-islam.github.io/accord-vi/register.html",
+      "availability": "https://schema.org/InStock"
+    }
+  ],
+  "organizer": {
+    "@type": "Organization",
+    "name": "Accord VI Organizing Committee"
+  }
+}
+</script>
+<style>
+  /* Smooth the hero → next-section seam instead of a hard color cut. */
+  .page-hero { position: relative; }
+  .page-hero::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 140px;
+    background: linear-gradient(180deg, transparent, var(--color-bg-alt));
+    pointer-events: none;
+  }
+
+  .wizard-wrap { max-width: 30rem; margin: 0 auto; }
+
+  .wizard-progress {
+    height: 3px;
+    background: var(--color-border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 0.6rem;
+  }
+  .wizard-progress-bar {
+    height: 100%;
+    width: 10%;
+    background: var(--color-primary);
+    transition: width 0.3s ease;
+  }
+  .wizard-step-label {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-faint);
+    margin-bottom: 1.75rem;
+  }
+
+  .wizard-step { display: none; }
+  .wizard-step.is-active { display: block; animation: wizard-in 0.3s ease; }
+  @keyframes wizard-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wizard-step.is-active { animation: none; }
+  }
+
+  .wizard-question {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin: 0 0 1.5rem;
+    line-height: 1.3;
+  }
+  .wizard-subnote {
+    margin: -1.1rem 0 1.25rem;
+    font-size: 0.85rem;
+    color: var(--color-text-dim);
+  }
+
+  .wizard-input {
+    width: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.9rem 1rem;
+    color: var(--color-text);
+    font-size: 1.05rem;
+    font-family: inherit;
+    margin-bottom: 1.25rem;
+  }
+  textarea.wizard-input { min-height: 7rem; resize: vertical; font-size: 0.95rem; }
+  .wizard-input:focus { outline: none; border-color: var(--color-primary); }
+  .wizard-input-code { letter-spacing: 0.3em; text-align: center; font-size: 1.3rem; }
+
+  .wizard-note {
+    margin-top: 0.9rem;
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    min-height: 1.2em;
+  }
+  .wizard-note.is-error { color: #e0555a; }
+  .wizard-note.is-success { color: #5ecb8f; }
+
+  .wizard-dev-skip {
+    display: block;
+    margin: 0.6rem auto 0;
+    background: none;
+    border: 1px dashed var(--color-text-faint);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    color: var(--color-text-faint);
+    font-size: 0.74rem;
+    cursor: pointer;
+  }
+  .wizard-dev-skip:hover { color: var(--color-text-dim); border-color: var(--color-text-dim); }
+
+  .wizard-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+  .wizard-chip {
+    flex: 1 1 auto;
+    min-width: 4rem;
+    padding: 0.85rem 0.5rem;
+    text-align: center;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  .wizard-chip-text { font-size: 0.85rem; }
+  .wizard-chip[aria-checked="true"] {
+    border-color: var(--color-primary);
+    background: rgba(224, 180, 85, 0.12);
+    color: var(--color-primary);
+  }
+  .wizard-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .wizard-stepper-btn {
+    width: 2.4rem; height: 2.4rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-primary);
+    background: transparent;
+    color: var(--color-primary);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .wizard-stepper-value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.6rem;
+    min-width: 2ch;
+    text-align: center;
+  }
+
+  .wizard-icon-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .wizard-icon-btn {
+    flex: 1 1 5.5rem;
+    max-width: 6.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    background: none;
+    border: none;
+    color: var(--color-text-dim);
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .wizard-icon-circle {
+    width: 4rem; height: 4rem;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--color-text-dim);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    transition: border-color 0.2s ease, transform 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .wizard-icon-btn[aria-checked="true"] .wizard-icon-circle {
+    border-color: var(--color-primary);
+    border-width: 2px;
+    color: var(--color-primary);
+    transform: translateY(-4px) scale(1.06);
+    box-shadow: 0 10px 22px rgba(224, 180, 85, 0.28);
+  }
+  .wizard-icon-label {
+    font-size: 0.78rem;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .wizard-icon-btn[aria-checked="true"] .wizard-icon-label { color: var(--color-primary); font-weight: 600; }
+
+  .wizard-pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .wizard-pill {
+    padding: 0.7rem 1.1rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .wizard-pill[aria-checked="true"] {
+    border-color: var(--color-primary);
+    background: rgba(224, 180, 85, 0.12);
+    color: var(--color-primary);
+  }
+
+  .payment-details {
+    border: 1px dashed #e0555a;
+    background: rgba(224, 85, 90, 0.08);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.1rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .payment-details .warn {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #e0555a;
+    margin-bottom: 0.5rem;
+  }
+  .payment-details dt { color: var(--color-text-dim); font-size: 0.78rem; margin-top: 0.5rem; }
+  .payment-details dd { margin: 0; font-family: var(--font-display); }
+  .payment-details ul { margin: 0.5rem 0 0; padding-left: 1.1rem; }
+  .payment-details li { margin-bottom: 0.3rem; }
+  .payment-details a { color: var(--color-primary); }
+
+  .wizard-back {
+    display: block;
+    margin: 1.5rem auto 0;
+    background: none;
+    border: none;
+    color: var(--color-text-faint);
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .wizard-back:hover { color: var(--color-text-dim); }
+
+  .wizard-done-icon {
+    width: 3rem; height: 3rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.25rem;
+    font-size: 1.4rem;
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="resonance-mark" viewBox="0 0 120 120">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+      <line x1="60" y1="8" x2="60" y2="112"></line>
+      <path d="M66.8,41.2 A20,20 0 0 1 66.8,78.8"></path>
+      <path d="M53.2,41.2 A20,20 0 0 0 53.2,78.8"></path>
+      <path d="M71.6,28.1 A34,34 0 0 1 71.6,91.9"></path>
+      <path d="M48.4,28.1 A34,34 0 0 0 48.4,91.9"></path>
+      <path d="M76.4,14.9 A48,48 0 0 1 76.4,105.1"></path>
+      <path d="M43.6,14.9 A48,48 0 0 0 43.6,105.1"></path>
+    </g>
+    <circle cx="60" cy="60" r="4" fill="currentColor"></circle>
+  </symbol>
+</svg>
+
+<!-- ============ NAV ============ -->
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
+      <span class="logo-text">Accord <span>VI</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="info.html" class="nav-link">Info</a>
+      <a href="sponsor.html" class="nav-link">Sponsors</a>
+      <a href="privacy-policy.html" class="nav-link">Privacy</a>
+      <a href="register.html" class="nav-cta">Register</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ PAGE HERO ============ -->
+<section class="page-hero" id="main">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="container page-hero-inner">
+    <div class="hero-mark" aria-hidden="true" data-aos="zoom-in">
+      <svg class="logo-mark logo-mark-hero" viewBox="0 0 120 120"><use href="#resonance-mark"></use></svg>
+    </div>
+    <p class="eyebrow" data-aos="fade-up" data-aos-delay="100">Two nights · 18–19 October</p>
+    <h1 class="page-title" data-aos="fade-up" data-aos-delay="200">Register for Accord VI</h1>
+    <p class="hero-tagline" data-aos="fade-up" data-aos-delay="300">
+      Live Concert on 18 October, Qawwali Night on 19 October — Beaconhouse Cantt Campus, Multan.
+    </p>
+  </div>
+</section>
+
+<!-- ============ REGISTRATION WIZARD ============ -->
+<section class="section section-alt">
+  <div class="container wizard-wrap">
+    <div class="wizard-progress"><div class="wizard-progress-bar" id="wizardProgressBar"></div></div>
+    <p class="wizard-step-label" id="wizardStepLabel">Question 1</p>
+
+    <form id="wizardForm">
+      <input type="hidden" name="form_type" value="Registration">
+      <input type="hidden" name="persona" id="wizPersonaField">
+      <input type="hidden" name="attendeeCount" id="wizAttendeeCount" value="1">
+      <input type="hidden" name="hearAbout" id="wizHearAbout">
+      <input type="hidden" name="details" id="wizDetailsField">
+
+      <div class="wizard-step is-active" data-step="persona">
+        <h2 class="wizard-question">Which one are you?</h2>
+        <div class="wizard-icon-grid" role="radiogroup" aria-label="Which one are you">
+          <button type="button" class="wizard-icon-btn" data-persona="student" role="radio" aria-checked="false">
+            <span class="wizard-icon-circle" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+            </span>
+            <span class="wizard-icon-label">Student</span>
+          </button>
+          <button type="button" class="wizard-icon-btn" data-persona="group" role="radio" aria-checked="false">
+            <span class="wizard-icon-circle" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M2 21c0-3.3 2.7-6 6-6s6 2.7 6 6M12 21c0-3.3 2.7-6 6-6"/></svg>
+            </span>
+            <span class="wizard-icon-label">Group leader</span>
+          </button>
+          <button type="button" class="wizard-icon-btn" data-persona="guest" role="radio" aria-checked="false">
+            <span class="wizard-icon-circle" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-8.5C.5 8.5 2.5 5 6 5c2 0 3.5 1 4 2.5C10.5 6 12 5 14 5c3.5 0 5.5 3.5 3.5 7.5C15 16.65 12 21 12 21z"/></svg>
+            </span>
+            <span class="wizard-icon-label">Parent / guest</span>
+          </button>
+          <button type="button" class="wizard-icon-btn" data-persona="sponsor" role="radio" aria-checked="false">
+            <span class="wizard-icon-circle" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg>
+            </span>
+            <span class="wizard-icon-label">Sponsor</span>
+          </button>
+        </div>
+        <button type="button" class="btn btn-primary btn-block wizard-next" id="personaNext" disabled>Continue</button>
+      </div>
+
+      <div class="wizard-step" data-step="name">
+        <h2 class="wizard-question">What is your name?</h2>
+        <input type="text" class="wizard-input" id="wizName" placeholder="Your full name" autocomplete="name">
+        <button type="button" class="btn btn-primary btn-block wizard-next" id="nameNext" disabled>Continue</button>
+      </div>
+
+      <div class="wizard-step" data-step="hearAbout">
+        <h2 class="wizard-question">How did you hear about Accord?</h2>
+        <div class="wizard-pill-list" role="radiogroup" aria-label="How did you hear about Accord">
+          <button type="button" class="wizard-pill" data-source="Instagram" role="radio" aria-checked="false">Instagram</button>
+          <button type="button" class="wizard-pill" data-source="Friends / family" role="radio" aria-checked="false">Friends / family</button>
+          <button type="button" class="wizard-pill" data-source="School announcement" role="radio" aria-checked="false">School announcement</button>
+          <button type="button" class="wizard-pill" data-source="Poster / flyer on campus" role="radio" aria-checked="false">Poster / flyer on campus</button>
+          <button type="button" class="wizard-pill" data-source="Came last year" role="radio" aria-checked="false">I came last year</button>
+          <button type="button" class="wizard-pill" data-source="Other" role="radio" aria-checked="false">Other</button>
+        </div>
+        <button type="button" class="btn btn-primary btn-block wizard-next" id="hearAboutNext" disabled>Continue</button>
+      </div>
+
+      <div class="wizard-step" data-step="headcount">
+        <h2 class="wizard-question">How many are in your group?</h2>
+        <div class="wizard-stepper">
+          <button type="button" class="wizard-stepper-btn" id="wizStepperMinus" aria-label="Decrease" hidden>−</button>
+          <span class="wizard-stepper-value" id="wizStepperValue">1</span>
+          <button type="button" class="wizard-stepper-btn" id="wizStepperPlus" aria-label="Increase">+</button>
+        </div>
+        <button type="button" class="btn btn-primary btn-block wizard-next">Continue</button>
+      </div>
+
+      <div class="wizard-step" data-step="groupNames">
+        <h2 class="wizard-question">Who's in your group?</h2>
+        <p class="wizard-subnote">List their names, one per line. Doesn't need to be exact yet.</p>
+        <textarea class="wizard-input" id="wizGroupNames" placeholder="Ali Raza&#10;Sana Tariq&#10;..."></textarea>
+        <button type="button" class="btn btn-primary btn-block wizard-next">Continue</button>
+      </div>
+
+      <div class="wizard-step" data-step="email">
+        <h2 class="wizard-question">What's your email?</h2>
+        <input type="email" class="wizard-input" id="wizEmail" placeholder="you@example.com" autocomplete="email">
+        <button type="button" class="btn btn-primary btn-block" id="wizSendCode" disabled>Send verification code</button>
+        <p class="wizard-note" id="wizEmailNote" role="status"></p>
+        <button type="button" class="wizard-dev-skip" id="wizSkipEmail">Skip verification (dev)</button>
+      </div>
+
+      <div class="wizard-step" data-step="code">
+        <h2 class="wizard-question">Enter the code we emailed you</h2>
+        <input type="text" class="wizard-input wizard-input-code" id="wizCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456">
+        <button type="button" class="btn btn-primary btn-block" id="wizVerifyCode">Verify</button>
+        <p class="wizard-note" id="wizCodeNote" role="status"></p>
+        <button type="button" class="wizard-dev-skip" id="wizSkipCode">Skip verification (dev)</button>
+      </div>
+
+      <div class="wizard-step" data-step="sponsorTier">
+        <h2 class="wizard-question">Which tier are you interested in?</h2>
+        <div class="wizard-chip-row" role="radiogroup" aria-label="Sponsorship tier">
+          <button type="button" class="wizard-chip wizard-chip-text" data-tier="Bronze" role="radio" aria-checked="false">Bronze</button>
+          <button type="button" class="wizard-chip wizard-chip-text" data-tier="Silver" role="radio" aria-checked="false">Silver</button>
+          <button type="button" class="wizard-chip wizard-chip-text" data-tier="Gold" role="radio" aria-checked="false">Gold</button>
+          <button type="button" class="wizard-chip wizard-chip-text" data-tier="Diamond" role="radio" aria-checked="false">Diamond</button>
+          <button type="button" class="wizard-chip wizard-chip-text" data-tier="Platinum" role="radio" aria-checked="false">Platinum</button>
+          <button type="button" class="wizard-chip wizard-chip-text" data-tier="Not sure yet" role="radio" aria-checked="false">Not sure yet</button>
+        </div>
+        <button type="button" class="btn btn-primary btn-block wizard-next" id="tierNext" disabled>Continue</button>
+      </div>
+
+      <div class="wizard-step" data-step="sponsorPayment">
+        <h2 class="wizard-question">How would you like to pay?</h2>
+        <div class="wizard-pill-list" role="radiogroup" aria-label="Payment method">
+          <button type="button" class="wizard-pill" data-pay="JazzCash" role="radio" aria-checked="false">JazzCash</button>
+          <button type="button" class="wizard-pill" data-pay="Bank transfer" role="radio" aria-checked="false">Bank transfer</button>
+          <button type="button" class="wizard-pill" data-pay="Cash" role="radio" aria-checked="false">Cash, in person</button>
+        </div>
+        <div class="payment-details" id="paymentDetails" hidden></div>
+        <button type="button" class="btn btn-primary btn-block wizard-next" id="paymentNext" hidden>Continue</button>
+      </div>
+
+      <div class="wizard-step" data-step="done">
+        <span class="wizard-done-icon" aria-hidden="true">✓</span>
+        <h2 class="wizard-question" id="doneTitle">You're on the list.</h2>
+        <p class="wizard-note is-success" id="doneNote">Thanks, we've got your registration. See you 18–19 October.</p>
+      </div>
+    </form>
+
+    <button type="button" class="wizard-back" id="wizardBack" hidden>← Back</button>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span class="logo footer-logo">
+      <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
+      <span class="logo-text">Accord <span>VI</span></span>
+    </span>
+    <p class="footer-tag">18–19 October · Beaconhouse Cantt Campus, Multan</p>
+    <a href="https://instagram.com/" target="_blank" rel="noopener" class="footer-ig">Instagram</a>
+    <p class="footer-legal"><a href="privacy-policy.html" class="text-link">Privacy Policy</a> · <a href="terms.html" class="text-link">Terms</a></p>
+    <p class="footer-copy">© <span id="year"></span> Accord VI. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  if (window.AOS) AOS.init({ once: true, duration: 600, disable: () => window.matchMedia('(prefers-reduced-motion: reduce)').matches });
+
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+    navLinks.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  const VERIFY_WORKER_URL = 'https://accord-vi-verify.accordbccmvi.workers.dev';
+  function setNote(note, text, kind) {
+    note.textContent = text;
+    note.classList.remove('is-error', 'is-success');
+    if (kind) note.classList.add(kind);
+  }
+
+  // Dev-only shortcuts that bypass email verification — never shown to real
+  // visitors, only enabled on localhost/file so testing doesn't need a real inbox.
+  const IS_DEV = ['localhost', '127.0.0.1'].includes(location.hostname) || location.protocol === 'file:';
+  document.querySelectorAll('.wizard-dev-skip').forEach((btn) => { btn.hidden = !IS_DEV; });
+
+  // ---------- Dynamic step sequence ----------
+  function computeSequence(persona) {
+    if (persona === 'group') return ['persona', 'name', 'hearAbout', 'headcount', 'groupNames', 'email', 'code'];
+    if (persona === 'sponsor') return ['persona', 'name', 'hearAbout', 'sponsorTier', 'sponsorPayment', 'email', 'code'];
+    return ['persona', 'name', 'hearAbout', 'email', 'code'];
+  }
+
+  let sequence = computeSequence(null);
+  let index = 0;
+  const steps = Array.from(document.querySelectorAll('.wizard-step'));
+  const progressBar = document.getElementById('wizardProgressBar');
+  const stepLabel = document.getElementById('wizardStepLabel');
+  const backBtn = document.getElementById('wizardBack');
+
+  function render() {
+    const key = sequence[index];
+    steps.forEach((s) => s.classList.toggle('is-active', s.dataset.step === key));
+    progressBar.style.width = `${((index + 1) / sequence.length) * 100}%`;
+    stepLabel.textContent = `Question ${index + 1} of ${sequence.length}`;
+    backBtn.hidden = index === 0;
+  }
+  function finish() {
+    if (wizPersonaField.value === 'sponsor') {
+      doneTitle.textContent = "You're in the pipeline.";
+      doneNote.textContent = `Thanks, we've got your sponsorship interest. Our team will follow up about ${chosenPayment || 'payment'} and next steps.`;
+    }
+    steps.forEach((s) => s.classList.toggle('is-active', s.dataset.step === 'done'));
+    progressBar.style.width = '100%';
+    stepLabel.textContent = 'All done';
+    backBtn.hidden = true;
+  }
+  // Continuing from the last step in the sequence finishes automatically —
+  // every Continue/Verify button can just call this.
+  function goNext() {
+    if (index < sequence.length - 1) { index += 1; render(); }
+    else { finish(); }
+  }
+  function goBack() {
+    if (index > 0) { index -= 1; render(); }
+  }
+  function setPersonaBranch(persona) {
+    sequence = computeSequence(persona);
+    index = 0;
+    if (persona !== 'group') {
+      groupCount = 1;
+      wizAttendeeCount.value = '1';
+      stepperValue.textContent = '1';
+      stepperMinus.hidden = true;
+    }
+  }
+
+  backBtn.addEventListener('click', goBack);
+  document.querySelectorAll('.wizard-step .wizard-next:not([id])').forEach((btn) => {
+    btn.addEventListener('click', goNext); // plain typed-answer steps (name/groupNames/headcount)
+  });
+  document.getElementById('wizardForm').addEventListener('submit', (e) => e.preventDefault());
+
+  // Step: headcount (group leader only) — stepper only, no presets. Minus
+  // stays hidden until there's something to subtract.
+  const wizAttendeeCount = document.getElementById('wizAttendeeCount');
+  const stepperMinus = document.getElementById('wizStepperMinus');
+  const stepperValue = document.getElementById('wizStepperValue');
+  let groupCount = 1;
+  function setGroupCount(n) {
+    groupCount = Math.max(1, n);
+    stepperValue.textContent = groupCount;
+    wizAttendeeCount.value = groupCount;
+    stepperMinus.hidden = groupCount <= 1;
+  }
+  document.getElementById('wizStepperMinus').addEventListener('click', () => setGroupCount(groupCount - 1));
+  document.getElementById('wizStepperPlus').addEventListener('click', () => setGroupCount(groupCount + 1));
+
+  // Step: persona — selecting only highlights the border; Continue is the
+  // real navigation trigger.
+  const wizPersonaField = document.getElementById('wizPersonaField');
+  const personaBtns = document.querySelectorAll('[data-step="persona"] .wizard-icon-btn');
+  const personaNext = document.getElementById('personaNext');
+  personaBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      personaBtns.forEach((b) => b.setAttribute('aria-checked', 'false'));
+      btn.setAttribute('aria-checked', 'true');
+      wizPersonaField.value = btn.dataset.persona;
+      setPersonaBranch(btn.dataset.persona);
+      personaNext.disabled = false;
+    });
+  });
+  personaNext.addEventListener('click', goNext);
+
+  // Smooth handoff from the sponsor page's CTA
+  const presetPath = new URLSearchParams(location.search).get('path');
+  if (presetPath === 'sponsor') {
+    const sponsorBtn = document.querySelector('[data-persona="sponsor"]');
+    sponsorBtn.setAttribute('aria-checked', 'true');
+    wizPersonaField.value = 'sponsor';
+    setPersonaBranch('sponsor');
+    personaNext.disabled = false;
+  }
+
+  // Step: name
+  const wizName = document.getElementById('wizName');
+  const nameNext = document.getElementById('nameNext');
+  wizName.addEventListener('input', () => { nameNext.disabled = wizName.value.trim().length === 0; });
+  nameNext.addEventListener('click', goNext);
+
+  // Step: how did you hear about us
+  const wizHearAbout = document.getElementById('wizHearAbout');
+  const hearAboutNext = document.getElementById('hearAboutNext');
+  const hearPills = document.querySelectorAll('[data-step="hearAbout"] .wizard-pill');
+  hearPills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      hearPills.forEach((p) => p.setAttribute('aria-checked', 'false'));
+      pill.setAttribute('aria-checked', 'true');
+      wizHearAbout.value = pill.dataset.source;
+      hearAboutNext.disabled = false;
+    });
+  });
+  hearAboutNext.addEventListener('click', goNext);
+
+  // Step: sponsor tier
+  let chosenTier = '';
+  const tierChips = document.querySelectorAll('[data-step="sponsorTier"] .wizard-chip');
+  const tierNext = document.getElementById('tierNext');
+  tierChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      tierChips.forEach((c) => c.setAttribute('aria-checked', 'false'));
+      chip.setAttribute('aria-checked', 'true');
+      chosenTier = chip.dataset.tier;
+      tierNext.disabled = false;
+    });
+  });
+  tierNext.addEventListener('click', goNext);
+
+  // Step: sponsor payment — selecting reveals details (or the two real
+  // meet-up spots for cash), then a manual Finish.
+  let chosenPayment = '';
+  const paymentDetails = document.getElementById('paymentDetails');
+  const paymentNext = document.getElementById('paymentNext');
+  const paymentPills = document.querySelectorAll('[data-step="sponsorPayment"] .wizard-pill');
+  const doneTitle = document.getElementById('doneTitle');
+  const doneNote = document.getElementById('doneNote');
+  const PAYMENT_INFO = {
+    JazzCash: `
+      <span class="warn">⚠ Placeholder, not a real account</span>
+      <dl>
+        <dt>JazzCash number</dt><dd>0300-1234567</dd>
+        <dt>Account name</dt><dd>ACCORD VI EVENTS (placeholder)</dd>
+      </dl>`,
+    'Bank transfer': `
+      <span class="warn">⚠ Placeholder, not a real account</span>
+      <dl>
+        <dt>Bank</dt><dd>Placeholder Bank Ltd.</dd>
+        <dt>Account title</dt><dd>Accord VI Organizing Committee</dd>
+        <dt>Account number</dt><dd>0123-4567890-1</dd>
+        <dt>IBAN</dt><dd>PK00PLHO0000001234567890</dd>
+      </dl>`,
+    Cash: `
+      <span class="warn">No account needed</span>
+      We'll have someone on hand with tickets at one of these two spots, 6:00 PM to 12:00 AM
+      (exact hours confirmed closer to the date):
+      <ul>
+        <li><a href="https://www.google.com/maps/search/?api=1&query=McDonald%27s+Multan+Cantt" target="_blank" rel="noopener">McDonald's, Multan Cantt →</a></li>
+        <li><a href="https://www.google.com/maps/search/?api=1&query=Gloria+Jean%27s+Coffee+Multan" target="_blank" rel="noopener">Gloria Jean's Coffee, Multan →</a></li>
+      </ul>`
+  };
+  paymentPills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      paymentPills.forEach((p) => p.setAttribute('aria-checked', 'false'));
+      pill.setAttribute('aria-checked', 'true');
+      chosenPayment = pill.dataset.pay;
+      paymentDetails.innerHTML = PAYMENT_INFO[chosenPayment];
+      paymentDetails.hidden = false;
+      paymentNext.hidden = false;
+    });
+  });
+  paymentNext.addEventListener('click', goNext);
+
+  // Step: email -> send code
+  const wizEmail = document.getElementById('wizEmail');
+  const wizSendCode = document.getElementById('wizSendCode');
+  const wizEmailNote = document.getElementById('wizEmailNote');
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  wizEmail.addEventListener('input', () => {
+    wizSendCode.disabled = !EMAIL_RE.test(wizEmail.value.trim()) || !wizEmail.checkValidity();
+  });
+
+  function buildDetails() {
+    const parts = [`Persona: ${wizPersonaField.value}`];
+    if (wizPersonaField.value === 'group') {
+      parts.push(`Attendees: ${wizAttendeeCount.value}`);
+    }
+    const groupNames = document.getElementById('wizGroupNames');
+    if (wizPersonaField.value === 'group' && groupNames.value.trim()) {
+      parts.push(`Group members: ${groupNames.value.trim().replace(/\n+/g, ', ')}`);
+    }
+    parts.push(`Heard about us: ${wizHearAbout.value}`);
+    if (wizPersonaField.value === 'sponsor') {
+      parts.push(`Tier interest: ${chosenTier || 'not selected yet'}`);
+      parts.push(`Payment method: ${chosenPayment || 'not selected yet'}`);
+    }
+    return parts.join(' | ');
+  }
+
+  wizSendCode.addEventListener('click', () => {
+    document.getElementById('wizDetailsField').value = buildDetails();
+    setNote(wizEmailNote, 'Sending you a verification code…');
+    wizSendCode.disabled = true;
+    backBtn.disabled = true;
+    fetch(`${VERIFY_WORKER_URL}/request-code`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        form_type: 'Registration',
+        name: wizName.value,
+        email: wizEmail.value.trim(),
+        details: document.getElementById('wizDetailsField').value
+      })
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.ok) throw new Error(data.error || 'Could not send code');
+        setNote(wizEmailNote, `Code sent to ${wizEmail.value}.`, 'is-success');
+        goNext();
+      })
+      .catch((err) => setNote(wizEmailNote, err.message || 'Something went wrong, please try again.', 'is-error'))
+      .finally(() => { wizSendCode.disabled = false; backBtn.disabled = false; });
+  });
+  document.getElementById('wizSkipEmail').addEventListener('click', () => { goNext(); goNext(); });
+
+  // Step: verify code
+  const wizCode = document.getElementById('wizCode');
+  const wizVerifyCode = document.getElementById('wizVerifyCode');
+  const wizCodeNote = document.getElementById('wizCodeNote');
+  wizVerifyCode.addEventListener('click', () => {
+    const code = wizCode.value.trim();
+    if (!code) { setNote(wizCodeNote, 'Enter the 6-digit code first.', 'is-error'); return; }
+    setNote(wizCodeNote, 'Checking…');
+    wizVerifyCode.disabled = true;
+    backBtn.disabled = true;
+    fetch(`${VERIFY_WORKER_URL}/verify-code`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: wizEmail.value, code })
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.ok) throw new Error(data.error || 'Incorrect code');
+        setNote(wizCodeNote, 'Confirmed!', 'is-success');
+        goNext();
+      })
+      .catch((err) => setNote(wizCodeNote, err.message || 'Incorrect code, please try again.', 'is-error'))
+      .finally(() => { wizVerifyCode.disabled = false; backBtn.disabled = false; });
+  });
+  document.getElementById('wizSkipCode').addEventListener('click', goNext);
+
+  render();
+</script>
+</body>
+</html>
