@@ -100,12 +100,53 @@
     max-width: 56rem;
     margin: 0 auto;
     border-radius: 20px;
-    border: 1px solid var(--gold-dim);
+    border: 1px solid transparent;
     background:
-      radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklab, var(--gold) 6%, transparent), transparent 70%),
-      linear-gradient(180deg, #000 0%, var(--canvas-deep) 55%, #050506 100%);
+      radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklab, var(--gold) 6%, transparent), transparent 70%) padding-box,
+      linear-gradient(180deg, #000 0%, var(--canvas-deep) 55%, #050506 100%) padding-box,
+      linear-gradient(90deg, var(--gold-dim), var(--gold-dim)) border-box;
     overflow: hidden;
     padding: 3.5rem 3.5rem 1rem;
+    transition: box-shadow 1s ease;
+  }
+  /* Reveal: the outline itself becomes the 3-artist gradient (border-box
+     layer above), plus an outer glow in the same three colours —
+     box-shadow paints outside the box regardless of overflow:hidden, so
+     this isn't clipped even though the sparkle canvas inside is. */
+  .stage.is-revealed {
+    transition-delay: 4.4s;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklab, var(--gold) 6%, transparent), transparent 70%) padding-box,
+      linear-gradient(180deg, #000 0%, var(--canvas-deep) 55%, #050506 100%) padding-box,
+      linear-gradient(90deg, var(--stage-accent-1), var(--stage-accent-2), var(--stage-accent-3)) border-box;
+    box-shadow:
+      -50px 0 90px -20px color-mix(in oklab, var(--stage-accent-1) 60%, transparent),
+      0 0 70px -10px color-mix(in oklab, var(--stage-accent-2) 50%, transparent),
+      50px 0 90px -20px color-mix(in oklab, var(--stage-accent-3) 60%, transparent);
+  }
+  /* The "3 thirds" background wash, matching the artists' left-to-right
+     order on stage — one colour blending into the next. A separate
+     layer (not baked into .stage's own background) so its opacity can
+     fade in cleanly instead of trying to cross-fade two gradients. */
+  .stage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(90deg,
+      color-mix(in oklab, var(--stage-accent-1) 45%, transparent) 0%,
+      color-mix(in oklab, var(--stage-accent-2) 38%, transparent) 50%,
+      color-mix(in oklab, var(--stage-accent-3) 45%, transparent) 100%);
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    pointer-events: none;
+  }
+  .stage.is-revealed::before {
+    opacity: 1;
+    transition-delay: 4.4s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stage, .stage::before { transition: none; }
   }
   .stage::after {
     content: '';
@@ -202,7 +243,10 @@
     padding: 0.6rem;
     border: 1px solid var(--gold-dim);
     background: linear-gradient(180deg, var(--canvas-deep) 0%, #000 100%);
-    box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
+    box-shadow:
+      0 0 0px 0px transparent,
+      0 0 0px 0px transparent,
+      0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
     transition: border-color 0.8s ease, box-shadow 0.8s ease;
   }
   .lineup-card-corner {
@@ -211,7 +255,8 @@
     font-size: 0.95rem;
     line-height: 1;
     color: var(--gold);
-    transition: color 0.8s ease;
+    filter: drop-shadow(0 0 0px transparent);
+    transition: color 0.8s ease, filter 0.8s ease;
   }
   .lineup-card-corner--tl { align-self: flex-start; }
   .lineup-card-corner--br { align-self: flex-end; transform: rotate(180deg); }
@@ -222,7 +267,8 @@
     justify-content: center;
     opacity: 0.85;
     color: var(--gold);
-    transition: color 0.8s ease;
+    filter: drop-shadow(0 0 0px transparent);
+    transition: color 0.8s ease, filter 0.8s ease;
   }
   .lineup-card-mark svg { width: 56%; }
   .lineup-card-rank {
@@ -237,35 +283,49 @@
   }
 
   /* Reveal sequence: no flip, no separate face — the same card glows
-     twice (a real pause between the two pulses, then a long hold
-     before anything else happens), then its border/shadow/corner/mark
-     colour shifts from gold to that artist's own accent (matching the
-     mystery-card front already used on their own page — --card-accent*
-     set inline per card below), and the rank word just fades out since
-     that reference card doesn't carry one either. The colour/rank
-     transition-delay is timed to the glow animation's own 5s length so
-     nothing else moves until the glow sequence has fully finished. */
+     twice (a pause between the two pulses, then a longer hold before
+     anything else happens), then its border/shadow/corner/mark colour
+     shifts from gold to that artist's own accent as an actual neon
+     glow (matching the mystery-card front already used on their own
+     page — --card-accent* set inline per card below), and the rank
+     word just fades out since that reference card doesn't carry one
+     either. The colour/rank transition-delay is timed to the glow
+     animation's own 4.4s length so nothing else moves until the glow
+     sequence has fully finished. Every box-shadow/filter keyframe below
+     keeps the same number of shadow/filter layers as the revealed
+     target so the hand-off from animation to transition interpolates
+     instead of snapping. */
   @keyframes lineupCardGlow {
-    0%, 16%, 56%, 72%, 100% {
-      box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
+    0%, 18%, 50%, 68%, 100% {
+      box-shadow:
+        0 0 0px 0px transparent,
+        0 0 0px 0px transparent,
+        0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
     }
-    8%, 64% {
-      box-shadow: 0 0 8px 2px var(--gold-bright), 0 0 42px 10px color-mix(in oklab, var(--gold) 65%, transparent), 0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
+    9%, 59% {
+      box-shadow:
+        0 0 8px 2px var(--gold-bright),
+        0 0 42px 10px color-mix(in oklab, var(--gold) 65%, transparent),
+        0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
     }
   }
   .stage.is-revealed .lineup-card-face {
-    animation: lineupCardGlow 5s ease-in-out 1;
-    transition-delay: 5s;
-    border-color: var(--card-accent-dim);
-    box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--card-accent) 35%, transparent);
+    animation: lineupCardGlow 4.4s ease-in-out 1;
+    transition-delay: 4.4s;
+    border-color: var(--card-accent);
+    box-shadow:
+      0 0 10px 2px var(--card-accent-bright),
+      0 0 46px 12px color-mix(in oklab, var(--card-accent) 65%, transparent),
+      0 20px 50px -20px color-mix(in oklab, var(--card-accent) 45%, transparent);
   }
   .stage.is-revealed .lineup-card-corner,
   .stage.is-revealed .lineup-card-mark {
-    transition-delay: 5s;
-    color: var(--card-accent);
+    transition-delay: 4.4s;
+    color: var(--card-accent-bright);
+    filter: drop-shadow(0 0 6px var(--card-accent));
   }
   .stage.is-revealed .lineup-card-rank {
-    transition-delay: 5s;
+    transition-delay: 4.4s;
     opacity: 0;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -386,7 +446,7 @@
 
 <button type="button" class="reveal-toggle" id="revealToggle">Reveal now (preview only)</button>
 
-<div class="stage" id="stage">
+<div class="stage" id="stage" style="--stage-accent-1:#a976b2; --stage-accent-2:#b57382; --stage-accent-3:#76a5b2;">
   <canvas class="stage-sparkle" id="stageSparkle" aria-hidden="true"></canvas>
   <span class="stage-spot" aria-hidden="true"></span>
   <div class="stage-figures">
@@ -395,7 +455,7 @@
     <a href="proto-hint.html?artist=2&from=sparkle" class="figure figure--left" data-artist="2" aria-label="Mystery artist one, tap for hints">
       <div class="lineup-card-scene">
         <div class="lineup-card-3d">
-          <div class="lineup-card-face" style="--card-accent:#a976b2; --card-accent-dim:#55335b;">
+          <div class="lineup-card-face" style="--card-accent:#a976b2; --card-accent-bright:#d2b7d7; --card-accent-dim:#55335b;">
             <span class="lineup-card-corner lineup-card-corner--tl">Q</span>
             <div class="lineup-card-mark"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="50" cy="50" r="7"/><path d="M50 41 C41 22 31 17 21 22 C27 32 36 39 43 44"/><path d="M58 41 C67 22 77 17 87 22 C81 32 72 39 65 44"/><path d="M43 56 C22 61 17 71 22 81 C32 75 39 66 44 59"/><path d="M58 56 C79 61 84 71 79 81 C69 75 62 66 57 59"/><path d="M50 57 L50 78"/></svg></div>
             <span class="lineup-card-corner lineup-card-corner--br">Q</span>
@@ -414,7 +474,7 @@
     <a href="proto-hint.html?artist=1&from=sparkle" class="figure figure--center" data-artist="1" aria-label="Mystery artist two, tap for hints">
       <div class="lineup-card-scene">
         <div class="lineup-card-3d">
-          <div class="lineup-card-face" style="--card-accent:#b57382; --card-accent-dim:#5e313b;">
+          <div class="lineup-card-face" style="--card-accent:#b57382; --card-accent-bright:#d8b6bd; --card-accent-dim:#5e313b;">
             <span class="lineup-card-corner lineup-card-corner--tl">K</span>
             <div class="lineup-card-mark"><svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 66 L25 34 L38 54 L52 20 L68 54 L80 36 L95 66"/><path d="M14 100 v-14 M26 100 v-24 M38 100 v-10 M50 100 v-30 M62 100 v-16 M74 100 v-22 M86 100 v-12"/></svg></div>
             <span class="lineup-card-corner lineup-card-corner--br">K</span>
@@ -433,7 +493,7 @@
     <a href="proto-hint.html?artist=3&from=sparkle" class="figure figure--right" data-artist="3" aria-label="Mystery artist three, tap for hints">
       <div class="lineup-card-scene">
         <div class="lineup-card-3d">
-          <div class="lineup-card-face" style="--card-accent:#76a5b2; --card-accent-dim:#33535b;">
+          <div class="lineup-card-face" style="--card-accent:#76a5b2; --card-accent-bright:#b7d0d7; --card-accent-dim:#33535b;">
             <span class="lineup-card-corner lineup-card-corner--tl">J</span>
             <div class="lineup-card-mark"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M50 6 L72 50 L50 94 L28 50 Z"/><path d="M50 6 L50 94 M28 50 L72 50" stroke-width="1.5" opacity="0.55"/><path d="M50 28 L61 50 L50 72 L39 50 Z"/></svg></div>
             <span class="lineup-card-corner lineup-card-corner--br">J</span>
