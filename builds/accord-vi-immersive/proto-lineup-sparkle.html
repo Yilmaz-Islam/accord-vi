@@ -100,33 +100,17 @@
     max-width: 56rem;
     margin: 0 auto;
     border-radius: 20px;
-    border: 1px solid transparent;
+    border: 1px solid var(--gold-dim);
     background:
-      radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklab, var(--gold) 6%, transparent), transparent 70%) padding-box,
-      linear-gradient(180deg, #000 0%, var(--canvas-deep) 55%, #050506 100%) padding-box,
-      linear-gradient(90deg, var(--gold-dim), var(--gold-dim)) border-box;
+      radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklab, var(--gold) 6%, transparent), transparent 70%),
+      linear-gradient(180deg, #000 0%, var(--canvas-deep) 55%, #050506 100%);
     overflow: hidden;
     padding: 3.5rem 3.5rem 1rem;
-  }
-  /* Reveal: just the outline itself becomes the 3-artist gradient, no
-     glow — the neon treatment stays on the cards only. `background` is
-     a discrete swap, not something CSS can smoothly transition or
-     delay, so `.stage-colors-in` is added by JS 4.4s after reveal
-     (matching the cards' own glow length) instead of relying on
-     transition-delay here, which a bare background change ignores —
-     that was the bug where this used to jump in immediately on click. */
-  .stage.stage-colors-in {
-    background:
-      radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklab, var(--gold) 6%, transparent), transparent 70%) padding-box,
-      linear-gradient(180deg, #000 0%, var(--canvas-deep) 55%, #050506 100%) padding-box,
-      linear-gradient(90deg, var(--stage-accent-1), var(--stage-accent-2), var(--stage-accent-3)) border-box;
   }
   /* The "3 thirds" background wash, matching the artists' left-to-right
      order on stage — one colour calmly blending into the next, kept
      deliberately faint (heavily diluted with transparent) since this
-     is meant to read as ambient tint, not a bright panel. A separate
-     layer (not baked into .stage's own background) so its opacity can
-     fade in cleanly instead of trying to cross-fade two gradients. */
+     is meant to read as ambient tint, not a bright panel. */
   .stage::before {
     content: '';
     position: absolute;
@@ -142,17 +126,52 @@
   }
   .stage.is-revealed::before {
     opacity: 1;
-    transition-delay: 4.4s;
+    transition-delay: 3.4s;
   }
   @media (prefers-reduced-motion: reduce) {
     .stage::before { transition: none; }
   }
+
+  /* Spinning outline: the same border-beam trick already used on the
+     sponsor tier cards elsewhere on this site (conic-gradient rotated
+     via an animatable angle custom property, then masked down to a
+     thin ring) — recoloured to the three artists' accents so the
+     outline travels around the box instead of sitting static. The
+     spin itself runs continuously; only opacity is gated on reveal.
+     `.stage-colors-in` (added by JS — see the script below for why a
+     plain transition-delay can't be trusted for this) times that fade
+     to land with everything else, at 3.4s. */
+  @property --stage-beam-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
   .stage::after {
     content: '';
     position: absolute;
-    left: 8%; right: 8%; bottom: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    padding: 2px;
+    background: conic-gradient(from var(--stage-beam-angle),
+      var(--stage-accent-1) 0deg,
+      var(--stage-accent-2) 120deg,
+      var(--stage-accent-3) 240deg,
+      var(--stage-accent-1) 360deg);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 1s ease;
+    animation: stage-beam-spin 9s linear infinite;
+    pointer-events: none;
+  }
+  .stage.stage-colors-in::after {
+    opacity: 1;
+  }
+  @keyframes stage-beam-spin { to { --stage-beam-angle: 360deg; } }
+  @media (prefers-reduced-motion: reduce) {
+    .stage::after { animation: none; }
   }
 
   /* Ambient sparkle layer — sits behind everything in the stage, never
@@ -281,36 +300,34 @@
     transition: opacity 0.6s ease;
   }
 
-  /* Reveal sequence: no flip, no separate face — the same card glows
-     twice (a pause between the two pulses, then a longer hold before
-     anything else happens), then its border/shadow/corner/mark colour
-     shifts from gold to that artist's own accent as an actual neon
-     glow (matching the mystery-card front already used on their own
-     page — --card-accent* set inline per card below), and the rank
-     word just fades out since that reference card doesn't carry one
-     either. The colour/rank transition-delay is timed to the glow
-     animation's own 4.4s length so nothing else moves until the glow
-     sequence has fully finished. Every box-shadow/filter keyframe below
-     keeps the same number of shadow/filter layers as the revealed
+  /* Reveal sequence, reshaped as a heartbeat: a slow, smooth first
+     beat (0 -> 19% -> 38%, i.e. a gentle 0.65s rise and 0.65s fall) —
+     dimmer than before, this used to run too hot — then a real
+     flatline (38% -> 56%, completely at rest, no glow at all) before
+     the second beat hits suddenly (56% -> 59% is a fast 0.12s onset,
+     then a slower 59% -> 73% fall, echoing an EKG spike rather than a
+     mirror of beat one). Everything else (colour/rank fade) waits for
+     this whole 3.4s sequence via transition-delay. Every box-shadow/
+     filter keyframe keeps the same number of layers as the revealed
      target so the hand-off from animation to transition interpolates
      instead of snapping. */
   @keyframes lineupCardGlow {
-    0%, 18%, 50%, 68%, 100% {
+    0%, 38%, 56%, 73%, 100% {
       box-shadow:
         0 0 0px 0px transparent,
         0 0 0px 0px transparent,
         0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
     }
-    9%, 59% {
+    19%, 59% {
       box-shadow:
-        0 0 8px 2px var(--gold-bright),
-        0 0 42px 10px color-mix(in oklab, var(--gold) 65%, transparent),
+        0 0 4px 1px var(--gold-bright),
+        0 0 22px 5px color-mix(in oklab, var(--gold) 40%, transparent),
         0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
     }
   }
   .stage.is-revealed .lineup-card-face {
-    animation: lineupCardGlow 4.4s ease-in-out 1;
-    transition-delay: 4.4s;
+    animation: lineupCardGlow 3.4s ease-in-out 1;
+    transition-delay: 3.4s;
     border-color: var(--card-accent);
     box-shadow:
       0 0 10px 2px var(--card-accent-bright),
@@ -319,12 +336,12 @@
   }
   .stage.is-revealed .lineup-card-corner,
   .stage.is-revealed .lineup-card-mark {
-    transition-delay: 4.4s;
+    transition-delay: 3.4s;
     color: var(--card-accent-bright);
     filter: drop-shadow(0 0 6px var(--card-accent));
   }
   .stage.is-revealed .lineup-card-rank {
-    transition-delay: 4.4s;
+    transition-delay: 3.4s;
     opacity: 0;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -566,16 +583,16 @@
   toggle.addEventListener('click', () => {
     revealed = !revealed;
     stage.classList.toggle('is-revealed', revealed);
-    // The stage outline's gradient swap is a plain background change,
-    // which CSS can't transition or delay on its own (that was the bug
-    // where it used to jump to colour immediately on click) — so time
-    // it with a real timer instead, matching the cards' own 4.4s glow.
+    // The spinning outline's reveal-opacity is gated on a real class
+    // rather than transition-delay because it's keyed off the same
+    // background-swap limitation the fill colour has — so time it with
+    // a real timer instead, matching the cards' own 3.4s glow.
     clearTimeout(colorsInTimer);
     stage.classList.remove('stage-colors-in');
     if (revealed) {
       colorsInTimer = setTimeout(() => {
         if (revealed) stage.classList.add('stage-colors-in');
-      }, 4400);
+      }, 3400);
     }
     labels.forEach((el) => { el.textContent = revealed ? el.dataset.real : el.dataset.mystery; });
     document.querySelectorAll('.figure').forEach((fig) => {
