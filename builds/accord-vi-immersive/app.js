@@ -126,11 +126,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // should already be fully formed by the time you're scrolling through
   // those photos, not still filling in. Six arcs for the sixth edition. ----
   const mark = document.querySelector('.av-mark');
-  const completeByEl = document.querySelector('[data-act-id="proof-photos"]');
+  // Desktop and mobile each render their own variant of this chapter
+  // (.chapter-desktop-only / .chapter-mobile-only, one always display:none);
+  // picking the wrong one gives a zero rect from the hidden element, which
+  // made the mark's draw-in snap to "complete" the instant mobile scrolled.
+  const completeByCandidates = document.querySelectorAll('[data-act-id="proof-photos"]');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function updateScrollProgress() {
     const doc = document.documentElement;
+    const completeByEl = Array.from(completeByCandidates).find((el) => el.offsetParent !== null);
     const target = completeByEl
       ? completeByEl.getBoundingClientRect().top + window.scrollY
       : Math.max(doc.scrollHeight - window.innerHeight, 1);
