@@ -177,28 +177,33 @@
   .lineup-card-scene {
     width: clamp(5.6rem, 24vw, 10rem);
     aspect-ratio: 5 / 7;
+    perspective: 900px;
   }
+  /* 3D tilt: --tilt-x/--tilt-y are set from JS on mousemove (relative
+     cursor position within the card), reset to 0 on mouseleave. */
   .lineup-card-3d {
     position: relative;
     width: 100%;
     height: 100%;
+    transform: translateY(0) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition: transform 0.2s ease-out;
+  }
+  .figure:hover .lineup-card-3d,
+  .figure:focus-visible .lineup-card-3d {
+    transform: translateY(-4px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
   }
   .lineup-card-face {
-    position: absolute;
-    inset: 0;
+    position: relative;
+    width: 100%;
+    height: 100%;
     border-radius: 14px;
-    pointer-events: none;
     display: flex;
     flex-direction: column;
     padding: 0.6rem;
     border: 1px solid var(--gold-dim);
     background: linear-gradient(180deg, var(--canvas-deep) 0%, #000 100%);
     box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
-    transition: transform 0.35s ease, opacity 0.7s ease;
-  }
-  .figure:hover .lineup-card-face,
-  .figure:focus-visible .lineup-card-face {
-    transform: translateY(-3px);
+    transition: border-color 0.8s ease, box-shadow 0.8s ease;
   }
   .lineup-card-corner {
     display: block;
@@ -206,6 +211,7 @@
     font-size: 0.95rem;
     line-height: 1;
     color: var(--gold);
+    transition: color 0.8s ease;
   }
   .lineup-card-corner--tl { align-self: flex-start; }
   .lineup-card-corner--br { align-self: flex-end; transform: rotate(180deg); }
@@ -216,6 +222,7 @@
     justify-content: center;
     opacity: 0.85;
     color: var(--gold);
+    transition: color 0.8s ease;
   }
   .lineup-card-mark svg { width: 56%; }
   .lineup-card-rank {
@@ -226,69 +233,44 @@
     text-transform: uppercase;
     color: var(--gold-dim);
     margin: 0;
+    transition: opacity 0.6s ease;
   }
 
-  /* Reveal sequence: no flip — the mystery face glows twice in place,
-     then cross-fades into the back face's colour (each artist's own
-     accent, set inline via --card-accent*). The 1.7s opacity delay on
-     both faces is timed to the glow's own length (2 x 0.85s) so the
-     fade only starts once the glow has finished. */
+  /* Reveal sequence: no flip, no separate face — the same card glows
+     twice (a real pause between the two pulses, then a long hold
+     before anything else happens), then its border/shadow/corner/mark
+     colour shifts from gold to that artist's own accent (matching the
+     mystery-card front already used on their own page — --card-accent*
+     set inline per card below), and the rank word just fades out since
+     that reference card doesn't carry one either. The colour/rank
+     transition-delay is timed to the glow animation's own 5s length so
+     nothing else moves until the glow sequence has fully finished. */
   @keyframes lineupCardGlow {
-    0%, 100% {
+    0%, 16%, 56%, 72%, 100% {
       box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
     }
-    50% {
+    8%, 64% {
       box-shadow: 0 0 8px 2px var(--gold-bright), 0 0 42px 10px color-mix(in oklab, var(--gold) 65%, transparent), 0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
     }
   }
-  .stage.is-revealed .lineup-card-face--front {
-    opacity: 0;
-    transition-delay: 1.7s;
-    animation: lineupCardGlow 0.85s ease-in-out 2;
+  .stage.is-revealed .lineup-card-face {
+    animation: lineupCardGlow 5s ease-in-out 1;
+    transition-delay: 5s;
+    border-color: var(--card-accent-dim);
+    box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--card-accent) 35%, transparent);
   }
-  .stage.is-revealed .lineup-card-face--back {
-    opacity: 1;
-    transition-delay: 1.7s;
+  .stage.is-revealed .lineup-card-corner,
+  .stage.is-revealed .lineup-card-mark {
+    transition-delay: 5s;
+    color: var(--card-accent);
+  }
+  .stage.is-revealed .lineup-card-rank {
+    transition-delay: 5s;
+    opacity: 0;
   }
   @media (prefers-reduced-motion: reduce) {
-    .lineup-card-face { transition: none; }
-    .stage.is-revealed .lineup-card-face--front { animation: none; }
-  }
-
-  /* Back face carries each artist's own accent colour (set inline per
-     card via --card-accent*), so the reveal moment hands the card its
-     own identity the same way each artist's full page is themed. */
-  .lineup-card-face--back {
-    opacity: 0;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    text-align: center;
-    border-color: color-mix(in oklab, var(--card-accent) 55%, var(--gold-dim));
-    background: linear-gradient(180deg, color-mix(in oklab, var(--card-accent) 20%, var(--canvas-deep)) 0%, #000 100%);
-    box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--card-accent) 45%, transparent);
-  }
-  .lineup-card-back-numeral {
-    font-family: 'Fraunces', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--card-accent-bright);
-    opacity: 0.85;
-  }
-  .lineup-card-back-name {
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: clamp(0.82rem, 2.4vw, 1.02rem);
-    line-height: 1.2;
-    color: var(--card-accent-bright);
-  }
-  .lineup-card-back-genre {
-    font-family: 'Sora', sans-serif;
-    font-size: 0.58rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: color-mix(in oklab, var(--card-accent-bright) 55%, var(--ink-soft));
+    .lineup-card-face, .lineup-card-corner, .lineup-card-mark, .lineup-card-rank { transition: none; }
+    .stage.is-revealed .lineup-card-face { animation: none; }
   }
 
   .figure__meta {
@@ -413,16 +395,11 @@
     <a href="proto-hint.html?artist=2&from=sparkle" class="figure figure--left" data-artist="2" aria-label="Mystery artist one, tap for hints">
       <div class="lineup-card-scene">
         <div class="lineup-card-3d">
-          <div class="lineup-card-face lineup-card-face--front">
+          <div class="lineup-card-face" style="--card-accent:#a976b2; --card-accent-dim:#55335b;">
             <span class="lineup-card-corner lineup-card-corner--tl">Q</span>
             <div class="lineup-card-mark"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="50" cy="50" r="7"/><path d="M50 41 C41 22 31 17 21 22 C27 32 36 39 43 44"/><path d="M58 41 C67 22 77 17 87 22 C81 32 72 39 65 44"/><path d="M43 56 C22 61 17 71 22 81 C32 75 39 66 44 59"/><path d="M58 56 C79 61 84 71 79 81 C69 75 62 66 57 59"/><path d="M50 57 L50 78"/></svg></div>
             <span class="lineup-card-corner lineup-card-corner--br">Q</span>
             <p class="lineup-card-rank">Queen</p>
-          </div>
-          <div class="lineup-card-face lineup-card-face--back" style="--card-accent:#a976b2; --card-accent-bright:#d2b7d7; --card-accent-dim:#55335b;">
-            <p class="lineup-card-back-numeral">II</p>
-            <p class="lineup-card-back-name">Nehaal Naseem</p>
-            <p class="lineup-card-back-genre">Urdu Pop · OST</p>
           </div>
         </div>
       </div>
@@ -437,16 +414,11 @@
     <a href="proto-hint.html?artist=1&from=sparkle" class="figure figure--center" data-artist="1" aria-label="Mystery artist two, tap for hints">
       <div class="lineup-card-scene">
         <div class="lineup-card-3d">
-          <div class="lineup-card-face lineup-card-face--front">
+          <div class="lineup-card-face" style="--card-accent:#b57382; --card-accent-dim:#5e313b;">
             <span class="lineup-card-corner lineup-card-corner--tl">K</span>
             <div class="lineup-card-mark"><svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 66 L25 34 L38 54 L52 20 L68 54 L80 36 L95 66"/><path d="M14 100 v-14 M26 100 v-24 M38 100 v-10 M50 100 v-30 M62 100 v-16 M74 100 v-22 M86 100 v-12"/></svg></div>
             <span class="lineup-card-corner lineup-card-corner--br">K</span>
             <p class="lineup-card-rank">King</p>
-          </div>
-          <div class="lineup-card-face lineup-card-face--back" style="--card-accent:#b57382; --card-accent-bright:#d8b6bd; --card-accent-dim:#5e313b;">
-            <p class="lineup-card-back-numeral">I</p>
-            <p class="lineup-card-back-name">Hasan Raheem</p>
-            <p class="lineup-card-back-genre">R&amp;B · Hip Hop · Indie</p>
           </div>
         </div>
       </div>
@@ -461,16 +433,11 @@
     <a href="proto-hint.html?artist=3&from=sparkle" class="figure figure--right" data-artist="3" aria-label="Mystery artist three, tap for hints">
       <div class="lineup-card-scene">
         <div class="lineup-card-3d">
-          <div class="lineup-card-face lineup-card-face--front">
+          <div class="lineup-card-face" style="--card-accent:#76a5b2; --card-accent-dim:#33535b;">
             <span class="lineup-card-corner lineup-card-corner--tl">J</span>
             <div class="lineup-card-mark"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M50 6 L72 50 L50 94 L28 50 Z"/><path d="M50 6 L50 94 M28 50 L72 50" stroke-width="1.5" opacity="0.55"/><path d="M50 28 L61 50 L50 72 L39 50 Z"/></svg></div>
             <span class="lineup-card-corner lineup-card-corner--br">J</span>
             <p class="lineup-card-rank">Jack</p>
-          </div>
-          <div class="lineup-card-face lineup-card-face--back" style="--card-accent:#76a5b2; --card-accent-bright:#b7d0d7; --card-accent-dim:#33535b;">
-            <p class="lineup-card-back-numeral">III</p>
-            <p class="lineup-card-back-name">Sabaat Batin</p>
-            <p class="lineup-card-back-genre">Punjabi · Urdu/Hindi · Indie</p>
           </div>
         </div>
       </div>
@@ -507,6 +474,33 @@
     fig.dataset.hintHref = fig.getAttribute('href');
     const n = fig.dataset.artist;
     fig.dataset.revealHref = 'proto-artist.html?artist=' + n + '&from=sparkle';
+  });
+
+  // 3D tilt: rotate the card toward wherever the cursor is over it,
+  // rather than a fixed hover pop — --tilt-x/--tilt-y are read by
+  // .lineup-card-3d's transform (see CSS). Settles back to flat on
+  // mouseleave/blur so it doesn't stick mid-tilt.
+  const tiltMax = 14;
+  document.querySelectorAll('.lineup-card-scene').forEach((scene) => {
+    const card = scene.querySelector('.lineup-card-3d');
+    scene.addEventListener('mousemove', (e) => {
+      const rect = scene.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width;
+      const py = (e.clientY - rect.top) / rect.height;
+      card.style.setProperty('--tilt-x', ((0.5 - py) * tiltMax).toFixed(2) + 'deg');
+      card.style.setProperty('--tilt-y', ((px - 0.5) * tiltMax).toFixed(2) + 'deg');
+    });
+    scene.addEventListener('mouseleave', () => {
+      card.style.setProperty('--tilt-x', '0deg');
+      card.style.setProperty('--tilt-y', '0deg');
+    });
+  });
+  document.querySelectorAll('.figure').forEach((fig) => {
+    fig.addEventListener('blur', () => {
+      const card = fig.querySelector('.lineup-card-3d');
+      card.style.setProperty('--tilt-x', '0deg');
+      card.style.setProperty('--tilt-y', '0deg');
+    });
   });
 
   toggle.addEventListener('click', () => {
