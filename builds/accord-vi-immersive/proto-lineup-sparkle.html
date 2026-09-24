@@ -107,25 +107,24 @@
       linear-gradient(90deg, var(--gold-dim), var(--gold-dim)) border-box;
     overflow: hidden;
     padding: 3.5rem 3.5rem 1rem;
-    transition: box-shadow 1s ease;
   }
-  /* Reveal: the outline itself becomes the 3-artist gradient (border-box
-     layer above), plus an outer glow in the same three colours —
-     box-shadow paints outside the box regardless of overflow:hidden, so
-     this isn't clipped even though the sparkle canvas inside is. */
-  .stage.is-revealed {
-    transition-delay: 4.4s;
+  /* Reveal: just the outline itself becomes the 3-artist gradient, no
+     glow — the neon treatment stays on the cards only. `background` is
+     a discrete swap, not something CSS can smoothly transition or
+     delay, so `.stage-colors-in` is added by JS 4.4s after reveal
+     (matching the cards' own glow length) instead of relying on
+     transition-delay here, which a bare background change ignores —
+     that was the bug where this used to jump in immediately on click. */
+  .stage.stage-colors-in {
     background:
       radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklab, var(--gold) 6%, transparent), transparent 70%) padding-box,
       linear-gradient(180deg, #000 0%, var(--canvas-deep) 55%, #050506 100%) padding-box,
       linear-gradient(90deg, var(--stage-accent-1), var(--stage-accent-2), var(--stage-accent-3)) border-box;
-    box-shadow:
-      -50px 0 90px -20px color-mix(in oklab, var(--stage-accent-1) 60%, transparent),
-      0 0 70px -10px color-mix(in oklab, var(--stage-accent-2) 50%, transparent),
-      50px 0 90px -20px color-mix(in oklab, var(--stage-accent-3) 60%, transparent);
   }
   /* The "3 thirds" background wash, matching the artists' left-to-right
-     order on stage — one colour blending into the next. A separate
+     order on stage — one colour calmly blending into the next, kept
+     deliberately faint (heavily diluted with transparent) since this
+     is meant to read as ambient tint, not a bright panel. A separate
      layer (not baked into .stage's own background) so its opacity can
      fade in cleanly instead of trying to cross-fade two gradients. */
   .stage::before {
@@ -134,9 +133,9 @@
     inset: 0;
     z-index: 0;
     background: linear-gradient(90deg,
-      color-mix(in oklab, var(--stage-accent-1) 45%, transparent) 0%,
-      color-mix(in oklab, var(--stage-accent-2) 38%, transparent) 50%,
-      color-mix(in oklab, var(--stage-accent-3) 45%, transparent) 100%);
+      color-mix(in oklab, var(--stage-accent-1) 16%, transparent) 0%,
+      color-mix(in oklab, var(--stage-accent-2) 13%, transparent) 50%,
+      color-mix(in oklab, var(--stage-accent-3) 16%, transparent) 100%);
     opacity: 0;
     transition: opacity 1.2s ease;
     pointer-events: none;
@@ -146,7 +145,7 @@
     transition-delay: 4.4s;
   }
   @media (prefers-reduced-motion: reduce) {
-    .stage, .stage::before { transition: none; }
+    .stage::before { transition: none; }
   }
   .stage::after {
     content: '';
@@ -527,6 +526,7 @@
   const sub = document.getElementById('lineupSub');
   const labels = document.querySelectorAll('.figure__label');
   let revealed = false;
+  let colorsInTimer = null;
 
   // Each figure links to the mystery hints page pre-reveal, and to that
   // artist's own custom reveal page (bio + real-song player) post-reveal.
@@ -566,6 +566,17 @@
   toggle.addEventListener('click', () => {
     revealed = !revealed;
     stage.classList.toggle('is-revealed', revealed);
+    // The stage outline's gradient swap is a plain background change,
+    // which CSS can't transition or delay on its own (that was the bug
+    // where it used to jump to colour immediately on click) — so time
+    // it with a real timer instead, matching the cards' own 4.4s glow.
+    clearTimeout(colorsInTimer);
+    stage.classList.remove('stage-colors-in');
+    if (revealed) {
+      colorsInTimer = setTimeout(() => {
+        if (revealed) stage.classList.add('stage-colors-in');
+      }, 4400);
+    }
     labels.forEach((el) => { el.textContent = revealed ? el.dataset.real : el.dataset.mystery; });
     document.querySelectorAll('.figure').forEach((fig) => {
       fig.setAttribute('href', revealed ? fig.dataset.revealHref : fig.dataset.hintHref);
