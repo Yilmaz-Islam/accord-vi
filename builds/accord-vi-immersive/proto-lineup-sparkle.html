@@ -203,9 +203,19 @@
     box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
     transition: transform 0.35s ease;
   }
-  .figure:hover .lineup-card-face,
-  .figure:focus-visible .lineup-card-face {
+  /* Each face already carries its own resting transform (the back face
+     is permanently rotateY(180deg) so it faces away until the whole
+     .lineup-card-3d flips) — a bare "transform: translateY(-3px)" here
+     would replace that instead of adding to it, snapping the back face
+     to the wrong rotation for the hover's whole duration. Compose per
+     face so the lift never fights the flip. */
+  .figure:hover .lineup-card-face--front,
+  .figure:focus-visible .lineup-card-face--front {
     transform: translateY(-3px);
+  }
+  .figure:hover .lineup-card-face--back,
+  .figure:focus-visible .lineup-card-face--back {
+    transform: rotateY(180deg) translateY(-3px);
   }
   .lineup-card-corner {
     display: block;
