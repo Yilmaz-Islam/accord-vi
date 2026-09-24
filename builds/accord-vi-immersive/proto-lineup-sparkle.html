@@ -121,12 +121,12 @@
       color-mix(in oklab, var(--stage-accent-2) 13%, transparent) 50%,
       color-mix(in oklab, var(--stage-accent-3) 16%, transparent) 100%);
     opacity: 0;
-    transition: opacity 1.2s ease;
+    transition: opacity 2s ease;
     pointer-events: none;
   }
   .stage.is-revealed::before {
     opacity: 1;
-    transition-delay: 3.4s;
+    transition-delay: 2.8s;
   }
   @media (prefers-reduced-motion: reduce) {
     .stage::before { transition: none; }
@@ -140,7 +140,8 @@
      spin itself runs continuously; only opacity is gated on reveal.
      `.stage-colors-in` (added by JS — see the script below for why a
      plain transition-delay can't be trusted for this) times that fade
-     to land with everything else, at 3.4s. */
+     to land with everything else, at 2.8s. Spins fast (2.5s/turn) so
+     it actually reads as motion rather than a static ring. */
   @property --stage-beam-angle {
     syntax: '<angle>';
     initial-value: 0deg;
@@ -162,8 +163,8 @@
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     opacity: 0;
-    transition: opacity 1s ease;
-    animation: stage-beam-spin 9s linear infinite;
+    transition: opacity 1.6s ease;
+    animation: stage-beam-spin 2.5s linear infinite;
     pointer-events: none;
   }
   .stage.stage-colors-in::after {
@@ -265,7 +266,7 @@
       0 0 0px 0px transparent,
       0 0 0px 0px transparent,
       0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
-    transition: border-color 0.8s ease, box-shadow 0.8s ease;
+    transition: border-color 1.6s ease, box-shadow 1.6s ease;
   }
   .lineup-card-corner {
     display: block;
@@ -274,7 +275,7 @@
     line-height: 1;
     color: var(--gold);
     filter: drop-shadow(0 0 0px transparent);
-    transition: color 0.8s ease, filter 0.8s ease;
+    transition: color 1.6s ease, filter 1.6s ease;
   }
   .lineup-card-corner--tl { align-self: flex-start; }
   .lineup-card-corner--br { align-self: flex-end; transform: rotate(180deg); }
@@ -286,7 +287,7 @@
     opacity: 0.85;
     color: var(--gold);
     filter: drop-shadow(0 0 0px transparent);
-    transition: color 0.8s ease, filter 0.8s ease;
+    transition: color 1.6s ease, filter 1.6s ease;
   }
   .lineup-card-mark svg { width: 56%; }
   .lineup-card-rank {
@@ -297,28 +298,29 @@
     text-transform: uppercase;
     color: var(--gold-dim);
     margin: 0;
-    transition: opacity 0.6s ease;
+    transition: opacity 1.2s ease;
   }
 
-  /* Reveal sequence, reshaped as a heartbeat: a slow, smooth first
-     beat (0 -> 19% -> 38%, i.e. a gentle 0.65s rise and 0.65s fall) —
-     dimmer than before, this used to run too hot — then a real
-     flatline (38% -> 56%, completely at rest, no glow at all) before
-     the second beat hits suddenly (56% -> 59% is a fast 0.12s onset,
-     then a slower 59% -> 73% fall, echoing an EKG spike rather than a
-     mirror of beat one). Everything else (colour/rank fade) waits for
-     this whole 3.4s sequence via transition-delay. Every box-shadow/
-     filter keyframe keeps the same number of layers as the revealed
-     target so the hand-off from animation to transition interpolates
-     instead of snapping. */
+  /* Reveal sequence, as a heartbeat: BOTH beats happen first, close
+     together — a slow smooth one (0 -> 18% -> 36%, 0.5s rise/fall),
+     a short gap (36% -> 46%, 0.3s), then a sudden second one (46% ->
+     50% is a fast 0.1s onset, then a slower 50% -> 64% fall, an EKG
+     spike rather than a mirror of beat one) — and only THEN a real
+     flatline (64% -> 100%, 1s of nothing) immediately before the
+     cards actually reveal, rather than a pause sandwiched between the
+     beats. Colour/rank transitions (now slower/smoother "load in"
+     too, see above) wait for this whole 2.8s via transition-delay.
+     Every box-shadow keyframe keeps the same number of layers as the
+     revealed target so the hand-off from animation to transition
+     interpolates instead of snapping. */
   @keyframes lineupCardGlow {
-    0%, 38%, 56%, 73%, 100% {
+    0%, 36%, 46%, 64%, 100% {
       box-shadow:
         0 0 0px 0px transparent,
         0 0 0px 0px transparent,
         0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
     }
-    19%, 59% {
+    18%, 50% {
       box-shadow:
         0 0 4px 1px var(--gold-bright),
         0 0 22px 5px color-mix(in oklab, var(--gold) 40%, transparent),
@@ -326,8 +328,8 @@
     }
   }
   .stage.is-revealed .lineup-card-face {
-    animation: lineupCardGlow 3.4s ease-in-out 1;
-    transition-delay: 3.4s;
+    animation: lineupCardGlow 2.8s ease-in-out 1;
+    transition-delay: 2.8s;
     border-color: var(--card-accent);
     box-shadow:
       0 0 10px 2px var(--card-accent-bright),
@@ -336,12 +338,12 @@
   }
   .stage.is-revealed .lineup-card-corner,
   .stage.is-revealed .lineup-card-mark {
-    transition-delay: 3.4s;
+    transition-delay: 2.8s;
     color: var(--card-accent-bright);
     filter: drop-shadow(0 0 6px var(--card-accent));
   }
   .stage.is-revealed .lineup-card-rank {
-    transition-delay: 3.4s;
+    transition-delay: 2.8s;
     opacity: 0;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -586,13 +588,13 @@
     // The spinning outline's reveal-opacity is gated on a real class
     // rather than transition-delay because it's keyed off the same
     // background-swap limitation the fill colour has — so time it with
-    // a real timer instead, matching the cards' own 3.4s glow.
+    // a real timer instead, matching the cards' own 2.8s glow.
     clearTimeout(colorsInTimer);
     stage.classList.remove('stage-colors-in');
     if (revealed) {
       colorsInTimer = setTimeout(() => {
         if (revealed) stage.classList.add('stage-colors-in');
-      }, 3400);
+      }, 2800);
     }
     labels.forEach((el) => { el.textContent = revealed ? el.dataset.real : el.dataset.mystery; });
     document.querySelectorAll('.figure').forEach((fig) => {
