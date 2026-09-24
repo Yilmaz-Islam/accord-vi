@@ -177,45 +177,28 @@
   .lineup-card-scene {
     width: clamp(5.6rem, 24vw, 10rem);
     aspect-ratio: 5 / 7;
-    perspective: 1400px;
   }
   .lineup-card-3d {
     position: relative;
     width: 100%;
     height: 100%;
-    transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
-    transform-style: preserve-3d;
-  }
-  .stage.is-revealed .lineup-card-3d { transform: rotateY(180deg); }
-  @media (prefers-reduced-motion: reduce) {
-    .lineup-card-3d { transition: none; }
   }
   .lineup-card-face {
     position: absolute;
     inset: 0;
     border-radius: 14px;
-    backface-visibility: hidden;
+    pointer-events: none;
     display: flex;
     flex-direction: column;
     padding: 0.6rem;
     border: 1px solid var(--gold-dim);
     background: linear-gradient(180deg, var(--canvas-deep) 0%, #000 100%);
     box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
-    transition: transform 0.35s ease;
+    transition: transform 0.35s ease, opacity 0.7s ease;
   }
-  /* Each face already carries its own resting transform (the back face
-     is permanently rotateY(180deg) so it faces away until the whole
-     .lineup-card-3d flips) — a bare "transform: translateY(-3px)" here
-     would replace that instead of adding to it, snapping the back face
-     to the wrong rotation for the hover's whole duration. Compose per
-     face so the lift never fights the flip. */
-  .figure:hover .lineup-card-face--front,
-  .figure:focus-visible .lineup-card-face--front {
+  .figure:hover .lineup-card-face,
+  .figure:focus-visible .lineup-card-face {
     transform: translateY(-3px);
-  }
-  .figure:hover .lineup-card-face--back,
-  .figure:focus-visible .lineup-card-face--back {
-    transform: rotateY(180deg) translateY(-3px);
   }
   .lineup-card-corner {
     display: block;
@@ -245,11 +228,38 @@
     margin: 0;
   }
 
+  /* Reveal sequence: no flip — the mystery face glows twice in place,
+     then cross-fades into the back face's colour (each artist's own
+     accent, set inline via --card-accent*). The 1.7s opacity delay on
+     both faces is timed to the glow's own length (2 x 0.85s) so the
+     fade only starts once the glow has finished. */
+  @keyframes lineupCardGlow {
+    0%, 100% {
+      box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
+    }
+    50% {
+      box-shadow: 0 0 8px 2px var(--gold-bright), 0 0 42px 10px color-mix(in oklab, var(--gold) 65%, transparent), 0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
+    }
+  }
+  .stage.is-revealed .lineup-card-face--front {
+    opacity: 0;
+    transition-delay: 1.7s;
+    animation: lineupCardGlow 0.85s ease-in-out 2;
+  }
+  .stage.is-revealed .lineup-card-face--back {
+    opacity: 1;
+    transition-delay: 1.7s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lineup-card-face { transition: none; }
+    .stage.is-revealed .lineup-card-face--front { animation: none; }
+  }
+
   /* Back face carries each artist's own accent colour (set inline per
      card via --card-accent*), so the reveal moment hands the card its
      own identity the same way each artist's full page is themed. */
   .lineup-card-face--back {
-    transform: rotateY(180deg);
+    opacity: 0;
     align-items: center;
     justify-content: center;
     gap: 0.35rem;
