@@ -440,11 +440,26 @@
   }
   adminSearch.addEventListener('input', applyFilter);
 
+  // A bearer token in localStorage, not a cookie: the page (github.io)
+  // and the worker (workers.dev) are different sites, and browsers that
+  // block third-party cookies (Safari by default, and others) silently
+  // drop a cookie set from a cross-site fetch response — which is why
+  // sign-in could succeed server-side yet still show "Not signed in".
+  const TOKEN_KEY = 'accord_admin_token';
+  function getToken() {
+    try { return localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; }
+  }
+  function setToken(token) {
+    try { localStorage.setItem(TOKEN_KEY, token); } catch {}
+  }
+  function clearToken() {
+    try { localStorage.removeItem(TOKEN_KEY); } catch {}
+  }
+
   async function loadRegistrations() {
     const res = await fetch(`${WORKER_URL}/admin/registrations`, {
       method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
       body: '{}',
     });
     const data = await res.json();
@@ -478,13 +493,13 @@
     loginBtn.disabled = true;
     fetch(`${WORKER_URL}/admin/login`, {
       method: 'POST',
-      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password }),
     })
       .then((res) => res.json())
       .then((data) => {
         if (!data.ok) throw new Error(data.error || 'Incorrect password');
+        setToken(data.token);
         return loadRegistrations();
       })
       .then((registrations) => {
@@ -498,10 +513,10 @@
   document.getElementById('logoutBtn').addEventListener('click', () => {
     fetch(`${WORKER_URL}/admin/logout`, {
       method: 'POST',
-      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: '{}',
     }).finally(() => {
+      clearToken();
       allRegistrations = [];
       document.getElementById('adminPassword').value = '';
       setNote('');
