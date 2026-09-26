@@ -485,7 +485,7 @@
         <button type="button" class="btn btn-primary btn-block wizard-next" id="tierNext" disabled>Continue</button>
       </div>
 
-      <div class="wizard-step" data-step="sponsorPayment">
+      <div class="wizard-step" data-step="payment">
         <h2 class="wizard-question">How would you like to pay?</h2>
         <div class="wizard-pill-list" role="radiogroup" aria-label="Payment method">
           <button type="button" class="wizard-pill" data-pay="JazzCash" role="radio" aria-checked="false">JazzCash</button>
@@ -555,9 +555,9 @@
 
   // ---------- Dynamic step sequence ----------
   function computeSequence(persona) {
-    if (persona === 'group') return ['persona', 'name', 'hearAbout', 'headcount', 'groupNames', 'email', 'code'];
-    if (persona === 'sponsor') return ['persona', 'name', 'hearAbout', 'sponsorTier', 'sponsorPayment', 'email', 'code'];
-    return ['persona', 'name', 'hearAbout', 'email', 'code'];
+    if (persona === 'group') return ['persona', 'name', 'hearAbout', 'headcount', 'groupNames', 'payment', 'email', 'code'];
+    if (persona === 'sponsor') return ['persona', 'name', 'hearAbout', 'sponsorTier', 'payment', 'email', 'code'];
+    return ['persona', 'name', 'hearAbout', 'payment', 'email', 'code'];
   }
 
   let sequence = computeSequence(null);
@@ -690,7 +690,7 @@
   let chosenPayment = '';
   const paymentDetails = document.getElementById('paymentDetails');
   const paymentNext = document.getElementById('paymentNext');
-  const paymentPills = document.querySelectorAll('[data-step="sponsorPayment"] .wizard-pill');
+  const paymentPills = document.querySelectorAll('[data-step="payment"] .wizard-pill');
   const doneTitle = document.getElementById('doneTitle');
   const doneNote = document.getElementById('doneNote');
   const PAYMENT_INFO = {
@@ -750,8 +750,8 @@
     parts.push(`Heard about us: ${wizHearAbout.value}`);
     if (wizPersonaField.value === 'sponsor') {
       parts.push(`Tier interest: ${chosenTier || 'not selected yet'}`);
-      parts.push(`Payment method: ${chosenPayment || 'not selected yet'}`);
     }
+    parts.push(`Payment method: ${chosenPayment || 'not selected yet'}`);
     return parts.join(' | ');
   }
 
