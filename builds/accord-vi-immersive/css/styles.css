@@ -929,6 +929,12 @@ ul { list-style: none; }
   border-radius: 999px;
   padding: 0.1rem 0.5rem;
 }
+/* Spans are inline pills within body text; keep the whole pill together
+   as one unit instead of splitting mid-phrase at the line wrap. The
+   block <p class="ph-tag"> banner variant is unaffected. */
+span.ph-tag {
+  display: inline-block;
+}
 
 .contact-form {
   background: var(--color-surface);

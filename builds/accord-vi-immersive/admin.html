@@ -58,6 +58,27 @@
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(224, 180, 85, 0.15);
   }
+  .admin-login label.show-password-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: -0.75rem 0 1.25rem;
+    text-transform: none;
+    letter-spacing: normal;
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: var(--color-text-dim);
+    cursor: pointer;
+  }
+  .admin-login input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+  }
   .admin-note {
     margin-top: 0.9rem;
     font-size: 0.85rem;
@@ -264,6 +285,10 @@
       <form id="loginForm">
         <label for="adminPassword">Password</label>
         <input type="password" id="adminPassword" autocomplete="current-password" required>
+        <label class="show-password-toggle" for="showPassword">
+          <input type="checkbox" id="showPassword">
+          <span>Show password</span>
+        </label>
         <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Sign in</button>
         <p class="admin-note" id="loginNote" role="status"></p>
       </form>
@@ -338,6 +363,11 @@
   const loginForm = document.getElementById('loginForm');
   const loginBtn = document.getElementById('loginBtn');
   const loginNote = document.getElementById('loginNote');
+  const adminPasswordInput = document.getElementById('adminPassword');
+  const showPasswordToggle = document.getElementById('showPassword');
+  showPasswordToggle.addEventListener('change', () => {
+    adminPasswordInput.type = showPasswordToggle.checked ? 'text' : 'password';
+  });
   const adminCount = document.getElementById('adminCount');
   const adminSearch = document.getElementById('adminSearch');
   const adminTableBody = document.getElementById('adminTableBody');
