@@ -10,9 +10,27 @@
 <style>
   .admin-wrap { max-width: 68rem; margin: 0 auto; }
 
+  .admin-loading {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--color-text-dim);
+    font-size: 0.9rem;
+  }
+  .admin-spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    animation: admin-spin 0.8s linear infinite;
+  }
+  @keyframes admin-spin { to { transform: rotate(360deg); } }
+
   .admin-login {
     max-width: 26rem;
     margin: 0 auto;
+    animation: admin-fade-in 0.4s ease;
   }
   .admin-login label {
     display: block;
@@ -33,8 +51,13 @@
     font-size: 1.05rem;
     font-family: inherit;
     margin-bottom: 1.25rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
-  .admin-login input:focus { outline: none; border-color: var(--color-primary); }
+  .admin-login input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(224, 180, 85, 0.15);
+  }
   .admin-note {
     margin-top: 0.9rem;
     font-size: 0.85rem;
@@ -43,25 +66,72 @@
   }
   .admin-note.is-error { color: #e0555a; }
 
+  #logView { animation: admin-fade-in 0.4s ease; }
+  @keyframes admin-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   .admin-toolbar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
     gap: 1rem;
     margin-bottom: 1.5rem;
   }
+  .admin-search-wrap {
+    position: relative;
+    flex: 1 1 16rem;
+    max-width: 22rem;
+  }
+  .admin-search-wrap svg {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-text-faint);
+    pointer-events: none;
+  }
+  .admin-search {
+    width: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.65rem 1rem 0.65rem 2.4rem;
+    color: var(--color-text);
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .admin-search:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(224, 180, 85, 0.15);
+  }
+  .admin-search::-webkit-search-cancel-button { cursor: pointer; }
+  .admin-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+  }
   .admin-count {
     font-family: var(--font-display);
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     color: var(--color-text-dim);
+    white-space: nowrap;
   }
   .admin-count strong { color: var(--color-primary); }
 
   .admin-table-scroll {
-    overflow-x: auto;
+    overflow: auto;
+    max-height: 70vh;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
   }
   table.admin-table {
     width: 100%;
@@ -70,28 +140,59 @@
     min-width: 46rem;
   }
   .admin-table th, .admin-table td {
-    padding: 0.75rem 1rem;
+    padding: 0.85rem 1.1rem;
     text-align: left;
     border-bottom: 1px solid var(--color-border);
     vertical-align: top;
   }
   .admin-table th {
     font-family: var(--font-display);
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     color: var(--color-text-faint);
-    background: var(--color-surface);
+    background: var(--color-bg-alt);
     white-space: nowrap;
+    position: sticky;
+    top: 0;
   }
   .admin-table tr:last-child td { border-bottom: none; }
-  .admin-table td.admin-cell-when { white-space: nowrap; color: var(--color-text-dim); }
+  .admin-table tbody tr {
+    transition: background 0.15s ease;
+    animation: admin-row-in 0.35s ease both;
+  }
+  .admin-table tbody tr:hover { background: var(--color-bg-alt); }
+  @keyframes admin-row-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .admin-table td.admin-cell-when { white-space: nowrap; color: var(--color-text-dim); font-size: 0.82rem; }
   .admin-table td.admin-cell-type { white-space: nowrap; }
+  .admin-table td.admin-cell-type span {
+    display: inline-block;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(224, 180, 85, 0.12);
+    color: var(--color-primary);
+    font-size: 0.76rem;
+    font-family: var(--font-display);
+  }
   .admin-table td.admin-cell-details { color: var(--color-text-dim); font-size: 0.82rem; }
+  .admin-table mark {
+    background: rgba(224, 180, 85, 0.4);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 0.1em;
+  }
   .admin-empty {
-    padding: 3rem 1.5rem;
+    padding: 3.5rem 1.5rem;
     text-align: center;
     color: var(--color-text-dim);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .admin-spinner { animation: none; }
+    .admin-login, #logView, .admin-table tbody tr { animation: none; }
   }
 
   .admin-logout {
@@ -102,8 +203,14 @@
     color: var(--color-text-dim);
     font-size: 0.85rem;
     cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s ease, border-color 0.2s ease;
   }
   .admin-logout:hover { color: var(--color-text); border-color: var(--color-text-dim); }
+
+  @media (max-width: 640px) {
+    .admin-toolbar-right { margin-left: 0; width: 100%; justify-content: space-between; }
+  }
 </style>
 </head>
 <body>
@@ -148,7 +255,12 @@
     <p class="eyebrow" style="text-align:center;">Executives only</p>
     <h1 class="page-title" style="text-align:center; margin-bottom:2.5rem;">Registration log</h1>
 
-    <div id="loginView" class="admin-login">
+    <div id="loadingView" class="admin-loading">
+      <div class="admin-spinner" aria-hidden="true"></div>
+      <p>Checking your session…</p>
+    </div>
+
+    <div id="loginView" class="admin-login" hidden>
       <form id="loginForm">
         <label for="adminPassword">Password</label>
         <input type="password" id="adminPassword" autocomplete="current-password" required>
@@ -159,8 +271,17 @@
 
     <div id="logView" hidden>
       <div class="admin-toolbar">
-        <p class="admin-count" id="adminCount"></p>
-        <button type="button" class="admin-logout" id="logoutBtn">Sign out</button>
+        <div class="admin-search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M21 21l-4.3-4.3"></path>
+          </svg>
+          <input type="search" id="adminSearch" class="admin-search" placeholder="Search by name or email…" aria-label="Search registrations">
+        </div>
+        <div class="admin-toolbar-right">
+          <p class="admin-count" id="adminCount"></p>
+          <button type="button" class="admin-logout" id="logoutBtn">Sign out</button>
+        </div>
       </div>
       <div class="admin-table-scroll">
         <table class="admin-table" id="adminTable">
@@ -211,15 +332,19 @@
   }
 
   const WORKER_URL = 'https://accord-vi-verify.accordbccmvi.workers.dev';
+  const loadingView = document.getElementById('loadingView');
   const loginView = document.getElementById('loginView');
   const logView = document.getElementById('logView');
   const loginForm = document.getElementById('loginForm');
   const loginBtn = document.getElementById('loginBtn');
   const loginNote = document.getElementById('loginNote');
   const adminCount = document.getElementById('adminCount');
+  const adminSearch = document.getElementById('adminSearch');
   const adminTableBody = document.getElementById('adminTableBody');
   const adminEmpty = document.getElementById('adminEmpty');
   const adminTable = document.getElementById('adminTable');
+
+  let allRegistrations = [];
 
   function setNote(text, kind) {
     loginNote.textContent = text;
@@ -233,29 +358,57 @@
     }[c]));
   }
 
-  function renderRegistrations(registrations) {
-    adminCount.innerHTML = `<strong>${registrations.length}</strong> registration${registrations.length === 1 ? '' : 's'}`;
+  // Wraps the first match of `query` in <mark>, working on the already
+  // HTML-escaped string so it can't reopen a tag — escape first, search
+  // in the escaped text (fine: query never contains the few characters
+  // escaping changes), then splice the mark in around that index.
+  function highlight(raw, query) {
+    const safe = escapeHtml(raw);
+    if (!query) return safe;
+    const idx = safe.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return safe;
+    return safe.slice(0, idx) + '<mark>' + safe.slice(idx, idx + query.length) + '</mark>' + safe.slice(idx + query.length);
+  }
+
+  function renderRegistrations(registrations, query) {
+    const total = allRegistrations.length;
+    adminCount.innerHTML = query
+      ? `<strong>${registrations.length}</strong> of ${total} registration${total === 1 ? '' : 's'}`
+      : `<strong>${total}</strong> registration${total === 1 ? '' : 's'}`;
+
     adminTableBody.innerHTML = '';
     if (!registrations.length) {
       adminTable.hidden = true;
       adminEmpty.hidden = false;
+      adminEmpty.textContent = query ? `No registrations match "${query}".` : 'No registrations yet.';
       return;
     }
     adminTable.hidden = false;
     adminEmpty.hidden = true;
-    registrations.forEach((r) => {
+    registrations.forEach((r, i) => {
       const tr = document.createElement('tr');
+      tr.style.animationDelay = `${Math.min(i, 24) * 20}ms`;
       const when = r.submittedAt ? new Date(r.submittedAt).toLocaleString() : '—';
       tr.innerHTML = `
         <td class="admin-cell-when">${escapeHtml(when)}</td>
-        <td class="admin-cell-type">${escapeHtml(r.form_type || '—')}</td>
-        <td>${escapeHtml(r.name || '—')}</td>
-        <td>${escapeHtml(r.email || '—')}</td>
+        <td class="admin-cell-type"><span>${escapeHtml(r.form_type || '—')}</span></td>
+        <td>${highlight(r.name || '—', query)}</td>
+        <td>${highlight(r.email || '—', query)}</td>
         <td class="admin-cell-details">${escapeHtml(r.details || '—')}</td>
       `;
       adminTableBody.appendChild(tr);
     });
   }
+
+  function applyFilter() {
+    const query = adminSearch.value.trim();
+    const q = query.toLowerCase();
+    const filtered = query
+      ? allRegistrations.filter((r) => (r.name || '').toLowerCase().includes(q) || (r.email || '').toLowerCase().includes(q))
+      : allRegistrations;
+    renderRegistrations(filtered, query);
+  }
+  adminSearch.addEventListener('input', applyFilter);
 
   async function loadRegistrations() {
     const res = await fetch(`${WORKER_URL}/admin/registrations`, {
@@ -270,16 +423,23 @@
   }
 
   function showLog(registrations) {
+    allRegistrations = registrations;
+    loadingView.hidden = true;
     loginView.hidden = true;
     logView.hidden = false;
-    renderRegistrations(registrations);
+    adminSearch.value = '';
+    applyFilter();
   }
 
-  // If a still-valid session cookie already exists (12h TTL), skip the
-  // login form entirely instead of always asking for the password again.
-  loadRegistrations()
-    .then(showLog)
-    .catch(() => { /* not signed in — leave the login form showing */ });
+  function showLogin() {
+    loadingView.hidden = true;
+    logView.hidden = true;
+    loginView.hidden = false;
+  }
+
+  // Loading view stays up until we know which way this goes, so an
+  // already-signed-in exec never sees the password form flash by first.
+  loadRegistrations().then(showLog).catch(showLogin);
 
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -311,13 +471,12 @@
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: '{}',
-    })
-      .finally(() => {
-        logView.hidden = true;
-        loginView.hidden = false;
-        document.getElementById('adminPassword').value = '';
-        setNote('');
-      });
+    }).finally(() => {
+      allRegistrations = [];
+      document.getElementById('adminPassword').value = '';
+      setNote('');
+      showLogin();
+    });
   });
 </script>
 </body>
