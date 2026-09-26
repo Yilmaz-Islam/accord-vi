@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Executive Portal — Accord VI</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .admin-wrap { max-width: 68rem; margin: 0 auto; }
+
+  .admin-login {
+    max-width: 26rem;
+    margin: 0 auto;
+  }
+  .admin-login label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-dim);
+    margin-bottom: 0.5rem;
+  }
+  .admin-login input {
+    width: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.9rem 1rem;
+    color: var(--color-text);
+    font-size: 1.05rem;
+    font-family: inherit;
+    margin-bottom: 1.25rem;
+  }
+  .admin-login input:focus { outline: none; border-color: var(--color-primary); }
+  .admin-note {
+    margin-top: 0.9rem;
+    font-size: 0.85rem;
+    color: var(--color-text-dim);
+    min-height: 1.2em;
+  }
+  .admin-note.is-error { color: #e0555a; }
+
+  .admin-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .admin-count {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    color: var(--color-text-dim);
+  }
+  .admin-count strong { color: var(--color-primary); }
+
+  .admin-table-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  table.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    min-width: 46rem;
+  }
+  .admin-table th, .admin-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+  }
+  .admin-table th {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-faint);
+    background: var(--color-surface);
+    white-space: nowrap;
+  }
+  .admin-table tr:last-child td { border-bottom: none; }
+  .admin-table td.admin-cell-when { white-space: nowrap; color: var(--color-text-dim); }
+  .admin-table td.admin-cell-type { white-space: nowrap; }
+  .admin-table td.admin-cell-details { color: var(--color-text-dim); font-size: 0.82rem; }
+  .admin-empty {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    color: var(--color-text-dim);
+  }
+
+  .admin-logout {
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.5rem 1.1rem;
+    color: var(--color-text-dim);
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .admin-logout:hover { color: var(--color-text); border-color: var(--color-text-dim); }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="resonance-mark" viewBox="0 0 120 120">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+      <line x1="60" y1="8" x2="60" y2="112"></line>
+      <path d="M66.8,41.2 A20,20 0 0 1 66.8,78.8"></path>
+      <path d="M53.2,41.2 A20,20 0 0 0 53.2,78.8"></path>
+      <path d="M71.6,28.1 A34,34 0 0 1 71.6,91.9"></path>
+      <path d="M48.4,28.1 A34,34 0 0 0 48.4,91.9"></path>
+      <path d="M76.4,14.9 A48,48 0 0 1 76.4,105.1"></path>
+      <path d="M43.6,14.9 A48,48 0 0 0 43.6,105.1"></path>
+    </g>
+    <circle cx="60" cy="60" r="4" fill="currentColor"></circle>
+  </symbol>
+</svg>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
+      <span class="logo-text">Accord <span>VI</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="info.html" class="nav-link">Info</a>
+      <a href="sponsor.html" class="nav-link">Sponsors</a>
+      <a href="privacy-policy.html" class="nav-link">Privacy</a>
+      <a href="register.html" class="nav-cta">Register</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<section class="section" id="main">
+  <div class="container admin-wrap">
+    <p class="eyebrow" style="text-align:center;">Executives only</p>
+    <h1 class="page-title" style="text-align:center; margin-bottom:2.5rem;">Registration log</h1>
+
+    <div id="loginView" class="admin-login">
+      <form id="loginForm">
+        <label for="adminPassword">Password</label>
+        <input type="password" id="adminPassword" autocomplete="current-password" required>
+        <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Sign in</button>
+        <p class="admin-note" id="loginNote" role="status"></p>
+      </form>
+    </div>
+
+    <div id="logView" hidden>
+      <div class="admin-toolbar">
+        <p class="admin-count" id="adminCount"></p>
+        <button type="button" class="admin-logout" id="logoutBtn">Sign out</button>
+      </div>
+      <div class="admin-table-scroll">
+        <table class="admin-table" id="adminTable">
+          <thead>
+            <tr>
+              <th>Submitted</th>
+              <th>Type</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody"></tbody>
+        </table>
+      </div>
+      <p class="admin-empty" id="adminEmpty" hidden>No registrations yet.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span class="logo footer-logo">
+      <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
+      <span class="logo-text">Accord <span>VI</span></span>
+    </span>
+    <p class="footer-tag">18–19 October · Beaconhouse Cantt Campus, Multan</p>
+    <p class="footer-copy">© <span id="year"></span> Accord VI. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+    navLinks.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  const WORKER_URL = 'https://accord-vi-verify.accordbccmvi.workers.dev';
+  const loginView = document.getElementById('loginView');
+  const logView = document.getElementById('logView');
+  const loginForm = document.getElementById('loginForm');
+  const loginBtn = document.getElementById('loginBtn');
+  const loginNote = document.getElementById('loginNote');
+  const adminCount = document.getElementById('adminCount');
+  const adminTableBody = document.getElementById('adminTableBody');
+  const adminEmpty = document.getElementById('adminEmpty');
+  const adminTable = document.getElementById('adminTable');
+
+  function setNote(text, kind) {
+    loginNote.textContent = text;
+    loginNote.classList.remove('is-error');
+    if (kind) loginNote.classList.add(kind);
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+  }
+
+  function renderRegistrations(registrations) {
+    adminCount.innerHTML = `<strong>${registrations.length}</strong> registration${registrations.length === 1 ? '' : 's'}`;
+    adminTableBody.innerHTML = '';
+    if (!registrations.length) {
+      adminTable.hidden = true;
+      adminEmpty.hidden = false;
+      return;
+    }
+    adminTable.hidden = false;
+    adminEmpty.hidden = true;
+    registrations.forEach((r) => {
+      const tr = document.createElement('tr');
+      const when = r.submittedAt ? new Date(r.submittedAt).toLocaleString() : '—';
+      tr.innerHTML = `
+        <td class="admin-cell-when">${escapeHtml(when)}</td>
+        <td class="admin-cell-type">${escapeHtml(r.form_type || '—')}</td>
+        <td>${escapeHtml(r.name || '—')}</td>
+        <td>${escapeHtml(r.email || '—')}</td>
+        <td class="admin-cell-details">${escapeHtml(r.details || '—')}</td>
+      `;
+      adminTableBody.appendChild(tr);
+    });
+  }
+
+  async function loadRegistrations() {
+    const res = await fetch(`${WORKER_URL}/admin/registrations`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Could not load registrations');
+    return data.registrations;
+  }
+
+  function showLog(registrations) {
+    loginView.hidden = true;
+    logView.hidden = false;
+    renderRegistrations(registrations);
+  }
+
+  // If a still-valid session cookie already exists (12h TTL), skip the
+  // login form entirely instead of always asking for the password again.
+  loadRegistrations()
+    .then(showLog)
+    .catch(() => { /* not signed in — leave the login form showing */ });
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const password = document.getElementById('adminPassword').value;
+    setNote('Checking…');
+    loginBtn.disabled = true;
+    fetch(`${WORKER_URL}/admin/login`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.ok) throw new Error(data.error || 'Incorrect password');
+        return loadRegistrations();
+      })
+      .then((registrations) => {
+        setNote('');
+        showLog(registrations);
+      })
+      .catch((err) => setNote(err.message || 'Something went wrong, please try again.', 'is-error'))
+      .finally(() => { loginBtn.disabled = false; });
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    fetch(`${WORKER_URL}/admin/logout`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+    })
+      .finally(() => {
+        logView.hidden = true;
+        loginView.hidden = false;
+        document.getElementById('adminPassword').value = '';
+        setNote('');
+      });
+  });
+</script>
+</body>
+</html>
