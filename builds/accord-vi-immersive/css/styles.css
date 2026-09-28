@@ -143,6 +143,35 @@ ul { list-style: none; }
   height: 26px;
   color: var(--color-primary);
   flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.logo-mark-wrap {
+  position: relative;
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+.logo:hover .logo-mark, .logo:focus-visible .logo-mark { transform: scale(1.12); }
+
+/* Two rings that ping outward from the mark on hover, like the sound
+   resonance the mark itself depicts. */
+.logo-ping {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-primary);
+  opacity: 0;
+  pointer-events: none;
+}
+.logo:hover .logo-ping, .logo:focus-visible .logo-ping {
+  animation: logo-ping-pulse 1.2s ease-out infinite;
+}
+.logo-ping-2 { animation-delay: 0.4s; }
+@keyframes logo-ping-pulse {
+  0% { transform: scale(0.55); opacity: 0.6; }
+  100% { transform: scale(1.7); opacity: 0; }
 }
 
 .nav-links {
@@ -162,12 +191,47 @@ ul { list-style: none; }
 .nav-links.open { transform: translateY(0); opacity: 1; }
 
 .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.85rem 0;
   border-bottom: 1px solid var(--color-border);
   font-weight: 500;
   color: var(--color-text-dim);
 }
 .nav-link:hover { color: var(--color-text); }
+
+.nav-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  overflow: visible;
+  transition: filter 0.3s ease;
+}
+
+/* Info: the lens lights up with a warm glow on hover. */
+.icon-lens { transition: fill-opacity 0.3s ease; fill: var(--color-primary); fill-opacity: 0; }
+.nav-link--info:hover .nav-icon, .nav-link--info:focus-visible .nav-icon {
+  filter: drop-shadow(0 0 4px var(--color-primary));
+}
+.nav-link--info:hover .icon-lens, .nav-link--info:focus-visible .icon-lens { fill-opacity: 0.4; }
+
+/* Sponsor: the coin flips over on hover. */
+.nav-link--sponsor { perspective: 60px; }
+.nav-icon--sponsor { transition: transform 0.5s ease; }
+.nav-link--sponsor:hover .nav-icon--sponsor, .nav-link--sponsor:focus-visible .nav-icon--sponsor {
+  transform: rotateY(360deg);
+}
+
+/* Privacy: the shackle swings shut on hover, like locking it. */
+.icon-shackle {
+  transform-origin: 16px 11px;
+  transform: rotate(-32deg);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-link--privacy:hover .icon-shackle, .nav-link--privacy:focus-visible .icon-shackle {
+  transform: rotate(0deg);
+}
 
 .nav-cta {
   margin-top: 1rem;
