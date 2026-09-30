@@ -117,6 +117,14 @@ body { font-family: var(--sc-font-text); }
   opacity: 0.72;
 }
 
+/* On phones the full-width hero CTA scrolls right underneath the folio, and
+   the chapter name printed across the button read as a collision, so only
+   the chapter number stays. */
+@media (max-width: 640px) {
+  .av-folio__title { display: none; }
+  .av-folio { right: var(--sc-3); bottom: var(--sc-3); }
+}
+
 /* ---------- Custom cursor: brass ring + dot, fine-pointer only ---------- */
 /* Hiding the native cursor is its own condition, gated on no-preference:
    without this, a mouse user with reduced-motion on got NO cursor at all —
@@ -232,7 +240,41 @@ body { font-family: var(--sc-font-text); }
   padding: var(--sc-section) var(--sc-gutter) var(--sc-9);
   background: var(--sc-canvas);
 }
-.av-hero__inner { max-width: 46rem; }
+.av-hero { position: relative; }
+.av-hero__inner { max-width: 46rem; position: relative; z-index: 1; }
+
+/* Resonance mark: only where it clears the 46rem text column (1280px+), so
+   phones, tablets and small laptops keep the pure title page. */
+.av-hero__mark { display: none; }
+@media (min-width: 1280px) {
+  .av-hero__mark {
+    display: block;
+    position: absolute;
+    right: var(--sc-gutter);
+    top: 50%;
+    width: min(30vw, 30rem);
+    height: auto;
+    transform: translateY(-50%);
+    color: var(--sc-accent);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .av-hero__mark [pathLength] {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: av-mark-draw 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--i) * 140ms + 200ms);
+  }
+  .av-hero__mark circle {
+    opacity: 0;
+    animation: av-mark-dot 0.8s ease-out 0.9s forwards;
+  }
+}
+@keyframes av-mark-draw { to { stroke-dashoffset: 0; } }
+@keyframes av-mark-dot { to { opacity: 1; } }
+
 .av-hero__eyebrow {
   font-family: var(--sc-font-display);
   font-size: var(--sc-t-sm);
@@ -925,7 +967,7 @@ body { font-family: var(--sc-font-text); }
 
 /* ---------- Chapter 5: Lineup (teaser, links out to the reveal) ---------- */
 /* The mystery-card reveal itself is its own full experience
-   (proto-lineup-real.html) — this chapter only teases it and hands off,
+   (lineup.html) — this chapter only teases it and hands off,
    the same "link out, don't duplicate" pattern the Register close chapter
    already uses for register.html/sponsor.html. */
 .av-lineup__title {
