@@ -1,0 +1,481 @@
+/* ============================================================
+   Accord VI: The Artists (3D scroll experiment)
+   Page-specific styles only. Never touches .sc-* engine classes
+   or [data-sc-*] selectors; those are the mechanism.
+
+   Progressive enhancement:
+   - Base rules are the static layout (no JS, phones, reduced motion).
+   - html.is-3d adds the pinned 3D coverflow, driven entirely by the
+     engine's --sc-p on #drum (pure CSS math, no per-frame JS layout).
+   ============================================================ */
+
+@font-face {
+  font-family: 'Sora';
+  src: url('assets/fonts/Sora-Variable.ttf') format('truetype-variations');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('assets/fonts/Inter-Variable.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --sc-canvas:     #0e0f12;
+  --sc-surface:    #17181d;
+  --sc-ink:        #efece6;
+  --sc-ink-soft:   #a9a6a0;
+  --sc-accent:     #e0b455;
+  --sc-accent-ink: #211a05;
+  --sc-font-display: 'Sora', system-ui, sans-serif;
+  --sc-font-text:    'Inter', system-ui, sans-serif;
+}
+
+/* The glow behind the drum follows whichever artist is at the front. */
+@property --front-theme {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e0b455;
+}
+
+html { background: var(--sc-canvas); }
+body {
+  margin: 0;
+  background: var(--sc-canvas);
+  color: var(--sc-ink);
+  font-family: var(--sc-font-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.art-sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+a:focus-visible, button:focus-visible, .art-portrait:focus-visible {
+  outline: 2px solid var(--sc-accent);
+  outline-offset: 3px;
+}
+
+.art-skip {
+  position: fixed;
+  left: var(--sc-4);
+  top: -4rem;
+  z-index: 100;
+  padding: var(--sc-3) var(--sc-4);
+  background: var(--sc-accent);
+  color: var(--sc-accent-ink);
+  font-family: var(--sc-font-display);
+  font-weight: 600;
+  border-radius: 999px;
+  text-decoration: none;
+}
+.art-skip:focus { top: var(--sc-4); }
+
+/* ---------------------------------------------------------- header -- */
+.art-top {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sc-4) var(--sc-gutter);
+  pointer-events: none;
+}
+.art-top > * { pointer-events: auto; }
+.art-top__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  color: var(--sc-accent);
+  font-family: var(--sc-font-display);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+.art-top__logo svg { width: 26px; height: 26px; }
+.art-top__logo span span { color: var(--sc-ink); }
+.art-top__back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--sc-4);
+  font-family: var(--sc-font-display);
+  font-weight: 600;
+  font-size: var(--sc-t-sm);
+  color: var(--sc-ink);
+  text-decoration: none;
+  border: 1px solid var(--sc-hairline-strong);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--sc-canvas) 72%, transparent);
+  backdrop-filter: blur(8px);
+  transition: border-color 160ms var(--sc-ease-out);
+}
+.art-top__back:hover { border-color: var(--sc-accent); }
+
+/* ----------------------------------------------------------- intro -- */
+.art-intro {
+  min-height: 72svh;
+  display: flex;
+  align-items: flex-end;
+  padding: 9rem var(--sc-gutter) var(--sc-8);
+}
+.art-intro__inner { max-width: 46rem; }
+.art-intro__title {
+  margin: 0;
+  font-family: var(--sc-font-display);
+  font-weight: 700;
+  font-size: var(--sc-t-3xl);
+  line-height: var(--sc-leading-none);
+  letter-spacing: var(--sc-track-tight);
+  text-wrap: balance;
+}
+.art-intro__sub {
+  margin: var(--sc-5) 0 0;
+  max-width: 34ch;
+  color: var(--sc-ink-soft);
+  font-size: var(--sc-t-base);
+  line-height: var(--sc-leading-body);
+}
+
+/* -------------------------------------------------- stage (static) -- */
+.art-stage {
+  position: relative;
+  padding: var(--sc-8) var(--sc-gutter) var(--sc-9);
+}
+.art-ring {
+  display: grid;
+  gap: var(--sc-9);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.art-panel {
+  width: min(100%, 30rem);
+  margin-inline: auto;
+}
+
+/* ------------------------------------------------------- controls -- */
+.art-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sc-2);
+  margin-bottom: var(--sc-7);
+}
+.art-seg { display: inline-flex; gap: var(--sc-2); }
+.art-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  padding: 0 var(--sc-4);
+  font-family: var(--sc-font-display);
+  font-weight: 600;
+  font-size: var(--sc-t-sm);
+  color: var(--sc-ink);
+  background: color-mix(in oklab, var(--sc-canvas) 72%, transparent);
+  border: 1px solid var(--sc-hairline-strong);
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: border-color 160ms var(--sc-ease-out), background 160ms var(--sc-ease-out), transform 120ms var(--sc-ease-out);
+}
+.art-btn:hover { border-color: var(--sc-accent); }
+.art-btn:active { transform: scale(0.97); }
+.art-btn[aria-pressed="true"] {
+  border-color: var(--sc-accent);
+  background: color-mix(in oklab, var(--sc-accent) 16%, var(--sc-canvas));
+}
+
+/* State icons: plain SVG driven by aria-pressed. Each one is a small state
+   machine (off/on) so it can be swapped for a Rive file later without
+   touching the markup around it. */
+.art-ico { width: 20px; height: 20px; flex: none; overflow: visible; }
+.ico-cone {
+  opacity: 0.45;
+  transform: scaleY(0.72);
+  transform-origin: 12px 8px;
+  transition: opacity 300ms var(--sc-ease-out), transform 420ms var(--sc-ease-out);
+}
+.art-btn[aria-pressed="true"] .ico-cone { opacity: 1; transform: scaleY(1); }
+.ico-arc {
+  opacity: 0.5;
+  transform-origin: 12px 12px;
+  transition: opacity 300ms var(--sc-ease-out), transform 460ms var(--sc-ease-out);
+}
+.ico-arc--outer { transform: scale(0.8); }
+.art-btn[aria-pressed="true"] .ico-arc { opacity: 1; transform: scale(1); }
+.ico-shackle {
+  transform-origin: 16px 11px;
+  transform: rotate(-32deg);
+  transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.art-lock[aria-pressed="true"] .ico-shackle { transform: rotate(0deg); }
+
+/* -------------------------------------------------------- portrait -- */
+.art-portrait {
+  --r: 120px;
+  --mx: 60px;
+  --my: 90px;
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #050506;
+  outline: 1px solid var(--sc-hairline);
+  box-shadow: 0 34px 60px -26px color-mix(in oklab, var(--theme-dim) 75%, black);
+  touch-action: pan-y;
+  cursor: crosshair;
+}
+.art-portrait img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 12%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.art-portrait__base { filter: grayscale(1) brightness(0.3) contrast(1.05); }
+
+/* Spotlight: a soft pool of light that follows the pointer with a little lag. */
+.art-stage[data-mode="spotlight"] .art-portrait__lit {
+  -webkit-mask-image: radial-gradient(circle var(--r) at var(--mx) var(--my), #000 0%, #000 34%, transparent 100%);
+          mask-image: radial-gradient(circle var(--r) at var(--mx) var(--my), #000 0%, #000 34%, transparent 100%);
+}
+/* Lens: the resonance mark itself is the frame. Hard-edged window onto the
+   colour photo, floating with inertia and tilting as it moves. */
+.art-stage[data-mode="lens"] .art-portrait__lit {
+  -webkit-mask-image: radial-gradient(circle var(--r) at var(--mx) var(--my), #000 calc(100% - 1.5px), transparent 100%);
+          mask-image: radial-gradient(circle var(--r) at var(--mx) var(--my), #000 calc(100% - 1.5px), transparent 100%);
+}
+.art-lens {
+  position: absolute;
+  left: 0; top: 0;
+  width: calc(var(--r) * 2);
+  height: calc(var(--r) * 2);
+  margin: calc(var(--r) * -1) 0 0 calc(var(--r) * -1);
+  color: var(--theme-bright);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(var(--mx), var(--my)) rotate(var(--rot, 0deg)) scale(var(--sq, 1));
+  transition: opacity 240ms var(--sc-ease-out);
+  will-change: transform;
+}
+.art-lens svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.art-stage[data-mode="lens"] .art-lens { opacity: 1; }
+.art-portrait.is-settle .art-lens svg { animation: art-settle 700ms var(--sc-ease-out); }
+@keyframes art-settle {
+  0%   { transform: scale(1); }
+  38%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+/* --------------------------------------------------------- caption -- */
+.art-info { padding-top: var(--sc-4); text-align: center; }
+.art-rank {
+  margin: 0;
+  color: var(--theme-bright);
+  font-family: var(--sc-font-display);
+  font-weight: 600;
+  font-size: var(--sc-t-xs);
+  letter-spacing: var(--sc-track-wide);
+  text-transform: uppercase;
+}
+.art-rank span { margin-right: 0.6em; opacity: 0.7; }
+.art-name {
+  margin: var(--sc-2) 0 0;
+  font-family: var(--sc-font-display);
+  font-weight: 700;
+  font-size: var(--sc-t-xl);
+  line-height: var(--sc-leading-tight);
+  letter-spacing: var(--sc-track-snug);
+}
+.art-genres {
+  margin: var(--sc-2) 0 0;
+  color: var(--sc-ink-soft);
+  font-size: var(--sc-t-sm);
+}
+.art-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: var(--sc-3);
+  color: var(--sc-ink);
+  font-family: var(--sc-font-display);
+  font-weight: 600;
+  font-size: var(--sc-t-sm);
+  text-decoration: underline;
+  text-decoration-color: var(--theme);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.4em;
+}
+.art-jump { display: none; }
+
+/* ----------------------------------------------------------- close -- */
+.art-close {
+  min-height: 78svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--sc-6);
+  padding: var(--sc-10) var(--sc-gutter);
+}
+.art-close__title {
+  margin: 0;
+  max-width: 16ch;
+  font-family: var(--sc-font-display);
+  font-weight: 700;
+  font-size: var(--sc-t-2xl);
+  line-height: var(--sc-leading-none);
+  letter-spacing: var(--sc-track-tight);
+  text-wrap: balance;
+}
+.art-close__meta { margin: 0; color: var(--sc-ink-soft); font-size: var(--sc-t-base); }
+.art-close__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sc-5); }
+.art-cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: var(--sc-4) var(--sc-6);
+  font-family: var(--sc-font-display);
+  font-weight: 700;
+  font-size: var(--sc-t-sm);
+  letter-spacing: var(--sc-track-wide);
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--sc-canvas);
+  background: var(--sc-accent);
+  border-radius: 999px;
+  transition: transform 160ms var(--sc-ease-out), background 160ms var(--sc-ease-out);
+}
+.art-cta:hover { background: color-mix(in oklab, var(--sc-accent) 88%, white); transform: translateY(-2px); }
+.art-textlink {
+  color: var(--sc-ink);
+  font-family: var(--sc-font-display);
+  font-weight: 600;
+  text-underline-offset: 0.4em;
+}
+
+/* ------------------------------------------------- the 3D coverflow -- */
+html.is-3d .art-stage {
+  /* Re-assert the engine's stickiness: the static rule above sets
+     position:relative and would otherwise win by load order. */
+  position: sticky;
+  top: 0;
+  --pw: min(70vw, 42vh);
+  --front-theme: #e0b455;
+  padding: 0;
+  transition: --front-theme 700ms var(--sc-ease-out);
+  background:
+    radial-gradient(62% 52% at 50% 44%, color-mix(in oklab, var(--front-theme) 16%, transparent), transparent 72%),
+    var(--sc-canvas);
+}
+
+/* Scroll progress (0..1) -> which artist is at the front (0..2 as a float).
+   Two smoothstepped turns with a hold on each artist. All in CSS calc. */
+html.is-3d .art-drum {
+  --t1: clamp(0, calc((var(--sc-p, 0) - 0.14) / 0.28), 1);
+  --t2: clamp(0, calc((var(--sc-p, 0) - 0.58) / 0.28), 1);
+  --s1: calc(var(--t1) * var(--t1) * (3 - 2 * var(--t1)));
+  --s2: calc(var(--t2) * var(--t2) * (3 - 2 * var(--t2)));
+  --cur: calc(var(--s1) + var(--s2));
+}
+
+html.is-3d .art-scene {
+  position: absolute;
+  inset: 0;
+  perspective: 1500px;
+  perspective-origin: 50% 46%;
+}
+html.is-3d .art-ring {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-style: preserve-3d;
+}
+html.is-3d .art-panel {
+  --off: calc(var(--i) - var(--cur));
+  --ab: max(var(--off), calc(var(--off) * -1));
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--pw);
+  margin: 0 0 0 calc(var(--pw) / -2);
+  transform:
+    translate3d(calc(var(--off) * 62%), -50%, calc(var(--ab) * -22rem))
+    rotateY(calc(var(--off) * -34deg))
+    scale(calc(1 - var(--ab) * 0.06));
+  opacity: max(0.22, calc(1 - var(--ab) * 0.55));
+  filter: brightness(calc(1 - var(--ab) * 0.3));
+  will-change: transform;
+}
+html.is-3d .art-info { opacity: max(0, calc(1 - var(--ab) * 1.8)); }
+html.is-3d .art-panel:not(.is-front) .art-portrait { cursor: pointer; }
+
+html.is-3d .art-controls {
+  position: absolute;
+  top: 50%;
+  left: var(--sc-gutter);
+  z-index: 5;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0;
+  transform: translateY(-50%);
+}
+html.is-3d .art-seg { flex-direction: column; }
+html.is-3d .art-jump {
+  position: absolute;
+  bottom: 1.6rem;
+  left: 50%;
+  z-index: 5;
+  display: flex;
+  gap: var(--sc-2);
+  transform: translateX(-50%);
+}
+.art-jump button {
+  width: 44px;
+  height: 44px;
+  font-family: var(--sc-font-display);
+  font-weight: 600;
+  font-size: var(--sc-t-sm);
+  color: var(--sc-ink);
+  background: color-mix(in oklab, var(--sc-canvas) 72%, transparent);
+  border: 1px solid var(--sc-hairline-strong);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 160ms var(--sc-ease-out), background 160ms var(--sc-ease-out);
+}
+.art-jump button:hover { border-color: var(--sc-accent); }
+.art-jump button[aria-current="true"] {
+  border-color: var(--sc-accent);
+  background: color-mix(in oklab, var(--sc-accent) 16%, var(--sc-canvas));
+}
+
+/* ------------------------------------------------------ safety nets -- */
+/* No JS: the reveal layers do nothing, so show the photograph. */
+html:not(.js) .art-portrait__base, html:not(.js) .art-lens { display: none; }
+html:not(.js) .art-portrait__lit { -webkit-mask-image: none; mask-image: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Comprehension survives without the light: the photograph is just shown. */
+  .art-portrait__base, .art-lens { display: none; }
+  .art-portrait__lit { -webkit-mask-image: none !important; mask-image: none !important; }
+  .art-portrait { cursor: default; }
+  .ico-cone, .ico-arc, .ico-shackle, .art-btn, .art-cta { transition: none; }
+  .art-portrait.is-settle .art-lens svg { animation: none; }
+}

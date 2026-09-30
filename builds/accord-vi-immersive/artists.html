@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // Decided once, before render: phones and reduced motion get the plain
+  // stacked layout (no pin, no 3D); everything else gets the scroll-driven
+  // coverflow. Same idea as index.html's is-mobile/is-desktop switch.
+  (function () {
+    var root = document.documentElement;
+    var flat = matchMedia('(max-width: 860px)').matches ||
+               matchMedia('(prefers-reduced-motion: reduce)').matches;
+    root.classList.add('js', flat ? 'is-static' : 'is-3d');
+  })();
+</script>
+<title>The Artists | Accord VI</title>
+<meta name="description" content="The Accord VI artists, on one turning stage. Hover a portrait to bring it into the light.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="scrollcraft.css">
+<link rel="stylesheet" href="artists.css">
+</head>
+<body>
+<a class="art-skip" href="#main">Skip to content</a>
+
+<header class="art-top">
+  <a class="art-top__logo" href="index.html" aria-label="Accord VI, home">
+    <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+      <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+        <line x1="60" y1="8" x2="60" y2="112"></line>
+        <path d="M66.8,41.2 A20,20 0 0 1 66.8,78.8"></path>
+        <path d="M53.2,41.2 A20,20 0 0 0 53.2,78.8"></path>
+        <path d="M71.6,28.1 A34,34 0 0 1 71.6,91.9"></path>
+        <path d="M48.4,28.1 A34,34 0 0 0 48.4,91.9"></path>
+        <path d="M76.4,14.9 A48,48 0 0 1 76.4,105.1"></path>
+        <path d="M43.6,14.9 A48,48 0 0 0 43.6,105.1"></path>
+      </g>
+      <circle cx="60" cy="60" r="4" fill="currentColor"></circle>
+    </svg>
+    <span>Accord <span>VI</span></span>
+  </a>
+  <a class="art-top__back" href="lineup.html">Back to the lineup</a>
+</header>
+
+<main id="main">
+
+  <section class="art-intro" data-sc-act="flow">
+    <div class="art-intro__inner" data-sc-in data-sc-stagger="80">
+      <h1 class="art-intro__title">Three artists. One stage.</h1>
+      <p class="art-intro__sub">Bring each portrait into the light with your cursor or your finger.</p>
+    </div>
+  </section>
+
+  <section class="art-drum" id="drum" data-sc-act="flow" aria-labelledby="drumLabel">
+    <div class="art-stage" id="stage" data-mode="spotlight">
+      <h2 class="art-sr" id="drumLabel">The artists</h2>
+
+      <div class="art-controls" role="group" aria-label="How the light behaves">
+        <div class="art-seg" role="group" aria-label="Light style">
+          <button type="button" class="art-btn" data-mode-btn="spotlight" aria-pressed="true">
+            <svg class="art-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="5.5" r="2.6"></circle>
+              <path class="ico-cone" d="M9.6 8 L4.5 20 H19.5 L14.4 8"></path>
+            </svg>
+            <span>Spotlight</span>
+          </button>
+          <button type="button" class="art-btn" data-mode-btn="lens" aria-pressed="false">
+            <svg class="art-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false">
+              <path class="ico-arc" d="M13.8 6.6 A6 6 0 0 1 13.8 17.4"></path>
+              <path class="ico-arc" d="M10.2 6.6 A6 6 0 0 0 10.2 17.4"></path>
+              <path class="ico-arc ico-arc--outer" d="M15.6 3.6 A9.5 9.5 0 0 1 15.6 20.4"></path>
+              <path class="ico-arc ico-arc--outer" d="M8.4 3.6 A9.5 9.5 0 0 0 8.4 20.4"></path>
+              <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"></circle>
+            </svg>
+            <span>Lens</span>
+          </button>
+        </div>
+        <button type="button" class="art-btn art-lock" id="lockBtn" aria-pressed="false">
+          <svg class="art-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <rect x="5.5" y="11" width="13" height="9.5" rx="2"></rect>
+            <path class="ico-shackle" d="M8 11V7.8a4 4 0 0 1 8 0V11"></path>
+          </svg>
+          <span id="lockLabel">Lock the light</span>
+        </button>
+      </div>
+
+      <div class="art-scene">
+        <ul class="art-ring" id="ring">
+
+          <li class="art-panel" style="--i:0; --theme:#b57382; --theme-bright:#d8b6bd; --theme-dim:#5e313b;" data-artist="1">
+            <figure class="art-portrait" tabindex="0" data-face="52 22" aria-label="Hasan Raheem. Arrow keys move the light.">
+              <img class="art-portrait__base" src="assets/lineup-real/hasan-raheem-portrait.png" alt="Portrait of Hasan Raheem" width="291" height="290" decoding="async">
+              <img class="art-portrait__lit" src="assets/lineup-real/hasan-raheem-portrait.png" alt="" aria-hidden="true" width="291" height="290" decoding="async">
+              <span class="art-lens" aria-hidden="true">
+                <svg viewBox="-60 -60 120 120" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+                  <circle r="58" stroke-width="1" opacity="0.55"></circle>
+                  <line x1="0" y1="-52" x2="0" y2="52" opacity="0.7"></line>
+                  <path d="M6.8,-18.8 A20,20 0 0 1 6.8,18.8"></path><path d="M-6.8,-18.8 A20,20 0 0 0 -6.8,18.8"></path>
+                  <path d="M11.6,-31.9 A34,34 0 0 1 11.6,31.9"></path><path d="M-11.6,-31.9 A34,34 0 0 0 -11.6,31.9"></path>
+                  <path d="M16.4,-45.1 A48,48 0 0 1 16.4,45.1"></path><path d="M-16.4,-45.1 A48,48 0 0 0 -16.4,45.1"></path>
+                  <circle r="1.8" fill="currentColor" stroke="none"></circle>
+                </svg>
+              </span>
+            </figure>
+            <div class="art-info">
+              <p class="art-rank"><span>I</span>King</p>
+              <h3 class="art-name">Hasan Raheem</h3>
+              <p class="art-genres">R&amp;B, Hip Hop, Indie</p>
+              <a class="art-link" href="lineup-artist.html?artist=1">See the full reveal</a>
+            </div>
+          </li>
+
+          <li class="art-panel" style="--i:1; --theme:#a976b2; --theme-bright:#d2b7d7; --theme-dim:#55335b;" data-artist="2">
+            <figure class="art-portrait" tabindex="0" data-face="50 21" aria-label="Nehaal Naseem. Arrow keys move the light.">
+              <img class="art-portrait__base" src="assets/lineup-real/nehaal-naseem-portrait.png" alt="Portrait of Nehaal Naseem" width="525" height="700" decoding="async">
+              <img class="art-portrait__lit" src="assets/lineup-real/nehaal-naseem-portrait.png" alt="" aria-hidden="true" width="525" height="700" decoding="async">
+              <span class="art-lens" aria-hidden="true">
+                <svg viewBox="-60 -60 120 120" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+                  <circle r="58" stroke-width="1" opacity="0.55"></circle>
+                  <line x1="0" y1="-52" x2="0" y2="52" opacity="0.7"></line>
+                  <path d="M6.8,-18.8 A20,20 0 0 1 6.8,18.8"></path><path d="M-6.8,-18.8 A20,20 0 0 0 -6.8,18.8"></path>
+                  <path d="M11.6,-31.9 A34,34 0 0 1 11.6,31.9"></path><path d="M-11.6,-31.9 A34,34 0 0 0 -11.6,31.9"></path>
+                  <path d="M16.4,-45.1 A48,48 0 0 1 16.4,45.1"></path><path d="M-16.4,-45.1 A48,48 0 0 0 -16.4,45.1"></path>
+                  <circle r="1.8" fill="currentColor" stroke="none"></circle>
+                </svg>
+              </span>
+            </figure>
+            <div class="art-info">
+              <p class="art-rank"><span>II</span>Queen</p>
+              <h3 class="art-name">Nehaal Naseem</h3>
+              <p class="art-genres">Urdu Pop, OST</p>
+              <a class="art-link" href="lineup-artist.html?artist=2">See the full reveal</a>
+            </div>
+          </li>
+
+          <li class="art-panel" style="--i:2; --theme:#76a5b2; --theme-bright:#b7d0d7; --theme-dim:#33535b;" data-artist="3">
+            <figure class="art-portrait" tabindex="0" data-face="56 38" aria-label="Sabaat Batin. Arrow keys move the light.">
+              <img class="art-portrait__base" src="assets/lineup-real/sabaat-batin-portrait.png" alt="Portrait of Sabaat Batin" width="266" height="320" decoding="async">
+              <img class="art-portrait__lit" src="assets/lineup-real/sabaat-batin-portrait.png" alt="" aria-hidden="true" width="266" height="320" decoding="async">
+              <span class="art-lens" aria-hidden="true">
+                <svg viewBox="-60 -60 120 120" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+                  <circle r="58" stroke-width="1" opacity="0.55"></circle>
+                  <line x1="0" y1="-52" x2="0" y2="52" opacity="0.7"></line>
+                  <path d="M6.8,-18.8 A20,20 0 0 1 6.8,18.8"></path><path d="M-6.8,-18.8 A20,20 0 0 0 -6.8,18.8"></path>
+                  <path d="M11.6,-31.9 A34,34 0 0 1 11.6,31.9"></path><path d="M-11.6,-31.9 A34,34 0 0 0 -11.6,31.9"></path>
+                  <path d="M16.4,-45.1 A48,48 0 0 1 16.4,45.1"></path><path d="M-16.4,-45.1 A48,48 0 0 0 -16.4,45.1"></path>
+                  <circle r="1.8" fill="currentColor" stroke="none"></circle>
+                </svg>
+              </span>
+            </figure>
+            <div class="art-info">
+              <p class="art-rank"><span>III</span>Jack</p>
+              <h3 class="art-name">Sabaat Batin</h3>
+              <p class="art-genres">Punjabi, Urdu/Hindi, Indie</p>
+              <a class="art-link" href="lineup-artist.html?artist=3">See the full reveal</a>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+
+      <nav class="art-jump" aria-label="Jump to an artist">
+        <button type="button" data-jump="0" aria-label="Hasan Raheem">I</button>
+        <button type="button" data-jump="1" aria-label="Nehaal Naseem">II</button>
+        <button type="button" data-jump="2" aria-label="Sabaat Batin">III</button>
+      </nav>
+
+      <p class="art-sr" id="artLive" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="art-close" data-sc-act="flow">
+    <div data-sc-in data-sc-stagger="80" style="display:flex;flex-direction:column;gap:var(--sc-6);align-items:flex-start">
+      <h2 class="art-close__title">Two nights of music in Multan.</h2>
+      <p class="art-close__meta">18-19 October, Beaconhouse Cantt Campus.</p>
+      <div class="art-close__row">
+        <a class="art-cta" href="register.html">Register for Accord VI &#8594;</a>
+        <a class="art-textlink" href="lineup.html">Back to the lineup</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // Opt the drum into the pinned 3D act before the engine reads the page.
+  (function () {
+    if (!document.documentElement.classList.contains('is-3d')) return;
+    var drum = document.getElementById('drum');
+    drum.setAttribute('data-sc-act', 'pin');
+    drum.setAttribute('data-sc-span', '5');
+    drum.querySelector('.art-stage').classList.add('sc-stage');
+  })();
+</script>
+<script src="scrollcraft.js"></script>
+<script src="artists.js"></script>
+</body>
+</html>

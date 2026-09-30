@@ -29,6 +29,7 @@ changes only grammar and world will fail it.
 | Build | Grammar | Nav treatment | Hero device | Act-sequence shape | Close pattern | Signature move | World | Port |
 |---|---|---|---|---|---|---|---|---|
 | accord-vi-immersive | Chaptered editorial | Folio (chapter number + title, fixed bottom-right, no bar) | Title page: type-only flow+in hero, no media above the fold | 6 acts, flow > pin(4.0) > pan(4.4) > flow > flow > pin(1.2), ~12.6vh | Colophon: pinned, one-value hold, CTA set as underlined running-text links (not a button), links out to the site's own registration/sponsor pages | Resonance mark (event's 6-arc identity symbol) drawn arc-by-arc via `stroke-dashoffset` driven by whole-page scroll fraction, fixed and persistent for the entire page, fully resonant only at the close | Photographic (real stock concert photography), navy/brass maximalist palette | 4501 |
+| accord-vi-artists (add-on page, experiment) | Single pinned stage | Numeral jump buttons (I, II, III) plus a back-to-lineup pill; no folio | 3D coverflow of the three artists, turned by scroll (pure CSS off --sc-p) | 3 acts, flow > pin(5.0) > flow, ~7.5vh | CTA button plus back link, on a quiet resolved screen | Portraits sit as silhouettes until a pointer-following light (soft spotlight, or the resonance mark as a floating lens) reveals the photo; a lock control freezes it | Portrait photography, navy/brass | 4501 |
 
 ---
 
@@ -70,3 +71,4 @@ If you want to see what a filled-in table looks like, and which shapes tend to
 collide, read `EXAMPLES.md` in the scroll-craft repository. Treat it as
 illustration only: those rows are somebody else's builds and they do **not**
 constrain yours.
+- accord-vi-artists: the 3D coverflow drum turned by --sc-p, and the pointer-following light that reveals a silhouetted portrait (spotlight or resonance-mark lens, with a lock). Do not reuse for another page.

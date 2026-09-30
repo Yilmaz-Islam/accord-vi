@@ -83,3 +83,24 @@ plain-HTML three-page site: `index.html`, `register.html`, `sponsor.html`).
 The Register close act links out to the existing site's real registration
 form rather than duplicating it, so the actual submission logic, conditional
 attendee/sponsor fields, and event-info accuracy live in one place.
+
+---
+
+## Add-on: artists.html (3D scroll experiment)
+
+Self-authored under explicit creative delegation (the user asked to "try" a
+3D scroll for the artists with scrollcraft; the eight interview topics from
+above still govern vibe and world). Not linked from the site yet.
+
+- **Journey:** title, then one pinned stage where the three artists turn past
+  on a 3D coverflow (King, Queen, Jack), then a resolved close with the one
+  action (Register for Accord VI).
+- **Feeling curve:** anticipation (title), intimacy (each artist settles and is
+  brought into the light), resolve (close).
+- **Peak:** the turn from one artist to the next, which owns the largest span
+  (5 viewport-heights).
+- **Signature move:** portraits are silhouettes until a pointer-following light
+  reveals them; the light is either a soft spotlight or the resonance mark as a
+  floating lens, and can be locked in place.
+- **Not covered:** phones and reduced motion get a plain stacked layout (no pin,
+  no 3D) by design. Portrait sources are low resolution and need better images.
