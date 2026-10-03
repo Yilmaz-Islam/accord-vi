@@ -3,8 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Executive Portal — Accord VI</title>
+<title>Accord Admin</title>
 <meta name="robots" content="noindex, nofollow">
+<script>
+  // Entry pass: set by the hidden (c) on terms.html, valid for 30 minutes.
+  (function () {
+    var KEY = 'accord_exec_pass';
+    var ok = false;
+    try { ok = Number(localStorage.getItem(KEY) || 0) > Date.now(); } catch (e) {}
+    if (!ok) { location.replace('terms.html'); return; }
+    try { localStorage.setItem(KEY, String(Date.now() + 30 * 60 * 1000)); } catch (e) {}
+  })();
+</script>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="css/styles.css">
 <style>
@@ -232,6 +242,70 @@
   @media (max-width: 640px) {
     .admin-toolbar-right { margin-left: 0; width: 100%; justify-content: space-between; }
   }
+
+  /* ---- tickets tab, receipt viewer ---- */
+  .admin-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--color-border); }
+  .admin-tab {
+    appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
+    padding: 0.7rem 1rem; color: var(--color-text-dim); font: inherit; font-family: var(--font-display);
+    font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer;
+  }
+  .admin-tab:hover { color: var(--color-text); }
+  .admin-tab[aria-selected="true"] { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+  .admin-tab .tab-count {
+    display: inline-block; min-width: 1.35rem; margin-left: 0.4rem; padding: 0.05rem 0.4rem; border-radius: 999px;
+    background: var(--color-primary); color: var(--color-bg); font-size: 0.7rem; font-weight: 700; text-align: center;
+  }
+  .admin-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
+  .admin-filter {
+    appearance: none; border: 1px solid var(--color-border); background: none; border-radius: 999px;
+    padding: 0.4rem 0.9rem; color: var(--color-text-dim); font: inherit; font-size: 0.82rem; cursor: pointer;
+  }
+  .admin-filter:hover { border-color: var(--color-text-dim); }
+  .admin-filter[aria-pressed="true"] { border-color: var(--color-primary); color: var(--color-primary); }
+  .admin-status {
+    display: inline-block; padding: 0.2rem 0.65rem; border-radius: 999px; border: 1px solid currentColor;
+    font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
+  }
+  .admin-status.is-pending { color: #e0b455; }
+  .admin-status.is-confirmed { color: #5fcf8f; }
+  .admin-status.is-interest { color: #8fb4ff; }
+  .admin-btn {
+    appearance: none; border: 1px solid var(--color-border); background: var(--color-bg); color: var(--color-text);
+    border-radius: 999px; padding: 0.4rem 0.9rem; font: inherit; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .admin-btn:hover { border-color: var(--color-primary); }
+  .admin-btn:disabled { opacity: 0.5; cursor: default; }
+  .admin-btn.is-confirm { background: linear-gradient(135deg, #3fae72, #2c8a57); border-color: transparent; color: #fff; font-weight: 600; }
+  .admin-btn.is-confirm:hover { box-shadow: 0 6px 18px rgba(63, 174, 114, 0.35); }
+  .admin-table td.admin-cell-money { white-space: nowrap; font-family: var(--font-display); }
+  .admin-table td small { display: block; color: var(--color-text-faint); font-size: 0.76rem; margin-top: 0.2rem; }
+  .admin-toast {
+    position: fixed; left: 50%; bottom: 1.5rem; z-index: 10000; transform: translateX(-50%); max-width: 90vw;
+    padding: 0.75rem 1.1rem; border-radius: 10px; background: var(--color-surface); border: 1px solid var(--color-primary);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); font-size: 0.9rem;
+  }
+  .admin-toast.is-error { border-color: #e0555a; color: #ffb4b6; }
+  .admin-toast[hidden] { display: none; }
+
+  .rmodal { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 1.2rem; background: rgba(8, 9, 12, 0.8); backdrop-filter: blur(4px); }
+  .rmodal[hidden] { display: none; }
+  .rmodal-card {
+    width: min(100%, 38rem); max-height: 92vh; overflow: auto; padding: 1.3rem 1.3rem 1.2rem;
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 14px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+  }
+  .rmodal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.9rem; }
+  .rmodal-head h2 { font-family: var(--font-display); font-size: 1.15rem; margin: 0; }
+  .rmodal-head p { color: var(--color-text-dim); font-size: 0.85rem; margin: 0.2rem 0 0; word-break: break-all; }
+  .rmodal-close { appearance: none; border: 0; background: none; color: var(--color-text-dim); font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0 0.3rem; }
+  .rmodal-close:hover { color: var(--color-text); }
+  .rmodal-body { display: grid; place-items: center; min-height: 8rem; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 10px; padding: 0.6rem; color: var(--color-text-dim); }
+  .rmodal-body img { max-width: 100%; max-height: 62vh; object-fit: contain; border-radius: 6px; }
+  .rmodal-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.8rem; margin-top: 1rem; }
+  .rmodal-amount { color: var(--color-text-dim); font-size: 0.88rem; }
+  .rmodal-amount strong { color: var(--color-primary); font-family: var(--font-display); font-size: 1.1rem; }
 </style>
 </head>
 <body>
@@ -267,6 +341,7 @@
       <a href="info.html" class="nav-link">Info</a>
       <a href="sponsor.html" class="nav-link">Sponsors</a>
       <a href="privacy-policy.html" class="nav-link">Privacy</a>
+      <a href="account.html" class="nav-link">Account</a>
       <a href="register.html" class="nav-cta">Register</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
@@ -299,6 +374,11 @@
     </div>
 
     <div id="logView" hidden>
+      <div class="admin-tabs" role="tablist" aria-label="Registrations">
+        <button class="admin-tab" role="tab" id="tabTickets" aria-selected="true" aria-controls="ticketsPanel" type="button">Tickets <span class="tab-count" id="pendingBadge" hidden></span></button>
+        <button class="admin-tab" role="tab" id="tabLegacy" aria-selected="false" aria-controls="legacyPanel" type="button">Older submissions</button>
+      </div>
+
       <div class="admin-toolbar">
         <div class="admin-search-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -312,24 +392,73 @@
           <button type="button" class="admin-logout" id="logoutBtn">Sign out</button>
         </div>
       </div>
-      <div class="admin-table-scroll">
-        <table class="admin-table" id="adminTable">
-          <thead>
-            <tr>
-              <th>Submitted</th>
-              <th>Type</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Details</th>
-            </tr>
-          </thead>
-          <tbody id="adminTableBody"></tbody>
-        </table>
+
+      <div id="ticketsPanel" role="tabpanel" aria-labelledby="tabTickets">
+        <div class="admin-filters" role="group" aria-label="Filter by status">
+          <button type="button" class="admin-filter" data-status="all" aria-pressed="false">All</button>
+          <button type="button" class="admin-filter" data-status="pending" aria-pressed="true">Pending payment</button>
+          <button type="button" class="admin-filter" data-status="confirmed" aria-pressed="false">Confirmed</button>
+          <button type="button" class="admin-filter" data-status="interest" aria-pressed="false">Sponsors</button>
+        </div>
+        <div class="admin-table-scroll">
+          <table class="admin-table" id="ticketsTable" style="min-width:56rem;">
+            <thead>
+              <tr>
+                <th>Submitted</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Pass</th>
+                <th>Amount</th>
+                <th>Paid by</th>
+                <th>Status</th>
+                <th>Receipt</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="ticketsBody"></tbody>
+          </table>
+        </div>
+        <p class="admin-empty" id="ticketsEmpty" hidden>No tickets yet.</p>
       </div>
-      <p class="admin-empty" id="adminEmpty" hidden>No registrations yet.</p>
+
+      <div id="legacyPanel" role="tabpanel" aria-labelledby="tabLegacy" hidden>
+        <div class="admin-table-scroll">
+          <table class="admin-table" id="adminTable">
+            <thead>
+              <tr>
+                <th>Submitted</th>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
+        </div>
+        <p class="admin-empty" id="adminEmpty" hidden>No registrations yet.</p>
+      </div>
     </div>
   </div>
 </section>
+
+<div class="rmodal" id="receiptModal" hidden>
+  <div class="rmodal-card" role="dialog" aria-modal="true" aria-labelledby="rmodalName">
+    <div class="rmodal-head">
+      <div>
+        <h2 id="rmodalName"></h2>
+        <p id="rmodalEmail"></p>
+      </div>
+      <button type="button" class="rmodal-close" id="rmodalClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="rmodal-body" id="rmodalBody"></div>
+    <div class="rmodal-actions">
+      <p class="rmodal-amount" id="rmodalAmount"></p>
+      <button type="button" class="admin-btn is-confirm" id="rmodalConfirm" hidden>Payment confirmed</button>
+    </div>
+  </div>
+</div>
+<div class="admin-toast" id="adminToast" role="status" hidden></div>
 
 <footer class="site-footer">
   <div class="container footer-inner">
@@ -360,7 +489,9 @@
     });
   }
 
-  const WORKER_URL = 'https://accord-vi-verify.accordbccmvi.workers.dev';
+  const WORKER_URL = ['localhost', '127.0.0.1'].includes(location.hostname)
+    ? 'http://127.0.0.1:8787'
+    : 'https://accord-vi-verify.accordbccmvi.workers.dev';
   const loadingView = document.getElementById('loadingView');
   const loginView = document.getElementById('loginView');
   const logView = document.getElementById('logView');
@@ -434,7 +565,7 @@
     });
   }
 
-  function applyFilter() {
+  function applyLegacyFilter() {
     const query = adminSearch.value.trim();
     const q = query.toLowerCase();
     const filtered = query
@@ -471,24 +602,234 @@
     return data.registrations;
   }
 
-  function showLog(registrations) {
-    allRegistrations = registrations;
-    loadingView.hidden = true;
-    loginView.hidden = true;
-    logView.hidden = false;
-    adminSearch.value = '';
-    applyFilter();
-  }
-
   function showLogin() {
     loadingView.hidden = true;
     logView.hidden = true;
     loginView.hidden = false;
   }
 
+  // ---------- Tickets: load, list, review receipts, confirm payments ----------
+  let allTickets = [];
+  let ticketsError = '';
+  let currentTab = 'tickets';
+  let statusFilter = 'pending';
+
+  const PASS_LABEL = { concert: 'Concert only (18 Oct)', both: 'Both nights', sponsor: 'Sponsor' };
+  const METHOD_LABEL = { jazzcash: 'JazzCash', bank: 'Bank transfer', cash: 'Cash', none: '—' };
+  const STATUS_LABEL = { pending: 'Pending', confirmed: 'Confirmed', interest: 'Sponsor interest' };
+  const money = (n) => 'Rs ' + Number(n).toLocaleString('en-US');
+
+  const ticketsBody = document.getElementById('ticketsBody');
+  const ticketsTable = document.getElementById('ticketsTable');
+  const ticketsEmpty = document.getElementById('ticketsEmpty');
+  const pendingBadge = document.getElementById('pendingBadge');
+  const toast = document.getElementById('adminToast');
+  let toastTimer = 0;
+
+  function showToast(text, isError) {
+    toast.textContent = text;
+    toast.classList.toggle('is-error', !!isError);
+    toast.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.hidden = true; }, isError ? 7000 : 4000);
+  }
+
+  async function adminPost(path, body) {
+    const res = await fetch(`${WORKER_URL}${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+      body: JSON.stringify(body || {}),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Request failed');
+    return data;
+  }
+
+  // The old log and the new tickets load separately, so one being unavailable
+  // (for example before the accounts backend is switched on) never hides the other.
+  async function loadAll() {
+    const [reg, tix] = await Promise.allSettled([adminPost('/admin/registrations'), adminPost('/admin/tickets')]);
+    if (reg.status === 'rejected' && tix.status === 'rejected') throw reg.reason;
+    return {
+      registrations: reg.status === 'fulfilled' ? reg.value.registrations : [],
+      tickets: tix.status === 'fulfilled' ? tix.value.tickets : [],
+      ticketsError: tix.status === 'rejected' ? tix.reason.message : '',
+    };
+  }
+
+  function visibleTickets(query) {
+    const q = (query || '').toLowerCase();
+    return allTickets.filter((t) => {
+      if (statusFilter !== 'all' && t.status !== statusFilter) return false;
+      return !q || (t.name || '').toLowerCase().includes(q) || (t.email || '').toLowerCase().includes(q);
+    });
+  }
+
+  function renderTickets(query) {
+    const pending = allTickets.filter((t) => t.status === 'pending').length;
+    pendingBadge.hidden = pending === 0;
+    pendingBadge.textContent = String(pending);
+
+    const list = visibleTickets(query);
+    adminCount.innerHTML = `<strong>${list.length}</strong> of ${allTickets.length} ticket${allTickets.length === 1 ? '' : 's'}`;
+    ticketsBody.innerHTML = '';
+
+    if (!list.length) {
+      ticketsTable.hidden = true;
+      ticketsEmpty.hidden = false;
+      ticketsEmpty.textContent = ticketsError
+        ? `Tickets are not available yet: ${ticketsError}`
+        : query
+          ? `No tickets match "${query}".`
+          : statusFilter === 'pending'
+            ? 'No payments are waiting for review.'
+            : 'No tickets here yet.';
+      return;
+    }
+    ticketsTable.hidden = false;
+    ticketsEmpty.hidden = true;
+
+    list.forEach((t, i) => {
+      const tr = document.createElement('tr');
+      tr.style.animationDelay = `${Math.min(i, 24) * 20}ms`;
+      const when = t.submittedAt ? new Date(t.submittedAt).toLocaleString() : '—';
+      const people = t.persona === 'group' ? `<small>Group of ${escapeHtml(t.attendeeCount)}</small>` : '';
+      const extra = t.persona === 'sponsor' && t.sponsorTier ? `<small>Tier: ${escapeHtml(t.sponsorTier)}</small>` : '';
+      const receiptCell = t.hasReceipt
+        ? `<button type="button" class="admin-btn" data-view="${t.id}">View receipt</button>`
+        : '<span style="color:var(--color-text-faint)">—</span>';
+      let action = '';
+      if (t.status === 'pending') action = `<button type="button" class="admin-btn is-confirm" data-confirm="${t.id}">Payment confirmed</button>`;
+      else if (t.status === 'confirmed') action = `<small>${t.confirmedAt ? escapeHtml(new Date(t.confirmedAt).toLocaleString()) : ''}</small>`;
+      tr.innerHTML = `
+        <td class="admin-cell-when">${escapeHtml(when)}</td>
+        <td>${highlight(t.name || '—', query)}</td>
+        <td>${highlight(t.email || '—', query)}</td>
+        <td>${escapeHtml(PASS_LABEL[t.pass] || t.pass)}${people}${extra}</td>
+        <td class="admin-cell-money">${t.pass === 'sponsor' ? '—' : escapeHtml(money(t.amountPkr))}</td>
+        <td>${escapeHtml(METHOD_LABEL[t.payMethod] || t.payMethod)}${t.payMethod === 'cash' ? '<small>No receipt: confirm once cash is received</small>' : ''}</td>
+        <td><span class="admin-status is-${escapeHtml(t.status)}">${escapeHtml(STATUS_LABEL[t.status] || t.status)}</span></td>
+        <td>${receiptCell}</td>
+        <td>${action}</td>`;
+      ticketsBody.appendChild(tr);
+    });
+  }
+
+  function applyFilter() {
+    const query = adminSearch.value.trim();
+    if (currentTab === 'tickets') renderTickets(query);
+    else applyLegacyFilter();
+  }
+
+  // ----- tabs and status filters -----
+  function selectAdminTab(tab) {
+    currentTab = tab;
+    const isTickets = tab === 'tickets';
+    document.getElementById('tabTickets').setAttribute('aria-selected', String(isTickets));
+    document.getElementById('tabLegacy').setAttribute('aria-selected', String(!isTickets));
+    document.getElementById('ticketsPanel').hidden = !isTickets;
+    document.getElementById('legacyPanel').hidden = isTickets;
+    applyFilter();
+  }
+  document.getElementById('tabTickets').addEventListener('click', () => selectAdminTab('tickets'));
+  document.getElementById('tabLegacy').addEventListener('click', () => selectAdminTab('legacy'));
+  document.querySelectorAll('.admin-filter').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      statusFilter = btn.dataset.status;
+      document.querySelectorAll('.admin-filter').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      applyFilter();
+    });
+  });
+
+  // ----- receipt viewer -----
+  const modal = document.getElementById('receiptModal');
+  const rBody = document.getElementById('rmodalBody');
+  const rConfirm = document.getElementById('rmodalConfirm');
+  let modalTicket = null;
+  let modalReturnFocus = null;
+
+  async function openReceipt(id) {
+    const t = allTickets.find((x) => x.id === id);
+    if (!t) return;
+    modalTicket = t;
+    modalReturnFocus = document.activeElement;
+    document.getElementById('rmodalName').textContent = t.name;
+    document.getElementById('rmodalEmail').textContent = t.email;
+    const amt = document.getElementById('rmodalAmount');
+    amt.textContent = '';
+    amt.append(`${PASS_LABEL[t.pass] || t.pass}${t.persona === 'group' ? `, group of ${t.attendeeCount}` : ''}. Should be `);
+    const strong = document.createElement('strong');
+    strong.textContent = money(t.amountPkr);
+    amt.append(strong);
+    rConfirm.hidden = t.status !== 'pending';
+    rBody.textContent = 'Loading receipt…';
+    modal.hidden = false;
+    document.getElementById('rmodalClose').focus();
+    try {
+      const data = await adminPost('/admin/ticket-receipt', { id });
+      if (modalTicket !== t) return;
+      const img = document.createElement('img');
+      img.alt = `Payment receipt from ${t.name}`;
+      img.src = data.receipt;
+      rBody.textContent = '';
+      rBody.appendChild(img);
+    } catch (err) {
+      rBody.textContent = err.message || 'Could not load the receipt.';
+    }
+  }
+  function closeReceipt() {
+    modal.hidden = true;
+    modalTicket = null;
+    rBody.textContent = '';
+    if (modalReturnFocus && modalReturnFocus.focus) modalReturnFocus.focus();
+  }
+  document.getElementById('rmodalClose').addEventListener('click', closeReceipt);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeReceipt(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) closeReceipt(); });
+
+  // ----- confirming a payment (this emails the person, so it asks first) -----
+  async function confirmTicket(id, button) {
+    const t = allTickets.find((x) => x.id === id);
+    if (!t || t.status !== 'pending') return;
+    const ok = window.confirm(`Confirm the payment from ${t.name} (${money(t.amountPkr)})?\n\nThis sends them an email saying their payment is confirmed.`);
+    if (!ok) return;
+    if (button) button.disabled = true;
+    try {
+      const data = await adminPost('/admin/ticket-confirm', { id });
+      t.status = 'confirmed';
+      t.confirmedAt = new Date().toISOString();
+      showToast(data.emailSent === false
+        ? `Confirmed ${t.name}, but the email could not be sent. Please email them yourself.`
+        : `Confirmed. ${t.name} has been emailed.`, data.emailSent === false);
+      if (!modal.hidden) closeReceipt();
+      applyFilter();
+    } catch (err) {
+      if (button) button.disabled = false;
+      showToast(err.message || 'Could not confirm that payment.', true);
+    }
+  }
+  rConfirm.addEventListener('click', () => { if (modalTicket) confirmTicket(modalTicket.id, rConfirm); });
+  ticketsBody.addEventListener('click', (e) => {
+    const view = e.target.closest('[data-view]');
+    if (view) { openReceipt(Number(view.dataset.view)); return; }
+    const conf = e.target.closest('[data-confirm]');
+    if (conf) confirmTicket(Number(conf.dataset.confirm), conf);
+  });
+
+  function showLog(all) {
+    allRegistrations = all.registrations;
+    allTickets = all.tickets;
+    ticketsError = all.ticketsError;
+    loadingView.hidden = true;
+    loginView.hidden = true;
+    logView.hidden = false;
+    adminSearch.value = '';
+    selectAdminTab('tickets');
+  }
+
   // Loading view stays up until we know which way this goes, so an
   // already-signed-in exec never sees the password form flash by first.
-  loadRegistrations().then(showLog).catch(showLogin);
+  loadAll().then(showLog).catch(showLogin);
 
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -504,11 +845,11 @@
       .then((data) => {
         if (!data.ok) throw new Error(data.error || 'Incorrect password');
         setToken(data.token);
-        return loadRegistrations();
+        return loadAll();
       })
-      .then((registrations) => {
+      .then((all) => {
         setNote('');
-        showLog(registrations);
+        showLog(all);
       })
       .catch((err) => setNote(err.message || 'Something went wrong, please try again.', 'is-error'))
       .finally(() => { loginBtn.disabled = false; });
@@ -522,6 +863,7 @@
     }).finally(() => {
       clearToken();
       allRegistrations = [];
+      allTickets = [];
       document.getElementById('adminPassword').value = '';
       setNote('');
       showLogin();

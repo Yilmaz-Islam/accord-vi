@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register — Accord VI, 18–19 October, Multan</title>
+<title>Accord Register</title>
 <meta name="description" content="Register for Accord VI: Live Concert on 18 October and Qawwali Night on 19 October at Beaconhouse Cantt Campus, Multan.">
 <link rel="canonical" href="https://yilmaz-islam.github.io/accord-vi/register.html">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Register — Accord VI, 18–19 October, Multan">
+<meta property="og:title" content="Accord Register">
 <meta property="og:description" content="Register for Accord VI: Live Concert on 18 October and Qawwali Night on 19 October at Beaconhouse Cantt Campus, Multan.">
 <meta property="og:url" content="https://yilmaz-islam.github.io/accord-vi/register.html">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Register — Accord VI, 18–19 October, Multan">
+<meta name="twitter:title" content="Accord Register">
 <meta name="twitter:description" content="Register for Accord VI: Live Concert on 18 October and Qawwali Night on 19 October at Beaconhouse Cantt Campus, Multan.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
@@ -321,6 +321,77 @@
     margin-bottom: 1.25rem;
     font-size: 1.4rem;
   }
+
+  /* ---- account gate, pass cards, receipt upload ---- */
+  .wizard-who { text-align: center; font-size: 0.85rem; color: var(--color-text-dim); margin-bottom: 1.1rem; }
+  .wizard-who strong { color: var(--color-text); }
+  .wizard-who button { appearance: none; border: 0; background: none; padding: 0; color: var(--color-primary); font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+  .wizard-wrap { position: relative; }
+  .wizard-wrap.is-locked > *:not(.wizard-lock) { filter: blur(3px); opacity: 0.45; pointer-events: none; user-select: none; }
+  .wizard-lock {
+    position: absolute; inset: 0; z-index: 3; display: flex; align-items: flex-start; justify-content: center; padding-top: 3.5rem;
+  }
+  .wizard-lock[hidden] { display: none; }
+  .wizard-lock-card {
+    max-width: 22rem; text-align: center; padding: 1.4rem 1.3rem;
+    background: var(--color-surface); border: 1px solid var(--color-primary); border-radius: 14px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+  }
+  .wizard-lock-card p { color: var(--color-text-dim); font-size: 0.92rem; margin: 0.4rem 0 1rem; }
+
+  .gate {
+    position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 1.25rem;
+    background: rgba(8, 9, 12, 0.72); backdrop-filter: blur(4px);
+  }
+  .gate[hidden] { display: none; }
+  .gate-card {
+    width: min(100%, 26rem); padding: 1.8rem 1.5rem 1.4rem; text-align: center;
+    background: var(--color-surface); border: 1px solid var(--color-primary); border-radius: 16px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6); animation: gate-in 0.25s ease;
+  }
+  .gate-card h2 { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 0.6rem; }
+  .gate-card p { color: var(--color-text-dim); font-size: 0.95rem; margin-bottom: 1.3rem; }
+  .gate-card .btn { margin-bottom: 0.65rem; }
+  .gate-close { appearance: none; border: 0; background: none; color: var(--color-text-dim); font: inherit; font-size: 0.88rem; cursor: pointer; margin-top: 0.3rem; text-decoration: underline; text-underline-offset: 3px; }
+  .gate-close:hover { color: var(--color-text); }
+  @keyframes gate-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
+
+  .pass-grid { display: grid; gap: 0.8rem; margin: 1.2rem 0 1.4rem; }
+  .pass-card {
+    display: flex; flex-direction: column; gap: 0.25rem; text-align: left; cursor: pointer; font: inherit; color: inherit;
+    padding: 1rem 1.1rem; background: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .pass-card:hover { border-color: var(--color-primary); }
+  .pass-card[aria-checked="true"] { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(224, 180, 85, 0.16); }
+  .pass-name { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; }
+  .pass-when { color: var(--color-text-dim); font-size: 0.85rem; }
+  .pass-price { color: var(--color-primary); font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-top: 0.2rem; }
+  .pass-price small { color: var(--color-text-dim); font-weight: 400; font-size: 0.78rem; }
+
+  .payment-total {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 1.1rem 0 0.2rem;
+    padding: 0.8rem 1rem; border: 1px dashed var(--color-primary); border-radius: 10px; font-size: 0.9rem; color: var(--color-text-dim);
+  }
+  .payment-total strong { color: var(--color-primary); font-family: var(--font-display); font-size: 1.25rem; }
+
+  .receipt-box { margin: 1.2rem 0; }
+  .receipt-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+  .receipt-help { color: var(--color-text-dim); font-size: 0.86rem; margin-bottom: 0.8rem; }
+  .receipt-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+  .receipt-input:focus-visible + .receipt-drop { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+  .receipt-drop {
+    display: grid; place-items: center; min-height: 11rem; padding: 1rem; cursor: pointer; text-align: center;
+    border: 2px dashed var(--color-border); border-radius: 12px; background: var(--color-bg);
+    color: var(--color-text-dim); transition: border-color 0.2s ease;
+  }
+  .receipt-drop:hover, .receipt-drop.is-drag { border-color: var(--color-primary); }
+  .receipt-placeholder { display: grid; gap: 0.35rem; justify-items: center; font-size: 0.95rem; }
+  .receipt-placeholder small { font-size: 0.78rem; color: var(--color-text-faint); }
+  .receipt-preview { max-width: 100%; max-height: 16rem; border-radius: 8px; object-fit: contain; }
+  .receipt-placeholder[hidden], .receipt-preview[hidden], .receipt-clear[hidden], .receipt-box[hidden] { display: none; }
+  .receipt-clear { appearance: none; border: 0; background: none; margin-top: 0.6rem; color: var(--color-primary); font: inherit; font-size: 0.85rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -357,6 +428,7 @@
       <a href="info.html" class="nav-link">Info</a>
       <a href="sponsor.html" class="nav-link">Sponsors</a>
       <a href="privacy-policy.html" class="nav-link">Privacy</a>
+      <a href="account.html" class="nav-link">Account</a>
       <a href="register.html" class="nav-cta">Register</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
@@ -383,6 +455,15 @@
 <!-- ============ REGISTRATION WIZARD ============ -->
 <section class="section section-alt">
   <div class="container wizard-wrap">
+    <div class="wizard-lock" id="wizardLock" hidden>
+      <div class="wizard-lock-card">
+        <h2 class="acct-h" style="font-family:var(--font-display);font-size:1.25rem;margin:0;">Create an account to register</h2>
+        <p>Browse as much as you like. To register, you need an account first.</p>
+        <button type="button" class="btn btn-primary btn-block" id="lockOpen">Create an account</button>
+      </div>
+    </div>
+    <p class="wizard-who" id="wizardWho" hidden></p>
+    <p class="wizard-note" id="resubmitNote" style="text-align:center;"></p>
     <div class="wizard-progress"><div class="wizard-progress-bar" id="wizardProgressBar"></div></div>
     <p class="wizard-step-label" id="wizardStepLabel">Question 1</p>
 
@@ -391,7 +472,6 @@
       <input type="hidden" name="persona" id="wizPersonaField">
       <input type="hidden" name="attendeeCount" id="wizAttendeeCount" value="1">
       <input type="hidden" name="hearAbout" id="wizHearAbout">
-      <input type="hidden" name="details" id="wizDetailsField">
 
       <div class="wizard-step is-active" data-step="persona">
         <h2 class="wizard-question">Which one are you?</h2>
@@ -424,12 +504,6 @@
         <button type="button" class="btn btn-primary btn-block wizard-next" id="personaNext" disabled>Continue</button>
       </div>
 
-      <div class="wizard-step" data-step="name">
-        <h2 class="wizard-question">What is your name?</h2>
-        <input type="text" class="wizard-input" id="wizName" placeholder="Your full name" autocomplete="name">
-        <button type="button" class="btn btn-primary btn-block wizard-next" id="nameNext" disabled>Continue</button>
-      </div>
-
       <div class="wizard-step" data-step="hearAbout">
         <h2 class="wizard-question">How did you hear about Accord?</h2>
         <div class="wizard-pill-list" role="radiogroup" aria-label="How did you hear about Accord">
@@ -460,22 +534,6 @@
         <button type="button" class="btn btn-primary btn-block wizard-next">Continue</button>
       </div>
 
-      <div class="wizard-step" data-step="email">
-        <h2 class="wizard-question">What's your email?</h2>
-        <input type="email" class="wizard-input" id="wizEmail" placeholder="you@example.com" autocomplete="email">
-        <button type="button" class="btn btn-primary btn-block" id="wizSendCode" disabled>Send verification code</button>
-        <p class="wizard-note" id="wizEmailNote" role="status"></p>
-        <button type="button" class="wizard-dev-skip" id="wizSkipEmail">Skip verification (dev)</button>
-      </div>
-
-      <div class="wizard-step" data-step="code">
-        <h2 class="wizard-question">Enter the code we emailed you</h2>
-        <input type="text" class="wizard-input wizard-input-code" id="wizCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456">
-        <button type="button" class="btn btn-primary btn-block" id="wizVerifyCode">Verify</button>
-        <p class="wizard-note" id="wizCodeNote" role="status"></p>
-        <button type="button" class="wizard-dev-skip" id="wizSkipCode">Skip verification (dev)</button>
-      </div>
-
       <div class="wizard-step" data-step="sponsorTier">
         <h2 class="wizard-question">Which tier are you interested in?</h2>
         <div class="wizard-chip-row" role="radiogroup" aria-label="Sponsorship tier">
@@ -486,30 +544,78 @@
           <button type="button" class="wizard-chip wizard-chip-text" data-tier="Platinum" role="radio" aria-checked="false">Platinum</button>
           <button type="button" class="wizard-chip wizard-chip-text" data-tier="Not sure yet" role="radio" aria-checked="false">Not sure yet</button>
         </div>
-        <button type="button" class="btn btn-primary btn-block wizard-next" id="tierNext" disabled>Continue</button>
+        <button type="button" class="btn btn-primary btn-block" id="tierNext" disabled>Send my interest</button>
+        <p class="wizard-note" id="tierNote" role="status"></p>
+      </div>
+
+      <div class="wizard-step" data-step="pass">
+        <h2 class="wizard-question">Which pass do you want?</h2>
+        <div class="pass-grid" role="radiogroup" aria-label="Pass">
+          <button type="button" class="pass-card" data-pass="concert" role="radio" aria-checked="false">
+            <span class="pass-name">Live Concert only</span>
+            <span class="pass-when">Sunday 18 October</span>
+            <span class="pass-price">Rs 2,500 <small>per person</small></span>
+          </button>
+          <button type="button" class="pass-card" data-pass="both" role="radio" aria-checked="false">
+            <span class="pass-name">Both nights</span>
+            <span class="pass-when">Live Concert + Qawwali Night, 18 and 19 October</span>
+            <span class="pass-price">Rs 3,500 <small>per person</small></span>
+          </button>
+        </div>
+        <button type="button" class="btn btn-primary btn-block wizard-next" id="passNext" disabled>Continue</button>
       </div>
 
       <div class="wizard-step" data-step="payment">
         <h2 class="wizard-question">How would you like to pay?</h2>
         <div class="wizard-pill-list" role="radiogroup" aria-label="Payment method">
-          <button type="button" class="wizard-pill" data-pay="JazzCash" role="radio" aria-checked="false">JazzCash</button>
-          <button type="button" class="wizard-pill" data-pay="Bank transfer" role="radio" aria-checked="false">Bank transfer</button>
-          <button type="button" class="wizard-pill" data-pay="Cash" role="radio" aria-checked="false">Cash, in person</button>
+          <button type="button" class="wizard-pill" data-pay="jazzcash" role="radio" aria-checked="false">JazzCash</button>
+          <button type="button" class="wizard-pill" data-pay="bank" role="radio" aria-checked="false">Bank transfer</button>
+          <button type="button" class="wizard-pill" data-pay="cash" role="radio" aria-checked="false">Cash, in person</button>
         </div>
+        <div class="payment-total" id="paymentTotal" hidden></div>
         <div class="payment-details" id="paymentDetails" hidden></div>
-        <button type="button" class="btn btn-primary btn-block wizard-next" id="paymentNext" hidden>Continue</button>
+
+        <div class="receipt-box" id="receiptBox" hidden>
+          <p class="receipt-title">Upload your payment receipt</p>
+          <p class="receipt-help">A clear photo or screenshot that shows the amount, the date and the transaction ID. One of our team will check it against your name and email.</p>
+          <input type="file" id="receiptFile" accept="image/*" class="receipt-input">
+          <label for="receiptFile" class="receipt-drop" id="receiptDrop">
+            <span class="receipt-placeholder" id="receiptPlaceholder">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/></svg>
+              <span>Tap to add a photo of your receipt</span>
+              <small>JPG, PNG or a screenshot</small>
+            </span>
+            <img id="receiptPreview" class="receipt-preview" alt="Preview of your receipt" hidden>
+          </label>
+          <button type="button" class="receipt-clear" id="receiptClear" hidden>Remove and choose a different photo</button>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-block" id="submitBtn" hidden disabled>Submit registration</button>
+        <p class="wizard-note" id="submitNote" role="status"></p>
       </div>
 
       <div class="wizard-step" data-step="done">
         <span class="wizard-done-icon" aria-hidden="true">✓</span>
-        <h2 class="wizard-question" id="doneTitle">You're on the list.</h2>
-        <p class="wizard-note is-success" id="doneNote">Thanks, we've got your registration. See you 18–19 October.</p>
+        <h2 class="wizard-question" id="doneTitle">We've got your registration.</h2>
+        <p class="wizard-note is-success" id="doneNote"></p>
+        <a href="account.html" class="btn btn-ghost btn-block" style="margin-top:1.2rem;">View my registration</a>
       </div>
     </form>
 
     <button type="button" class="wizard-back" id="wizardBack" hidden>← Back</button>
   </div>
 </section>
+
+<!-- ============ ACCOUNT GATE (popup) ============ -->
+<div class="gate" id="gate" hidden>
+  <div class="gate-card" role="dialog" aria-modal="true" aria-labelledby="gateTitle" aria-describedby="gateText">
+    <h2 id="gateTitle">Create an account to register</h2>
+    <p id="gateText">You can look around the whole site without an account. To register we need one, so we can link your payment to you and email you updates about it.</p>
+    <a class="btn btn-primary btn-block" href="account.html?next=register.html#signup" id="gateSignup">Create an account</a>
+    <a class="btn btn-ghost btn-block" href="account.html?next=register.html#login">I already have an account</a>
+    <button type="button" class="gate-close" id="gateClose">Keep browsing</button>
+  </div>
+</div>
 
 <!-- ============ FOOTER ============ -->
 <footer class="site-footer">
@@ -545,23 +651,104 @@
     });
   }
 
-  const VERIFY_WORKER_URL = 'https://accord-vi-verify.accordbccmvi.workers.dev';
+  // ---------- Account + API ----------
+  // The local test worker when previewing on this machine, otherwise the live one.
+  const IS_DEV = ['localhost', '127.0.0.1'].includes(location.hostname);
+  const API = IS_DEV ? 'http://127.0.0.1:8787' : 'https://accord-vi-verify.accordbccmvi.workers.dev';
+  const TOKEN_KEY = 'accord_account_token';
+  const getToken = () => { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; } };
+  const clearToken = () => { try { localStorage.removeItem(TOKEN_KEY); } catch {} };
+
+  async function api(path, body) {
+    let res;
+    try {
+      res = await fetch(API + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+        body: JSON.stringify(body || {})
+      });
+    } catch {
+      return { ok: false, status: 0, error: 'Could not reach the server. Check your connection and try again.' };
+    }
+    let data = {};
+    try { data = await res.json(); } catch {}
+    return { status: res.status, ...data, ok: res.ok && data.ok !== false };
+  }
+
   function setNote(note, text, kind) {
     note.textContent = text;
     note.classList.remove('is-error', 'is-success');
     if (kind) note.classList.add(kind);
   }
 
-  // Dev-only shortcuts that bypass email verification — never shown to real
-  // visitors, only enabled on localhost/file so testing doesn't need a real inbox.
-  const IS_DEV = ['localhost', '127.0.0.1'].includes(location.hostname) || location.protocol === 'file:';
-  document.querySelectorAll('.wizard-dev-skip').forEach((btn) => { btn.hidden = !IS_DEV; });
+  const wizardWrap = document.querySelector('.wizard-wrap');
+  const wizardLock = document.getElementById('wizardLock');
+  const wizardWho = document.getElementById('wizardWho');
+  const gate = document.getElementById('gate');
+  let me = null; // { user, ticket } once signed in
+
+  // ---------- The "create an account" popup ----------
+  let gateReturnFocus = null;
+  function openGate() {
+    gateReturnFocus = document.activeElement;
+    gate.hidden = false;
+    document.getElementById('gateSignup').focus();
+  }
+  function closeGate() {
+    gate.hidden = true;
+    if (gateReturnFocus && gateReturnFocus.focus) gateReturnFocus.focus();
+  }
+  document.getElementById('gateClose').addEventListener('click', closeGate);
+  gate.addEventListener('click', (e) => { if (e.target === gate) closeGate(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !gate.hidden) closeGate(); });
+  document.getElementById('lockOpen').addEventListener('click', openGate);
+
+  function lockWizard(locked) {
+    wizardWrap.classList.toggle('is-locked', locked);
+    wizardLock.hidden = !locked;
+    document.getElementById('wizardForm').toggleAttribute('inert', locked);
+  }
+
+  async function startSession() {
+    if (!getToken()) { lockWizard(true); openGate(); return; }
+    const r = await api('/account/me');
+    if (!r.ok) {
+      if (r.status === 401) clearToken();
+      lockWizard(true);
+      openGate();
+      return;
+    }
+    me = { user: r.user, ticket: r.ticket };
+    lockWizard(false);
+    wizardWho.hidden = false;
+    wizardWho.textContent = '';
+    wizardWho.append('Registering as ');
+    const strong = document.createElement('strong');
+    strong.textContent = `${r.user.name} (${r.user.email})`;
+    wizardWho.append(strong, '. Not you? ');
+    const out = document.createElement('button');
+    out.type = 'button';
+    out.textContent = 'Sign out';
+    out.addEventListener('click', async () => {
+      await api('/account/logout');
+      clearToken();
+      location.reload();
+    });
+    wizardWho.append(out);
+
+    if (r.ticket && r.ticket.status === 'confirmed') {
+      showAlreadyConfirmed();
+    } else if (r.ticket && r.ticket.status === 'pending') {
+      setNote(document.getElementById('resubmitNote'), 'You already submitted a registration. Going through this again replaces it, for example to upload a clearer receipt.', '');
+    }
+  }
 
   // ---------- Dynamic step sequence ----------
+  // Name and email come from the account, so there are no name/email/code steps.
   function computeSequence(persona) {
-    if (persona === 'group') return ['persona', 'name', 'hearAbout', 'headcount', 'groupNames', 'payment', 'email', 'code'];
-    if (persona === 'sponsor') return ['persona', 'name', 'hearAbout', 'sponsorTier', 'payment', 'email', 'code'];
-    return ['persona', 'name', 'hearAbout', 'payment', 'email', 'code'];
+    if (persona === 'group') return ['persona', 'hearAbout', 'headcount', 'groupNames', 'pass', 'payment'];
+    if (persona === 'sponsor') return ['persona', 'hearAbout', 'sponsorTier'];
+    return ['persona', 'hearAbout', 'pass', 'payment'];
   }
 
   let sequence = computeSequence(null);
@@ -570,6 +757,8 @@
   const progressBar = document.getElementById('wizardProgressBar');
   const stepLabel = document.getElementById('wizardStepLabel');
   const backBtn = document.getElementById('wizardBack');
+  const doneTitle = document.getElementById('doneTitle');
+  const doneNote = document.getElementById('doneNote');
 
   function render() {
     const key = sequence[index];
@@ -578,21 +767,20 @@
     stepLabel.textContent = `Question ${index + 1} of ${sequence.length}`;
     backBtn.hidden = index === 0;
   }
-  function finish() {
-    if (wizPersonaField.value === 'sponsor') {
-      doneTitle.textContent = "You're in the pipeline.";
-      doneNote.textContent = `Thanks, we've got your sponsorship interest. Our team will follow up about ${chosenPayment || 'payment'} and next steps.`;
-    }
+  function showDone(title, note) {
+    doneTitle.textContent = title;
+    doneNote.textContent = note;
     steps.forEach((s) => s.classList.toggle('is-active', s.dataset.step === 'done'));
     progressBar.style.width = '100%';
     stepLabel.textContent = 'All done';
     backBtn.hidden = true;
   }
-  // Continuing from the last step in the sequence finishes automatically —
-  // every Continue/Verify button can just call this.
+  function showAlreadyConfirmed() {
+    showDone('Your payment is confirmed.', 'You are registered and your payment has been confirmed. You can see the details any time on your account page.');
+    stepLabel.textContent = 'Already registered';
+  }
   function goNext() {
     if (index < sequence.length - 1) { index += 1; render(); }
-    else { finish(); }
   }
   function goBack() {
     if (index > 0) { index -= 1; render(); }
@@ -610,18 +798,17 @@
 
   backBtn.addEventListener('click', goBack);
   document.querySelectorAll('.wizard-step .wizard-next:not([id])').forEach((btn) => {
-    btn.addEventListener('click', goNext); // plain typed-answer steps (name/groupNames/headcount)
+    btn.addEventListener('click', goNext); // plain typed-answer steps (headcount / group names)
   });
   document.getElementById('wizardForm').addEventListener('submit', (e) => e.preventDefault());
 
-  // Step: headcount (group leader only) — stepper only, no presets. Minus
-  // stays hidden until there's something to subtract.
+  // Step: headcount (group leader only)
   const wizAttendeeCount = document.getElementById('wizAttendeeCount');
   const stepperMinus = document.getElementById('wizStepperMinus');
   const stepperValue = document.getElementById('wizStepperValue');
   let groupCount = 1;
   function setGroupCount(n) {
-    groupCount = Math.max(1, n);
+    groupCount = Math.min(50, Math.max(1, n));
     stepperValue.textContent = groupCount;
     wizAttendeeCount.value = groupCount;
     stepperMinus.hidden = groupCount <= 1;
@@ -629,8 +816,7 @@
   document.getElementById('wizStepperMinus').addEventListener('click', () => setGroupCount(groupCount - 1));
   document.getElementById('wizStepperPlus').addEventListener('click', () => setGroupCount(groupCount + 1));
 
-  // Step: persona — selecting only highlights the border; Continue is the
-  // real navigation trigger.
+  // Step: persona
   const wizPersonaField = document.getElementById('wizPersonaField');
   const personaBtns = document.querySelectorAll('[data-step="persona"] .wizard-icon-btn');
   const personaNext = document.getElementById('personaNext');
@@ -655,12 +841,6 @@
     personaNext.disabled = false;
   }
 
-  // Step: name
-  const wizName = document.getElementById('wizName');
-  const nameNext = document.getElementById('nameNext');
-  wizName.addEventListener('input', () => { nameNext.disabled = wizName.value.trim().length === 0; });
-  nameNext.addEventListener('click', goNext);
-
   // Step: how did you hear about us
   const wizHearAbout = document.getElementById('wizHearAbout');
   const hearAboutNext = document.getElementById('hearAboutNext');
@@ -675,10 +855,29 @@
   });
   hearAboutNext.addEventListener('click', goNext);
 
-  // Step: sponsor tier
+  // ---------- Submitting ----------
+  const submitBtn = document.getElementById('submitBtn');
+  const submitNote = document.getElementById('submitNote');
+
+  async function submitTicket(extra) {
+    if (!me) { openGate(); return; }
+    const body = {
+      persona: wizPersonaField.value,
+      hearAbout: wizHearAbout.value,
+      attendeeCount: Number(wizAttendeeCount.value),
+      groupNames: document.getElementById('wizGroupNames').value,
+      ...extra
+    };
+    const r = await api('/account/ticket/submit', body);
+    if (r.status === 401) { clearToken(); lockWizard(true); openGate(); }
+    return r;
+  }
+
+  // Step: sponsor tier -> register interest straight away (no payment for sponsors)
   let chosenTier = '';
   const tierChips = document.querySelectorAll('[data-step="sponsorTier"] .wizard-chip');
   const tierNext = document.getElementById('tierNext');
+  const tierNote = document.getElementById('tierNote');
   tierChips.forEach((chip) => {
     chip.addEventListener('click', () => {
       tierChips.forEach((c) => c.setAttribute('aria-checked', 'false'));
@@ -687,24 +886,64 @@
       tierNext.disabled = false;
     });
   });
-  tierNext.addEventListener('click', goNext);
+  tierNext.addEventListener('click', async () => {
+    tierNext.disabled = true;
+    setNote(tierNote, 'Sending…');
+    const r = await submitTicket({ sponsorTier: chosenTier });
+    tierNext.disabled = false;
+    if (!r || !r.ok) { setNote(tierNote, (r && r.error) || 'Something went wrong, please try again.', 'is-error'); return; }
+    setNote(tierNote, '');
+    showDone("You're in the pipeline.", `Thanks, we've got your sponsorship interest and emailed you a copy. Our team will follow up with you at ${me.user.email}.`);
+  });
 
-  // Step: sponsor payment — selecting reveals details (or the two real
-  // meet-up spots for cash), then a manual Finish.
+  // Step: pass
+  const PRICE = { concert: 2500, both: 3500 };
+  let chosenPass = '';
+  const passCards = document.querySelectorAll('[data-step="pass"] .pass-card');
+  const passNext = document.getElementById('passNext');
+  passCards.forEach((card) => {
+    card.addEventListener('click', () => {
+      passCards.forEach((c) => c.setAttribute('aria-checked', 'false'));
+      card.setAttribute('aria-checked', 'true');
+      chosenPass = card.dataset.pass;
+      passNext.disabled = false;
+      updateTotal();
+    });
+  });
+  passNext.addEventListener('click', goNext);
+
+  const money = (n) => 'Rs ' + n.toLocaleString('en-US');
+  const paymentTotal = document.getElementById('paymentTotal');
+  function currentTotal() {
+    const people = wizPersonaField.value === 'group' ? groupCount : 1;
+    return (PRICE[chosenPass] || 0) * people;
+  }
+  function updateTotal() {
+    if (!chosenPass) { paymentTotal.hidden = true; return; }
+    const people = wizPersonaField.value === 'group' ? groupCount : 1;
+    paymentTotal.hidden = false;
+    paymentTotal.textContent = '';
+    const label = document.createElement('span');
+    label.textContent = people > 1 ? `Amount to pay (${people} people)` : 'Amount to pay';
+    const amount = document.createElement('strong');
+    amount.textContent = money(currentTotal());
+    paymentTotal.append(label, amount);
+  }
+
+  // Step: payment method + receipt
   let chosenPayment = '';
+  let receiptData = '';
   const paymentDetails = document.getElementById('paymentDetails');
-  const paymentNext = document.getElementById('paymentNext');
   const paymentPills = document.querySelectorAll('[data-step="payment"] .wizard-pill');
-  const doneTitle = document.getElementById('doneTitle');
-  const doneNote = document.getElementById('doneNote');
+  const receiptBox = document.getElementById('receiptBox');
   const PAYMENT_INFO = {
-    JazzCash: `
+    jazzcash: `
       <span class="warn">⚠ Placeholder, not a real account</span>
       <dl>
         <dt>JazzCash number</dt><dd>0300-1234567</dd>
         <dt>Account name</dt><dd>ACCORD VI EVENTS (placeholder)</dd>
       </dl>`,
-    'Bank transfer': `
+    bank: `
       <span class="warn">⚠ Placeholder, not a real account</span>
       <dl>
         <dt>Bank</dt><dd>Placeholder Bank Ltd.</dd>
@@ -712,15 +951,21 @@
         <dt>Account number</dt><dd>0123-4567890-1</dd>
         <dt>IBAN</dt><dd>PK00PLHO0000001234567890</dd>
       </dl>`,
-    Cash: `
-      <span class="warn">No account needed</span>
+    cash: `
+      <span class="warn">No account needed, no receipt needed</span>
       We'll have someone on hand with tickets at one of these two spots, 6:00 PM to 12:00 AM
-      (exact hours confirmed closer to the date):
+      (exact hours confirmed closer to the date). Your registration stays pending until we receive your payment:
       <ul>
         <li><a href="https://www.google.com/maps/search/?api=1&query=McDonald%27s+Multan+Cantt" target="_blank" rel="noopener">McDonald's, Multan Cantt →</a></li>
         <li><a href="https://www.google.com/maps/search/?api=1&query=Gloria+Jean%27s+Coffee+Multan" target="_blank" rel="noopener">Gloria Jean's Coffee, Multan →</a></li>
       </ul>`
   };
+
+  function refreshSubmit() {
+    const needsReceipt = chosenPayment === 'jazzcash' || chosenPayment === 'bank';
+    submitBtn.hidden = !chosenPayment;
+    submitBtn.disabled = !chosenPayment || (needsReceipt && !receiptData);
+  }
   paymentPills.forEach((pill) => {
     pill.addEventListener('click', () => {
       paymentPills.forEach((p) => p.setAttribute('aria-checked', 'false'));
@@ -728,90 +973,104 @@
       chosenPayment = pill.dataset.pay;
       paymentDetails.innerHTML = PAYMENT_INFO[chosenPayment];
       paymentDetails.hidden = false;
-      paymentNext.hidden = false;
+      receiptBox.hidden = chosenPayment === 'cash';
+      updateTotal();
+      refreshSubmit();
     });
   });
-  paymentNext.addEventListener('click', goNext);
 
-  // Step: email -> send code
-  const wizEmail = document.getElementById('wizEmail');
-  const wizSendCode = document.getElementById('wizSendCode');
-  const wizEmailNote = document.getElementById('wizEmailNote');
-  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  wizEmail.addEventListener('input', () => {
-    wizSendCode.disabled = !EMAIL_RE.test(wizEmail.value.trim()) || !wizEmail.checkValidity();
-  });
+  // Receipt photo: shrunk in the browser to roughly 300 KB so uploads are quick on phone data.
+  const receiptFile = document.getElementById('receiptFile');
+  const receiptPreview = document.getElementById('receiptPreview');
+  const receiptPlaceholder = document.getElementById('receiptPlaceholder');
+  const receiptClear = document.getElementById('receiptClear');
+  const receiptDrop = document.getElementById('receiptDrop');
 
-  function buildDetails() {
-    const parts = [`Persona: ${wizPersonaField.value}`];
-    if (wizPersonaField.value === 'group') {
-      parts.push(`Attendees: ${wizAttendeeCount.value}`);
-    }
-    const groupNames = document.getElementById('wizGroupNames');
-    if (wizPersonaField.value === 'group' && groupNames.value.trim()) {
-      parts.push(`Group members: ${groupNames.value.trim().replace(/\n+/g, ', ')}`);
-    }
-    parts.push(`Heard about us: ${wizHearAbout.value}`);
-    if (wizPersonaField.value === 'sponsor') {
-      parts.push(`Tier interest: ${chosenTier || 'not selected yet'}`);
-    }
-    parts.push(`Payment method: ${chosenPayment || 'not selected yet'}`);
-    return parts.join(' | ');
+  function loadImage(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('unreadable')); };
+      img.src = url;
+    });
   }
+  async function shrink(file) {
+    const img = await loadImage(file);
+    let max = 1400;
+    for (let attempt = 0; attempt < 6; attempt += 1) {
+      const scale = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      for (const q of [0.82, 0.7, 0.58, 0.46]) {
+        const data = canvas.toDataURL('image/jpeg', q);
+        if (data.length <= 450000) return data;
+      }
+      max = Math.round(max * 0.78);
+    }
+    throw new Error('toobig');
+  }
+  function clearReceipt() {
+    receiptData = '';
+    receiptFile.value = '';
+    receiptPreview.hidden = true;
+    receiptPreview.removeAttribute('src');
+    receiptPlaceholder.hidden = false;
+    receiptClear.hidden = true;
+    refreshSubmit();
+  }
+  receiptClear.addEventListener('click', clearReceipt);
+  async function handleReceipt(file) {
+    if (!file) return;
+    setNote(submitNote, 'Preparing your photo…');
+    try {
+      receiptData = await shrink(file);
+      receiptPreview.src = receiptData;
+      receiptPreview.hidden = false;
+      receiptPlaceholder.hidden = true;
+      receiptClear.hidden = false;
+      setNote(submitNote, '');
+    } catch {
+      clearReceipt();
+      setNote(submitNote, "We couldn't read that photo. Try a screenshot, or a JPG or PNG.", 'is-error');
+    }
+    refreshSubmit();
+  }
+  receiptFile.addEventListener('change', () => handleReceipt(receiptFile.files[0]));
+  ['dragenter', 'dragover'].forEach((ev) => receiptDrop.addEventListener(ev, (e) => { e.preventDefault(); receiptDrop.classList.add('is-drag'); }));
+  ['dragleave', 'drop'].forEach((ev) => receiptDrop.addEventListener(ev, (e) => { e.preventDefault(); receiptDrop.classList.remove('is-drag'); }));
+  receiptDrop.addEventListener('drop', (e) => handleReceipt(e.dataTransfer.files[0]));
 
-  wizSendCode.addEventListener('click', () => {
-    document.getElementById('wizDetailsField').value = buildDetails();
-    setNote(wizEmailNote, 'Sending you a verification code…');
-    wizSendCode.disabled = true;
+  submitBtn.addEventListener('click', async () => {
+    submitBtn.disabled = true;
     backBtn.disabled = true;
-    fetch(`${VERIFY_WORKER_URL}/request-code`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        form_type: 'Registration',
-        name: wizName.value,
-        email: wizEmail.value.trim(),
-        details: document.getElementById('wizDetailsField').value
-      })
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.ok) throw new Error(data.error || 'Could not send code');
-        setNote(wizEmailNote, `Code sent to ${wizEmail.value}.`, 'is-success');
-        goNext();
-      })
-      .catch((err) => setNote(wizEmailNote, err.message || 'Something went wrong, please try again.', 'is-error'))
-      .finally(() => { wizSendCode.disabled = false; backBtn.disabled = false; });
+    setNote(submitNote, 'Submitting your registration…');
+    const r = await submitTicket({ pass: chosenPass, payMethod: chosenPayment, receipt: chosenPayment === 'cash' ? '' : receiptData });
+    backBtn.disabled = false;
+    if (!r || !r.ok) {
+      setNote(submitNote, (r && r.error) || 'Something went wrong, please try again.', 'is-error');
+      refreshSubmit();
+      return;
+    }
+    setNote(submitNote, '');
+    const mailNote = r.warnings && r.warnings.length
+      ? " We couldn't send the confirmation email, but your registration is saved."
+      : ` We've emailed ${me.user.email}.`;
+    showDone(
+      'Registration received.',
+      chosenPayment === 'cash'
+        ? `Your registration is pending until we receive your cash payment (${money(currentTotal())}).${mailNote}`
+        : `Your payment of ${money(currentTotal())} is pending verification. One of our team will check your receipt and email you once it is confirmed.${mailNote}`
+    );
   });
-  document.getElementById('wizSkipEmail').addEventListener('click', () => { goNext(); goNext(); });
-
-  // Step: verify code
-  const wizCode = document.getElementById('wizCode');
-  const wizVerifyCode = document.getElementById('wizVerifyCode');
-  const wizCodeNote = document.getElementById('wizCodeNote');
-  wizVerifyCode.addEventListener('click', () => {
-    const code = wizCode.value.trim();
-    if (!code) { setNote(wizCodeNote, 'Enter the 6-digit code first.', 'is-error'); return; }
-    setNote(wizCodeNote, 'Checking…');
-    wizVerifyCode.disabled = true;
-    backBtn.disabled = true;
-    fetch(`${VERIFY_WORKER_URL}/verify-code`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: wizEmail.value, code })
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.ok) throw new Error(data.error || 'Incorrect code');
-        setNote(wizCodeNote, 'Confirmed!', 'is-success');
-        goNext();
-      })
-      .catch((err) => setNote(wizCodeNote, err.message || 'Incorrect code, please try again.', 'is-error'))
-      .finally(() => { wizVerifyCode.disabled = false; backBtn.disabled = false; });
-  });
-  document.getElementById('wizSkipCode').addEventListener('click', goNext);
 
   render();
+  startSession();
 </script>
 </body>
 </html>
