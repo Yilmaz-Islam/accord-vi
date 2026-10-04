@@ -74,9 +74,9 @@
     <!-- sign in -->
     <div id="viewLogin" class="gt-card" hidden>
       <h1 class="page-title" style="font-size:1.6rem;margin-bottom:0.4rem;">Gate sign in</h1>
-      <p style="color:var(--color-text-dim);margin-bottom:1.2rem;font-size:0.95rem;">For door staff. Ask an organiser for the gate password.</p>
+      <p style="color:var(--color-text-dim);margin-bottom:1.2rem;font-size:0.95rem;">For door staff. Use your admin password, or the gate password if you were given one.</p>
       <form id="formLogin" novalidate>
-        <label class="gt-label" for="gatePw">Gate password</label>
+        <label class="gt-label" for="gatePw">Admin or gate password</label>
         <input class="gt-input" id="gatePw" type="password" autocomplete="current-password" required>
         <button type="submit" class="btn btn-primary btn-block" id="btnLogin">Sign in</button>
         <p class="gt-note" id="noteLogin" role="status"></p>
@@ -136,11 +136,15 @@
   const IS_LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname);
   const API = IS_LOCAL ? 'http://127.0.0.1:8787' : 'https://accord-vi-verify.accordbccmvi.workers.dev';
   const TOKEN_KEY = 'accord_gate_token';
+  const ADMIN_TOKEN_KEY = 'accord_admin_token'; // the same key admin.html uses
   const PASS = { concert: 'Live Concert only (18 Oct)', both: 'Both nights (18 + 19 Oct)' };
   const $ = (id) => document.getElementById(id);
-  const getToken = () => { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; } };
+  // Either a gate token or an admin token opens the scanner (the server accepts both).
+  const getToken = () => { try { return localStorage.getItem(TOKEN_KEY) || localStorage.getItem(ADMIN_TOKEN_KEY) || ''; } catch { return ''; } };
   const setToken = (t) => { try { localStorage.setItem(TOKEN_KEY, t); } catch {} };
-  const clearToken = () => { try { localStorage.removeItem(TOKEN_KEY); } catch {} };
+  const setAdminToken = (t) => { try { localStorage.setItem(ADMIN_TOKEN_KEY, t); } catch {} };
+  // signing out here signs out of both, so a shared phone is not left signed in as an admin
+  const clearToken = () => { try { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(ADMIN_TOKEN_KEY); } catch {} };
 
   async function api(path, body) {
     let res;
@@ -154,7 +158,7 @@
       return { ok: false, status: 0, error: 'No connection. Check the signal and try again.' };
     }
     const data = await res.json().catch(() => ({}));
-    if (res.status === 401 && path !== '/gate/login') { signedOut('Your session ended. Please sign in again.'); }
+    if (res.status === 401 && path !== '/gate/login' && path !== '/admin/login') { signedOut('Your session ended. Please sign in again.'); }
     return { status: res.status, ...data, ok: res.ok && data.ok !== false };
   }
 
@@ -170,10 +174,20 @@
     if (!password) { note('noteLogin', 'Enter the gate password.', true); return; }
     $('btnLogin').disabled = true;
     note('noteLogin', 'Checking…');
-    const r = await api('/gate/login', { password });
+    // The gate password first (if the gate password has been removed, or it is not
+    // that one, the admin password is tried next).
+    let r = await api('/gate/login', { password });
+    let wrong = false;
+    if (r.ok) {
+      setToken(r.token);
+    } else if (r.status === 401 || r.status === 503) {
+      const a = await api('/admin/login', { password });
+      if (a.ok) { r = a; setAdminToken(a.token); }
+      else if (a.status === 401) { wrong = true; r = a; }
+      else { r = a; }
+    }
     $('btnLogin').disabled = false;
-    if (!r.ok) { note('noteLogin', r.error || 'Could not sign in.', true); return; }
-    setToken(r.token);
+    if (!r.ok) { note('noteLogin', wrong ? 'Incorrect password' : (r.error || 'Could not sign in.'), true); return; }
     $('gatePw').value = '';
     note('noteLogin', '');
     showScan();
