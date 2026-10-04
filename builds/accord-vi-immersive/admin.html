@@ -465,6 +465,16 @@
     </div>
   </div>
 </div>
+<div class="rmodal" id="confirmModal" style="z-index:10002;" hidden>
+  <div class="rmodal-card" role="alertdialog" aria-modal="true" aria-labelledby="cmTitle" aria-describedby="cmText" style="max-width:26rem;">
+    <h2 id="cmTitle" style="font-family:var(--font-display);font-size:1.2rem;margin:0 0 0.6rem;"></h2>
+    <p id="cmText" style="color:var(--color-text-dim);font-size:0.95rem;line-height:1.55;margin:0 0 1.2rem;white-space:pre-line;"></p>
+    <div class="rmodal-actions" style="margin-top:0;justify-content:flex-end;">
+      <button type="button" class="admin-btn" id="cmCancel">Cancel</button>
+      <button type="button" class="admin-btn is-confirm" id="cmOk">Yes, confirm</button>
+    </div>
+  </div>
+</div>
 <div class="admin-toast" id="adminToast" role="status" hidden></div>
 
 <footer class="site-footer">
@@ -830,11 +840,50 @@
   modal.addEventListener('click', (e) => { if (e.target === modal) closeReceipt(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) closeReceipt(); });
 
+  // An in-page "are you sure?" popup. The browser's own confirm() is silently blocked
+  // in some browsers (in-app browsers, some phones), which made buttons look dead.
+  function askConfirm({ title, text, okLabel }) {
+    return new Promise((resolve) => {
+      const m = document.getElementById('confirmModal');
+      const ok = document.getElementById('cmOk');
+      const cancel = document.getElementById('cmCancel');
+      const returnTo = document.activeElement;
+      document.getElementById('cmTitle').textContent = title;
+      document.getElementById('cmText').textContent = text;
+      ok.textContent = okLabel || 'Yes, confirm';
+      m.hidden = false;
+      cancel.focus();
+      function done(answer) {
+        m.hidden = true;
+        ok.removeEventListener('click', onOk);
+        cancel.removeEventListener('click', onCancel);
+        m.removeEventListener('click', onBackdrop);
+        document.removeEventListener('keydown', onKey, true);
+        if (returnTo && returnTo.focus) returnTo.focus();
+        resolve(answer);
+      }
+      const onOk = () => done(true);
+      const onCancel = () => done(false);
+      const onBackdrop = (e) => { if (e.target === m) done(false); };
+      const onKey = (e) => { if (e.key === 'Escape') { e.stopImmediatePropagation(); done(false); } };
+      ok.addEventListener('click', onOk);
+      cancel.addEventListener('click', onCancel);
+      m.addEventListener('click', onBackdrop);
+      document.addEventListener('keydown', onKey, true);
+    });
+  }
+
   // ----- confirming a payment (this emails the person, so it asks first) -----
   async function confirmTicket(id, button) {
     const t = allTickets.find((x) => x.id === id);
     if (!t || t.status !== 'pending') return;
-    const ok = window.confirm(`Confirm the payment from ${t.name} (${money(t.amountPkr)})?\n\nThis sends them an email saying their payment is confirmed.`);
+    const ok = await askConfirm({
+      title: `Confirm the payment from ${t.name}?`,
+      text: `Amount: ${money(t.amountPkr)}
+
+This marks it as paid, creates ${t.persona === 'group' ? t.attendeeCount + ' tickets' : 'their ticket'} and emails them the confirmation with the ticket links. It can't be undone from here.`,
+      okLabel: 'Yes, payment confirmed',
+    });
     if (!ok) return;
     if (button) button.disabled = true;
     try {

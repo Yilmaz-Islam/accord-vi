@@ -79,7 +79,7 @@
     box.appendChild(close);
     box.appendChild(make('p', 'secret-panel__eyebrow', 'Hidden'));
     box.appendChild(make('p', 'secret-panel__title', 'Executive access'));
-    box.appendChild(make('p', 'secret-panel__text', 'Registrations and payment checks, or the gate scanner for door staff. Each needs its own password.'));
+    box.appendChild(make('p', 'secret-panel__text', 'Registrations and payment checks, or the gate scanner for door staff. You will need the admin password.'));
     box.appendChild(link);
     var gate = make('a', 'secret-panel__link secret-panel__link--ghost', 'Open the gate scanner \u2192');
     gate.href = 'gate.html';
@@ -103,6 +103,14 @@
     setTimeout(function () { if (p.parentNode) p.parentNode.removeChild(p); }, 220);
     if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
   }
+
+  // Arriving from the gate scanner's Sign out: open the popup once, then forget it.
+  try {
+    if (sessionStorage.getItem('accord_open_exec') === '1') {
+      sessionStorage.removeItem('accord_open_exec');
+      open();
+    }
+  } catch (e) {}
 
   document.addEventListener('click', function (e) {
     if (e.target.closest && e.target.closest('[data-exec-trigger]')) open();

@@ -192,7 +192,14 @@
     note('noteLogin', '');
     showScan();
   });
-  $('btnSignOut').addEventListener('click', () => { clearToken(); showLogin(); note('noteLogin', ''); });
+  // Signing out of the scanner goes back to the Terms page with the Executive access popup open.
+  // A one-time flag (not a link anyone could guess) tells the Terms page to open it.
+  $('btnSignOut').addEventListener('click', () => {
+    stopCamera();
+    clearToken();
+    try { sessionStorage.setItem('accord_open_exec', '1'); } catch {}
+    location.href = 'terms.html';
+  });
 
   // ---------- the result card ----------
   let current = null; // the ticket being shown: { id, holderName, seq, of, pass, purchaser, admittedAt, code? }
