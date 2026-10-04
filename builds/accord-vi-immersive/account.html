@@ -120,6 +120,7 @@
     font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase;
     border: 1px solid currentColor;
   }
+  .acct-badge[hidden] { display: none; }
   .acct-badge.is-pending { color: #e0b455; }
   .acct-badge.is-confirmed { color: #5fcf8f; }
   .acct-badge.is-interest { color: #8fb4ff; }
@@ -200,6 +201,144 @@
   @media (prefers-reduced-motion: reduce) {
     .acct-card, .acct-spinner { animation: none; }
   }
+
+  /* ---- the account centre (signed in) ---- */
+  .acct-wrap.is-wide { max-width: 62rem; }
+  .acct-center { animation: acct-fade-in 0.35s ease; }
+
+  .acct-profile-head {
+    display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap;
+    padding: 1.3rem 1.4rem; margin-bottom: 1.2rem;
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px;
+  }
+  .acct-avatar-lg {
+    flex: none; width: 4.4rem; height: 4.4rem; border-radius: 50%; display: grid; place-items: center;
+    background: var(--acct-avatar, var(--color-primary)); color: #0e0f12;
+    font-family: var(--font-display); font-weight: 700; font-size: 1.9rem;
+    box-shadow: 0 0 0 3px var(--color-surface), 0 0 0 5px var(--acct-avatar, var(--color-primary));
+  }
+  .acct-head-text { flex: 1 1 14rem; min-width: 0; }
+  .acct-head-text h2 { font-family: var(--font-display); font-size: 1.45rem; margin: 0 0 0.15rem; word-break: break-word; }
+  .acct-head-text p { margin: 0; color: var(--color-text-dim); font-size: 0.9rem; word-break: break-all; }
+  .acct-head-text .acct-meta { color: var(--color-text-faint); font-size: 0.8rem; margin-top: 0.2rem; }
+  .acct-profile-head .acct-badge { margin: 0; }
+
+  .acct-layout { display: grid; gap: 1.2rem; align-items: start; }
+  @media (min-width: 860px) { .acct-layout { grid-template-columns: 15.5rem minmax(0, 1fr); } }
+
+  /* the section list: a sidebar on desktop, a scrolling row on phones */
+  .acct-nav {
+    display: flex; gap: 0.4rem; overflow-x: auto; padding: 0.35rem; -webkit-overflow-scrolling: touch;
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 14px;
+  }
+  .acct-nav a, .acct-nav .acct-nav-out {
+    flex: none; display: block; padding: 0.7rem 0.95rem; border-radius: 10px; border: 0; background: none;
+    color: var(--color-text-dim); font: inherit; font-size: 0.92rem; text-decoration: none; cursor: pointer; white-space: nowrap; text-align: left;
+    min-height: 2.75rem;
+  }
+  .acct-nav a:hover, .acct-nav .acct-nav-out:hover { color: var(--color-text); background: var(--color-bg); }
+  .acct-nav a[aria-current="page"] { color: var(--color-text); background: var(--color-bg); box-shadow: inset 3px 0 0 var(--color-primary); font-weight: 600; }
+  .acct-nav .acct-nav-out { color: #e0555a; }
+  @media (min-width: 860px) {
+    .acct-nav { flex-direction: column; position: sticky; top: 5.5rem; overflow: visible; }
+    .acct-nav .acct-nav-out { margin-top: 0.5rem; border-top: 1px solid var(--color-border); border-radius: 0 0 10px 10px; padding-top: 0.9rem; }
+  }
+  @media (max-width: 859px) { .acct-nav a[aria-current="page"] { box-shadow: inset 0 -3px 0 var(--color-primary); } }
+
+  .acct-panel[hidden] { display: none; }
+  .acct-panel-title { font-family: var(--font-display); font-size: 1.5rem; margin: 0 0 1rem; outline: none; }
+  .acct-block {
+    margin-bottom: 1.1rem; padding: 1.3rem 1.3rem 1.2rem;
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 14px;
+  }
+  .acct-block h3 { font-family: var(--font-display); font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .acct-block-sub { color: var(--color-text-dim); font-size: 0.88rem; line-height: 1.55; margin: 0 0 1.1rem; }
+  .acct-block-sub strong { color: var(--color-text); word-break: break-all; }
+  .acct-block .acct-form { max-width: 26rem; }
+  .acct-block .btn { min-height: 2.75rem; }
+  .acct-block .acct-note { min-height: 0; margin-top: 0.8rem; }
+  .acct-block .acct-note:empty { display: none; }
+
+  .acct-swatches { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .acct-swatch {
+    width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 3px solid transparent; cursor: pointer; padding: 0;
+    background: var(--sw); box-shadow: 0 0 0 2px var(--color-surface) inset;
+  }
+  .acct-swatch:hover { transform: scale(1.06); }
+  .acct-swatch[aria-checked="true"] { border-color: var(--color-text); }
+  .acct-swatch:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+
+  .acct-meter { display: flex; align-items: center; gap: 0.7rem; margin: -0.5rem 0 1.1rem; }
+  .acct-meter-bar { flex: 1; height: 0.4rem; background: var(--color-border); border-radius: 999px; overflow: hidden; }
+  .acct-meter-bar span { display: block; height: 100%; width: 0; background: #e0555a; border-radius: 999px; transition: width 0.25s ease, background 0.25s ease; }
+  .acct-meter-label { font-size: 0.8rem; color: var(--color-text-faint); min-width: 9rem; }
+
+  .acct-switch { display: flex; gap: 0.9rem; align-items: center; cursor: pointer; }
+  .acct-switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .acct-switch-track { flex: none; width: 3rem; height: 1.7rem; border-radius: 999px; background: var(--color-border); position: relative; transition: background 0.2s ease; }
+  .acct-switch-track::after { content: ''; position: absolute; top: 0.2rem; left: 0.2rem; width: 1.3rem; height: 1.3rem; border-radius: 50%; background: #fff; transition: transform 0.2s ease; }
+  .acct-switch input:checked + .acct-switch-track { background: #3fae72; }
+  .acct-switch input:checked + .acct-switch-track::after { transform: translateX(1.3rem); }
+  .acct-switch input:focus-visible + .acct-switch-track { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+  .acct-switch input:disabled + .acct-switch-track { opacity: 0.5; }
+  .acct-switch-text b { display: block; font-size: 0.95rem; font-weight: 600; }
+  .acct-switch-text small { color: var(--color-text-dim); font-size: 0.8rem; }
+
+  .acct-devices { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 0.6rem; }
+  .acct-device {
+    display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; padding: 0.85rem 1rem;
+    background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px;
+  }
+  .acct-device.is-current { border-color: var(--color-primary); }
+  .acct-device-info { flex: 1 1 12rem; min-width: 0; }
+  .acct-device-info b { display: block; font-size: 0.97rem; }
+  .acct-device-info small { color: var(--color-text-dim); font-size: 0.82rem; }
+  .acct-chip { display: inline-block; margin-left: 0.5rem; padding: 0.1rem 0.55rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; background: rgba(224, 180, 85, 0.15); color: var(--color-primary); vertical-align: middle; }
+  .acct-device button { min-height: 2.5rem; }
+
+  .acct-danger-zone { border-color: rgba(224, 85, 90, 0.55); background: rgba(224, 85, 90, 0.04); }
+  .acct-danger-zone h3 { color: #ff7b80; }
+  .acct-danger-zone .acct-form { margin-top: 1rem; }
+  .acct-danger-zone input[type="text"] { text-transform: uppercase; letter-spacing: 0.1em; }
+  .btn-danger:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .acct-center, .acct-meter-bar span, .acct-switch-track, .acct-switch-track::after { animation: none; transition: none; }
+  }
+
+  /* ---- the "accept the Terms and the Privacy Policy" popup shown when creating an account ---- */
+  .tc-overlay {
+    position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 1rem;
+    background: rgba(8, 9, 12, 0.76); backdrop-filter: blur(4px);
+  }
+  .tc-overlay[hidden] { display: none; }
+  .tc-card {
+    width: min(100%, 34rem); max-height: calc(100vh - 2rem); max-height: calc(100dvh - 2rem);
+    display: flex; flex-direction: column; padding: 1.5rem 1.4rem 1.2rem;
+    background: var(--color-surface); border: 1px solid var(--color-primary); border-radius: 16px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6); animation: tc-in 0.25s ease;
+  }
+  .tc-card h2 { font-family: var(--font-display); font-size: 1.35rem; margin: 0 0 0.35rem; outline: none; }
+  .tc-lead { color: var(--color-text-dim); font-size: 0.92rem; margin: 0 0 1rem; }
+  .tc-scroll {
+    flex: 1 1 auto; min-height: 6rem; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding: 0.9rem 1rem 0.3rem; margin-bottom: 0.9rem;
+    background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px;
+  }
+  .tc-scroll:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+  .tc-scroll h3 { font-family: var(--font-display); font-size: 0.95rem; margin: 0 0 0.45rem; color: var(--color-primary); }
+  .tc-scroll ul { margin: 0 0 0.9rem; padding-left: 1.1rem; list-style: disc; }
+  .tc-scroll li::marker { color: var(--color-primary); }
+  .tc-scroll li { color: var(--color-text-dim); font-size: 0.88rem; line-height: 1.55; margin-bottom: 0.4rem; }
+  .tc-links { font-size: 0.86rem; color: var(--color-text-dim); margin: 0 0 0.9rem; }
+  .tc-links a { color: var(--color-primary); }
+  .tc-agree { align-items: flex-start; gap: 0.7rem; margin: 0 0 1rem; color: var(--color-text); font-size: 0.93rem; line-height: 1.45; cursor: pointer; }
+  .tc-agree input { margin-top: 0.15rem; flex: none; width: 1.15rem; height: 1.15rem; }
+  .tc-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+  .tc-actions .btn { min-height: 2.75rem; flex: 1 1 11rem; }
+  .tc-actions .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  @keyframes tc-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .tc-card { animation: none; } }
 </style>
 </head>
 <body>
@@ -245,7 +384,7 @@
 </header>
 
 <section class="section" id="main">
-  <div class="container acct-wrap">
+  <div class="container acct-wrap" id="acctWrap">
     <p class="eyebrow" style="text-align:center;">Accord VI</p>
     <h1 class="page-title" style="text-align:center; margin-bottom:2rem;">Your account</h1>
 
@@ -332,46 +471,158 @@
       <div class="acct-links"><button class="acct-link" type="button" data-back>Back to sign in</button></div>
     </div>
 
-    <!-- signed in -->
-    <div id="viewAccount" class="acct-card" hidden>
-      <div class="acct-hello">
-        <div class="acct-avatar" id="avatar" aria-hidden="true"></div>
-        <div>
-          <h2 class="acct-h" id="helloName" style="margin:0;"></h2>
+    <!-- signed in: the account centre -->
+    <div id="viewAccount" class="acct-center" hidden>
+
+      <header class="acct-profile-head">
+        <div class="acct-avatar-lg" id="avatar" aria-hidden="true"></div>
+        <div class="acct-head-text">
+          <h2 id="helloName"></h2>
           <p id="helloEmail"></p>
+          <p class="acct-meta" id="helloMeta"></p>
         </div>
-      </div>
+        <span class="acct-badge" id="headStatus" hidden></span>
+      </header>
 
-      <div class="acct-ticket" id="ticketBox" aria-live="polite">
-        <h3 class="acct-label" style="margin-bottom:0.7rem;">Your registration</h3>
-        <div id="ticketBody"></div>
-        <div id="myTickets" class="acct-tickets" aria-live="polite"></div>
-      </div>
+      <div class="acct-layout">
+        <nav class="acct-nav" id="acctNav" aria-label="Account sections">
+          <a href="#registration" data-section="registration">Registration &amp; tickets</a>
+          <a href="#profile" data-section="profile">Profile</a>
+          <a href="#security" data-section="security">Password &amp; security</a>
+          <a href="#data" data-section="data">Your data &amp; privacy</a>
+          <button type="button" class="acct-nav-out" id="btnLogout">Sign out</button>
+        </nav>
 
-      <div class="acct-section">
-        <form id="formProfile" class="acct-form" novalidate>
-          <label class="acct-label" for="profileName">Your name</label>
-          <input type="text" id="profileName" autocomplete="name" maxlength="80" required>
-          <button type="submit" class="btn btn-ghost btn-block" id="btnProfile">Update name</button>
-          <p class="acct-note" id="noteProfile" role="status"></p>
-        </form>
-      </div>
+        <div class="acct-main">
 
-      <div class="acct-section">
-        <button class="btn btn-ghost btn-block" type="button" id="btnLogout">Sign out</button>
-      </div>
+          <!-- registration and tickets -->
+          <section class="acct-panel" data-panel="registration" aria-labelledby="h-registration">
+            <h2 class="acct-panel-title" id="h-registration" tabindex="-1">Registration &amp; tickets</h2>
+            <div id="ticketBody" aria-live="polite"></div>
+            <div id="myTickets" class="acct-tickets" aria-live="polite"></div>
+          </section>
 
-      <div class="acct-section acct-danger-box">
-        <details>
-          <summary>Delete my account</summary>
-          <form id="formDelete" class="acct-form" novalidate>
-            <p class="acct-sub" style="margin-bottom:1rem;">This permanently removes your account and your saved plans. It cannot be undone.</p>
-            <label class="acct-label" for="deletePassword">Confirm with your password</label>
-            <input type="password" id="deletePassword" autocomplete="current-password" required>
-            <button type="submit" class="btn btn-danger btn-block" id="btnDelete">Delete my account</button>
-            <p class="acct-note" id="noteDelete" role="status"></p>
-          </form>
-        </details>
+          <!-- profile -->
+          <section class="acct-panel" data-panel="profile" aria-labelledby="h-profile" hidden>
+            <h2 class="acct-panel-title" id="h-profile" tabindex="-1">Profile</h2>
+
+            <div class="acct-block">
+              <h3>Avatar colour</h3>
+              <p class="acct-block-sub">Your avatar shows the first letter of your name. Pick the colour you like.</p>
+              <div class="acct-swatches" id="swatches" role="radiogroup" aria-label="Avatar colour"></div>
+              <p class="acct-note" id="noteAvatar" role="status"></p>
+            </div>
+
+            <div class="acct-block">
+              <h3>Name</h3>
+              <p class="acct-block-sub">This is the name on your registration and your emails.</p>
+              <form id="formProfile" class="acct-form" novalidate>
+                <label class="acct-label" for="profileName">Your name</label>
+                <input type="text" id="profileName" autocomplete="name" maxlength="80" required>
+                <button type="submit" class="btn btn-primary" id="btnProfile" disabled>Save name</button>
+                <p class="acct-note" id="noteProfile" role="status"></p>
+              </form>
+            </div>
+          </section>
+
+          <!-- password and security -->
+          <section class="acct-panel" data-panel="security" aria-labelledby="h-security" hidden>
+            <h2 class="acct-panel-title" id="h-security" tabindex="-1">Password &amp; security</h2>
+
+            <div class="acct-block">
+              <h3>Change password</h3>
+              <p class="acct-block-sub">You will stay signed in here and be signed out everywhere else. We email you a notice when it changes.</p>
+              <form id="formPassword" class="acct-form" novalidate>
+                <label class="acct-label" for="pwCurrent">Current password</label>
+                <input type="password" id="pwCurrent" autocomplete="current-password" required>
+                <label class="acct-label" for="pwNew">New password</label>
+                <input type="password" id="pwNew" autocomplete="new-password" minlength="10" maxlength="128" required aria-describedby="pwMeter">
+                <div class="acct-meter" id="pwMeter" aria-live="polite">
+                  <div class="acct-meter-bar"><span id="pwMeterFill"></span></div>
+                  <span class="acct-meter-label" id="pwMeterLabel">At least 10 characters</span>
+                </div>
+                <label class="acct-label" for="pwConfirm">Confirm new password</label>
+                <input type="password" id="pwConfirm" autocomplete="new-password" maxlength="128" required>
+                <label class="acct-check"><input type="checkbox" id="pwShow"><span>Show passwords</span></label>
+                <button type="submit" class="btn btn-primary" id="btnPassword">Change password</button>
+                <p class="acct-note" id="notePassword" role="status"></p>
+              </form>
+            </div>
+
+            <div class="acct-block">
+              <h3>Email address</h3>
+              <p class="acct-block-sub">Signed in as <strong id="emailNow"></strong>. To change it, confirm your password and we send a code to the new address. We also tell your old address.</p>
+              <form id="formEmail" class="acct-form" novalidate>
+                <label class="acct-label" for="emailNew">New email address</label>
+                <input type="email" id="emailNew" autocomplete="email" required>
+                <label class="acct-label" for="emailPw">Your password</label>
+                <input type="password" id="emailPw" autocomplete="current-password" required>
+                <button type="submit" class="btn btn-ghost" id="btnEmail">Send code to new address</button>
+                <p class="acct-note" id="noteEmail" role="status"></p>
+              </form>
+              <form id="formEmailCode" class="acct-form" novalidate hidden>
+                <div class="acct-dev" id="devBoxEmail" hidden>Local preview: the code is <code id="devCodeEmail"></code></div>
+                <label class="acct-label" for="emailCode">6-digit code</label>
+                <input type="text" id="emailCode" class="code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required>
+                <button type="submit" class="btn btn-primary" id="btnEmailCode">Confirm new email</button>
+                <button type="button" class="acct-link" id="emailCancel" style="margin-left:1rem;">Cancel</button>
+                <p class="acct-note" id="noteEmailCode" role="status"></p>
+              </form>
+            </div>
+
+            <div class="acct-block">
+              <h3>Login alerts</h3>
+              <label class="acct-switch" for="alertsToggle">
+                <input type="checkbox" id="alertsToggle" role="switch">
+                <span class="acct-switch-track" aria-hidden="true"></span>
+                <span class="acct-switch-text"><b>Email me when a new device signs in</b><small>Each alert uses one email. Off by default.</small></span>
+              </label>
+              <p class="acct-note" id="noteAlerts" role="status"></p>
+            </div>
+
+            <div class="acct-block">
+              <h3>Where you're logged in</h3>
+              <p class="acct-block-sub">Devices that are signed in to your account. If you don't recognise one, sign it out and change your password.</p>
+              <ul class="acct-devices" id="deviceList" aria-live="polite"></ul>
+              <button type="button" class="btn btn-ghost" id="btnRevokeOthers" hidden>Sign out of all other devices</button>
+              <p class="acct-note" id="noteDevices" role="status"></p>
+            </div>
+          </section>
+
+          <!-- data and privacy -->
+          <section class="acct-panel" data-panel="data" aria-labelledby="h-data" hidden>
+            <h2 class="acct-panel-title" id="h-data" tabindex="-1">Your data &amp; privacy</h2>
+
+            <div class="acct-block">
+              <h3>Download your information</h3>
+              <p class="acct-block-sub">A file with everything we hold about your account: your details, registration, receipts, tickets and signed-in devices. Your password is never included.</p>
+              <button type="button" class="btn btn-ghost" id="btnExport">Download my data</button>
+              <p class="acct-note" id="noteExport" role="status"></p>
+            </div>
+
+            <div class="acct-block">
+              <h3>Privacy</h3>
+              <p class="acct-block-sub">Read how we use your information in the <a href="privacy-policy.html" class="text-link">Privacy Policy</a> and the <a href="terms.html" class="text-link">Terms</a>.</p>
+              <p class="acct-block-sub" id="termsLine"></p>
+            </div>
+
+            <div class="acct-block acct-danger-zone">
+              <h3>Delete account</h3>
+              <p class="acct-block-sub" id="deleteIntro">This permanently erases your account, registration, receipts and tickets, and emails you to confirm. It cannot be undone.</p>
+              <button type="button" class="btn btn-danger" id="btnDeleteStart">Delete my account…</button>
+              <form id="formDelete" class="acct-form" novalidate hidden>
+                <label class="acct-label" for="deleteConfirmText">Type <b>DELETE</b> to confirm</label>
+                <input type="text" id="deleteConfirmText" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="noteDelete">
+                <label class="acct-label" for="deletePassword">Your password</label>
+                <input type="password" id="deletePassword" autocomplete="current-password" required>
+                <button type="submit" class="btn btn-danger" id="btnDelete" disabled>Permanently delete my account</button>
+                <button type="button" class="acct-link" id="deleteCancel" style="margin-left:1rem;">Cancel</button>
+                <p class="acct-note" id="noteDelete" role="status"></p>
+              </form>
+            </div>
+          </section>
+
+        </div>
       </div>
     </div>
   </div>
@@ -388,6 +639,45 @@
     <p class="footer-copy">© <span id="year"></span> Accord VI. All rights reserved.</p>
   </div>
 </footer>
+
+<!-- shown when someone presses "Send verification code" on the Create account form -->
+<div class="tc-overlay" id="tcModal" hidden>
+  <div class="tc-card" role="dialog" aria-modal="true" aria-labelledby="tcTitle" aria-describedby="tcLead">
+    <h2 id="tcTitle" tabindex="-1">Before we create your account</h2>
+    <p class="tc-lead" id="tcLead">Please read the Terms and the Privacy Policy. This is the short version; the full pages are linked below.</p>
+    <div class="tc-scroll" id="tcScroll" tabindex="0" role="region" aria-label="Summary of the Terms and the Privacy Policy">
+      <h3>Terms</h3>
+      <ul>
+        <li>Registering is an expression of interest, not a confirmed reservation.</li>
+        <li>We may carry out bag checks at entry, and refuse or remove anyone who is unsafe, breaks the law or is disruptive.</li>
+        <li>The line-up, schedule and activities can change.</li>
+        <li>You may appear in photos and video of the event that we use to promote Accord VI. Tell event staff on the day if you would rather not.</li>
+        <li>You attend at your own risk, and we are not liable for lost, stolen or damaged belongings.</li>
+      </ul>
+      <h3>Privacy</h3>
+      <ul>
+        <li>We store your name, your email, your password (scrambled, so nobody can read it), your registration, your payment receipt photo and your tickets.</li>
+        <li>We use it to run your account, check your payment, email you and run the event. We do not sell it, and there are no advertising trackers on this site.</li>
+        <li>The committee members who check payments can see your registration and receipt. Gate staff see the name on a ticket when they scan it.</li>
+        <li>Cloudflare and EmailJS handle your information for us, to run the site and send emails.</li>
+        <li>You can download your data or delete your account from your Account page. Once your payment is confirmed we keep that record, and you would need to contact us to delete it.</li>
+        <li>If you are under 18, we encourage you to register with a parent, guardian or teacher knowing about it.</li>
+      </ul>
+    </div>
+    <p class="tc-links">
+      Read the full <a href="terms.html" target="_blank" rel="noopener">Terms</a> and
+      <a href="privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a> (each opens in a new tab).
+    </p>
+    <label class="acct-check tc-agree" for="tcAgree">
+      <input type="checkbox" id="tcAgree">
+      <span>I have read and agree to the Terms and the Privacy Policy.</span>
+    </label>
+    <div class="tc-actions">
+      <button type="button" class="btn btn-primary" id="tcOk" disabled>Agree and create account</button>
+      <button type="button" class="btn btn-ghost" id="tcCancel">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <script>
 (() => {
@@ -419,6 +709,7 @@
   // ---- small helpers ----
   function show(id) {
     views.forEach((v) => { $(v).hidden = v !== id; });
+    $('acctWrap').classList.toggle('is-wide', id === 'viewAccount');
     const first = $(id).querySelector('input:not([type=checkbox]):not([hidden]), button');
     if (id !== 'viewLoading' && first && !matchMedia('(pointer: coarse)').matches) first.focus({ preventScroll: true });
   }
@@ -607,17 +898,103 @@
     return a;
   }
 
-  function renderAccount(user, ticket) {
+  // ---- the account centre: sections, header, avatar ----
+  const SECTIONS = ['registration', 'profile', 'security', 'data'];
+  const AVATAR_COLORS = ['#e0b455', '#e0555a', '#5fcf8f', '#6aa8ff', '#b184ff', '#ff8fb1', '#4fd1d9', '#ff9d4d'];
+  const COLOR_NAMES = ['Gold', 'Red', 'Green', 'Blue', 'Purple', 'Pink', 'Teal', 'Orange'];
+  let me = { user: null, ticket: null };
+
+  function sectionFromHash() {
+    const h = location.hash.slice(1);
+    if (h === 'forgot') return 'security'; // emails link to #forgot; a signed-in person changes the password here
+    return SECTIONS.includes(h) ? h : 'registration';
+  }
+  function showSection(name, focusHeading) {
+    document.querySelectorAll('[data-panel]').forEach((p) => { p.hidden = p.dataset.panel !== name; });
+    document.querySelectorAll('#acctNav a').forEach((a) => {
+      if (a.dataset.section === name) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+    if (name === 'security') loadSessions();
+    if (focusHeading) { const h = $('h-' + name); if (h) h.focus(); }
+  }
+  window.addEventListener('hashchange', () => {
+    if (!$('viewAccount').hidden) showSection(sectionFromHash(), true);
+  });
+
+  function buildSwatches() {
+    const box = $('swatches');
+    if (box.children.length) return;
+    AVATAR_COLORS.forEach((c, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'acct-swatch';
+      b.dataset.color = c;
+      b.style.setProperty('--sw', c);
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-checked', 'false');
+      b.setAttribute('aria-label', COLOR_NAMES[i]);
+      b.title = COLOR_NAMES[i];
+      b.addEventListener('click', () => chooseColor(c));
+      box.appendChild(b);
+    });
+  }
+
+  const STATUS_TEXT = { pending: 'Pending verification', confirmed: 'Payment confirmed', interest: 'Interest received' };
+  function paintHeader() {
+    const user = me.user;
+    const color = user.avatarColor || AVATAR_COLORS[0];
+    $('avatar').textContent = (user.name.trim()[0] || '?').toUpperCase();
+    $('avatar').style.setProperty('--acct-avatar', color);
     $('helloName').textContent = user.name;
     $('helloEmail').textContent = user.email;
-    $('avatar').textContent = (user.name.trim()[0] || '?').toUpperCase();
+    $('emailNow').textContent = user.email;
+    const d = new Date(user.createdAt);
+    $('helloMeta').textContent = isNaN(d) ? '' : 'Member since ' + d.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+    document.querySelectorAll('.acct-swatch').forEach((sw) => sw.setAttribute('aria-checked', String(sw.dataset.color === color)));
+    $('alertsToggle').checked = !!user.loginAlerts;
+    const accepted = user.termsAcceptedAt ? new Date(user.termsAcceptedAt) : null;
+    $('termsLine').textContent = accepted && !isNaN(accepted)
+      ? 'You accepted the Terms and the Privacy Policy on ' + accepted.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + ' (version ' + (user.termsVersion || 'unknown') + ').'
+      : 'We have no record of you accepting the Terms and the Privacy Policy, because your account was created before we asked at sign-up.';
+
+    const badge = $('headStatus');
+    const t = me.ticket;
+    if (t && STATUS_TEXT[t.status]) {
+      badge.hidden = false;
+      badge.className = 'acct-badge is-' + t.status;
+      badge.textContent = STATUS_TEXT[t.status];
+    } else {
+      badge.hidden = true;
+    }
+  }
+
+  function renderAccount(user, ticket) {
+    me = { user, ticket };
+    buildSwatches();
+    paintHeader();
     $('profileName').value = user.name;
+    $('btnProfile').disabled = true;
     renderTicket(ticket);
+
+    // deleting is blocked once a payment is confirmed: we keep the record of the payment
+    const confirmed = !!(ticket && ticket.status === 'confirmed');
+    $('btnDeleteStart').disabled = confirmed;
+    $('deleteIntro').textContent = confirmed
+      ? 'Your payment is confirmed, so we keep the record of it and your tickets. To delete your account, please contact the organisers.'
+      : 'This permanently erases your account, registration, receipts and tickets, and emails you to confirm. It cannot be undone.';
+
     show('viewAccount');
+    if (location.hash === '#forgot') history.replaceState(null, '', location.pathname + location.search + '#security');
+    showSection(sectionFromHash(), false);
   }
 
   async function loadSession() {
-    if (!getToken()) { show('viewAuth'); return; }
+    if (!getToken()) {
+      if (location.hash === '#forgot') $('goForgot').click();
+      else show('viewAuth');
+      return;
+    }
     const r = await api('/account/me', {}, true);
     if (r.ok) { if (goNextIfAny()) return; renderAccount(r.user, r.ticket); }
     else if (r.status === 401) { clearToken(); show('viewAuth'); }
@@ -642,6 +1019,58 @@
     renderAccount(r.user, me.ok ? me.ticket : null);
   });
 
+  // ---- the Terms + Privacy Policy popup ----
+  // Resolves true only when the box is ticked and "Agree" is pressed. Cancel, Escape and a tap
+  // outside the card all resolve false. The box starts unticked every time it opens.
+  function askTerms() {
+    return new Promise((resolve) => {
+      const m = $('tcModal');
+      const agree = $('tcAgree');
+      const ok = $('tcOk');
+      const cancel = $('tcCancel');
+      const returnTo = document.activeElement;
+      agree.checked = false;
+      ok.disabled = true;
+      $('tcScroll').scrollTop = 0;
+      m.hidden = false;
+      document.body.style.overflow = 'hidden';
+      $('tcTitle').focus();
+
+      function done(answer) {
+        m.hidden = true;
+        document.body.style.overflow = '';
+        agree.removeEventListener('change', onAgree);
+        ok.removeEventListener('click', onOk);
+        cancel.removeEventListener('click', onCancel);
+        m.removeEventListener('click', onBackdrop);
+        document.removeEventListener('keydown', onKey, true);
+        if (returnTo && returnTo.focus) returnTo.focus({ preventScroll: true });
+        resolve(answer);
+      }
+      const onAgree = () => { ok.disabled = !agree.checked; };
+      const onOk = () => { if (agree.checked) done(true); };
+      const onCancel = () => done(false);
+      const onBackdrop = (e) => { if (e.target === m) done(false); };
+      const onKey = (e) => {
+        if (e.key === 'Escape') { e.stopImmediatePropagation(); done(false); return; }
+        if (e.key !== 'Tab') return;
+        // keep Tab inside the popup
+        const items = Array.from(m.querySelectorAll('a[href], button, input, [tabindex="0"]')).filter((el) => !el.disabled && el.offsetParent !== null);
+        if (!items.length) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && (document.activeElement === first || document.activeElement === $('tcTitle'))) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        else if (!m.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+      };
+      agree.addEventListener('change', onAgree);
+      ok.addEventListener('click', onOk);
+      cancel.addEventListener('click', onCancel);
+      m.addEventListener('click', onBackdrop);
+      document.addEventListener('keydown', onKey, true);
+    });
+  }
+
   // ---- sign up (step 1: request a code) ----
   let pendingEmail = '';
   $('formSignup').addEventListener('submit', async (e) => {
@@ -652,8 +1081,12 @@
     if (!name || !email || !password) { note('noteSignup', 'Fill in every field.', 'is-error'); return; }
     if (password.length < 10) { note('noteSignup', 'Your password needs at least 10 characters.', 'is-error'); return; }
     note('noteSignup', '');
+    if (!(await askTerms())) {
+      note('noteSignup', 'No account was created. You need to accept the Terms and the Privacy Policy to sign up.');
+      return;
+    }
     busy($('btnSignup'), true, 'Sending code…');
-    const r = await api('/account/signup/request', { name, email, password });
+    const r = await api('/account/signup/request', { name, email, password, acceptTerms: true });
     busy($('btnSignup'), false);
     if (!r.ok) { note('noteSignup', r.error || 'Could not start sign-up.', 'is-error'); return; }
     pendingEmail = email.toLowerCase();
@@ -730,6 +1163,8 @@
   // ---- signed-in actions ----
   async function authed(path, body) {
     const r = await api(path, body, true);
+    // 401 means the session ended. Wrong passwords and codes come back as 400/403 instead,
+    // except for delete, which has always answered 401 for a wrong password.
     if (r.status === 401 && path !== '/account/delete') {
       clearToken();
       show('viewAuth');
@@ -737,19 +1172,281 @@
     }
     return r;
   }
+
+  // A two-step button for actions that cannot be taken back: the first click arms it.
+  function armedClick(btn, armedLabel, action) {
+    const original = btn.textContent;
+    let armed = false;
+    let timer = 0;
+    btn.addEventListener('click', () => {
+      if (!armed) {
+        armed = true;
+        btn.textContent = armedLabel;
+        clearTimeout(timer);
+        timer = setTimeout(() => { armed = false; btn.textContent = original; }, 4000);
+        return;
+      }
+      clearTimeout(timer);
+      armed = false;
+      btn.textContent = original;
+      action();
+    });
+  }
+
+  // ----- profile -----
+  async function chooseColor(color) {
+    note('noteAvatar', '');
+    const r = await authed('/account/prefs', { avatarColor: color });
+    if (!r.ok) { note('noteAvatar', r.error || 'Could not save that colour.', 'is-error'); return; }
+    me.user = r.user;
+    paintHeader();
+    note('noteAvatar', 'Saved.', 'is-ok');
+  }
+  $('profileName').addEventListener('input', () => {
+    const v = $('profileName').value.trim();
+    $('btnProfile').disabled = !v || (me.user && v === me.user.name);
+  });
   $('formProfile').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = $('profileName').value.trim();
     if (!name) { note('noteProfile', 'Enter your name.', 'is-error'); return; }
-    busy($('btnProfile'), true, 'Updating…');
+    busy($('btnProfile'), true, 'Saving…');
     const r = await authed('/account/update', { name });
-    busy($('btnProfile'), false);
     if (r.ok) {
-      $('helloName').textContent = r.user.name;
-      $('avatar').textContent = (r.user.name.trim()[0] || '?').toUpperCase();
+      me.user = r.user;
+      paintHeader();
+      $('btnProfile').textContent = 'Save name';
+      $('btnProfile').disabled = true;
+      note('noteProfile', 'Name saved.', 'is-ok');
+    } else {
+      busy($('btnProfile'), false);
+      note('noteProfile', r.error || 'Could not save your name.', 'is-error');
     }
-    note('noteProfile', r.ok ? 'Name updated.' : (r.error || 'Could not update.'), r.ok ? 'is-ok' : 'is-error');
   });
+
+  // ----- change password -----
+  function strength(pw) {
+    if (pw.length < 10) return 0;
+    let score = 1;
+    if (pw.length >= 14) score += 1;
+    if (pw.length >= 18) score += 1;
+    const kinds = [/[a-z]/, /[A-Z]/, /\d/, /[^A-Za-z0-9]/].filter((re) => re.test(pw)).length;
+    if (kinds >= 3) score += 1;
+    if (/^(.)\1+$/.test(pw) || /password|qwerty|12345|letmein/i.test(pw)) score = 1;
+    return Math.min(4, score);
+  }
+  function updateMeter() {
+    const pw = $('pwNew').value;
+    const s = strength(pw);
+    const fill = $('pwMeterFill');
+    const label = $('pwMeterLabel');
+    const levels = [
+      { text: pw ? 'Too short: needs 10 or more characters' : 'At least 10 characters', color: '#e0555a', w: Math.min(100, Math.round((pw.length / 10) * 22)) },
+      { text: 'Weak', color: '#e0555a', w: 30 },
+      { text: 'Okay', color: '#e0a23c', w: 55 },
+      { text: 'Good', color: '#9ccf5f', w: 78 },
+      { text: 'Strong', color: '#3fae72', w: 100 },
+    ];
+    fill.style.width = levels[s].w + '%';
+    fill.style.background = levels[s].color;
+    label.textContent = levels[s].text;
+  }
+  $('pwNew').addEventListener('input', updateMeter);
+  $('pwShow').addEventListener('change', () => {
+    const t = $('pwShow').checked ? 'text' : 'password';
+    ['pwCurrent', 'pwNew', 'pwConfirm'].forEach((id) => { $(id).type = t; });
+  });
+  $('formPassword').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const current = $('pwCurrent').value;
+    const next = $('pwNew').value;
+    if (!current) { note('notePassword', 'Enter your current password.', 'is-error'); return; }
+    if (next.length < 10) { note('notePassword', 'Your new password needs at least 10 characters.', 'is-error'); return; }
+    if (next !== $('pwConfirm').value) { note('notePassword', 'The new passwords do not match.', 'is-error'); return; }
+    note('notePassword', '');
+    busy($('btnPassword'), true, 'Changing…');
+    const r = await authed('/account/password/change', { current, next });
+    busy($('btnPassword'), false);
+    if (!r.ok) { note('notePassword', r.error || 'Could not change your password.', 'is-error'); return; }
+    ['pwCurrent', 'pwNew', 'pwConfirm'].forEach((id) => { $(id).value = ''; });
+    updateMeter();
+    note('notePassword', 'Password changed. You were signed out of your other devices and we emailed you a confirmation.', 'is-ok');
+    loadSessions();
+  });
+
+  // ----- change email -----
+  let pendingNewEmail = '';
+  function resetEmailForms() {
+    $('formEmail').hidden = false;
+    $('formEmailCode').hidden = true;
+    $('emailNew').value = '';
+    $('emailPw').value = '';
+    $('emailCode').value = '';
+    $('devBoxEmail').hidden = true;
+    note('noteEmailCode', '');
+  }
+  $('formEmail').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const newEmail = $('emailNew').value.trim();
+    const password = $('emailPw').value;
+    if (!newEmail || !password) { note('noteEmail', 'Enter the new address and your password.', 'is-error'); return; }
+    note('noteEmail', '');
+    busy($('btnEmail'), true, 'Sending…');
+    const r = await authed('/account/email/change/request', { newEmail, password });
+    busy($('btnEmail'), false);
+    if (!r.ok) { note('noteEmail', r.error || 'Could not start the change.', 'is-error'); return; }
+    pendingNewEmail = newEmail.toLowerCase();
+    $('emailPw').value = '';
+    $('formEmail').hidden = true;
+    $('formEmailCode').hidden = false;
+    // The same message whether or not the address can be used.
+    note('noteEmailCode', `If ${pendingNewEmail} can be used, a 6-digit code is on its way. It expires in 10 minutes.`);
+    $('devBoxEmail').hidden = !(IS_LOCAL && r.devCode);
+    if (r.devCode) $('devCodeEmail').textContent = r.devCode;
+    $('emailCode').focus();
+  });
+  $('formEmailCode').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const code = $('emailCode').value.trim();
+    if (!/^\d{6}$/.test(code)) { note('noteEmailCode', 'Enter the 6-digit code.', 'is-error'); return; }
+    busy($('btnEmailCode'), true, 'Confirming…');
+    const r = await authed('/account/email/change/verify', { code });
+    busy($('btnEmailCode'), false);
+    if (!r.ok) { note('noteEmailCode', r.error || 'Could not confirm that code.', 'is-error'); return; }
+    me.user = r.user;
+    paintHeader();
+    resetEmailForms();
+    note('noteEmail', 'Email changed. You were signed out of your other devices and we told your old address.', 'is-ok');
+    loadSessions();
+  });
+  $('emailCancel').addEventListener('click', () => { resetEmailForms(); note('noteEmail', ''); });
+
+  // ----- login alerts -----
+  $('alertsToggle').addEventListener('change', async () => {
+    const on = $('alertsToggle').checked;
+    $('alertsToggle').disabled = true;
+    note('noteAlerts', '');
+    const r = await authed('/account/prefs', { loginAlerts: on });
+    $('alertsToggle').disabled = false;
+    if (!r.ok) {
+      $('alertsToggle').checked = !on;
+      note('noteAlerts', r.error || 'Could not save that setting.', 'is-error');
+      return;
+    }
+    me.user = r.user;
+    note('noteAlerts', on ? 'On. We will email you when a new device signs in.' : 'Off.', 'is-ok');
+  });
+
+  // ----- where you're logged in -----
+  function ago(iso) {
+    const s = Math.max(0, (Date.now() - Date.parse(iso)) / 1000);
+    if (s < 90) return 'Active now';
+    if (s < 3600) return Math.round(s / 60) + ' min ago';
+    if (s < 86400) return Math.round(s / 3600) + ' h ago';
+    const d = Math.round(s / 86400);
+    return d === 1 ? 'Yesterday' : d + ' days ago';
+  }
+  async function loadSessions() {
+    const r = await authed('/account/sessions', {});
+    const list = $('deviceList');
+    if (!r.ok) { note('noteDevices', r.error || 'Could not load your devices.', 'is-error'); return; }
+    list.textContent = '';
+    r.sessions.forEach((s) => {
+      const li = document.createElement('li');
+      li.className = 'acct-device' + (s.current ? ' is-current' : '');
+      const info = document.createElement('div');
+      info.className = 'acct-device-info';
+      const b = document.createElement('b');
+      b.textContent = s.device;
+      if (s.current) {
+        const chip = document.createElement('span');
+        chip.className = 'acct-chip';
+        chip.textContent = 'This device';
+        b.appendChild(chip);
+      }
+      const small = document.createElement('small');
+      small.textContent = [s.country, s.current ? 'Active now' : ago(s.lastSeen)].filter(Boolean).join(' · ');
+      info.append(b, small);
+      li.appendChild(info);
+      if (!s.current) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn-ghost';
+        btn.textContent = 'Sign out';
+        btn.setAttribute('aria-label', 'Sign out ' + s.device);
+        btn.addEventListener('click', async () => {
+          btn.disabled = true;
+          const rr = await authed('/account/sessions/revoke', { id: s.id });
+          if (rr.ok) { note('noteDevices', 'Signed out ' + s.device + '.', 'is-ok'); loadSessions(); }
+          else { btn.disabled = false; note('noteDevices', rr.error || 'Could not sign that device out.', 'is-error'); }
+        });
+        li.appendChild(btn);
+      }
+      list.appendChild(li);
+    });
+    $('btnRevokeOthers').hidden = !r.sessions.some((s) => !s.current);
+  }
+  armedClick($('btnRevokeOthers'), 'Click again to sign out everywhere else', async () => {
+    const r = await authed('/account/sessions/revoke-others', {});
+    note('noteDevices', r.ok ? 'Signed out of every other device.' : (r.error || 'Could not sign them out.'), r.ok ? 'is-ok' : 'is-error');
+    loadSessions();
+  });
+
+  // ----- download my data -----
+  $('btnExport').addEventListener('click', async () => {
+    note('noteExport', '');
+    busy($('btnExport'), true, 'Preparing…');
+    const r = await authed('/account/export', {});
+    busy($('btnExport'), false);
+    if (!r.ok) { note('noteExport', r.error || 'Could not prepare your data.', 'is-error'); return; }
+    const blob = new Blob([JSON.stringify(r.export, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'accord-account-data.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    note('noteExport', 'Downloaded accord-account-data.json.', 'is-ok');
+  });
+
+  // ----- delete account (three steps: open, type DELETE + password, confirm) -----
+  function syncDeleteButton() {
+    $('btnDelete').disabled = !($('deleteConfirmText').value.trim().toUpperCase() === 'DELETE' && $('deletePassword').value);
+  }
+  $('btnDeleteStart').addEventListener('click', () => {
+    $('formDelete').hidden = false;
+    $('btnDeleteStart').hidden = true;
+    $('deleteConfirmText').focus();
+  });
+  function closeDelete() {
+    $('formDelete').hidden = true;
+    $('btnDeleteStart').hidden = false;
+    $('deleteConfirmText').value = '';
+    $('deletePassword').value = '';
+    note('noteDelete', '');
+    syncDeleteButton();
+  }
+  $('deleteCancel').addEventListener('click', closeDelete);
+  $('deleteConfirmText').addEventListener('input', syncDeleteButton);
+  $('deletePassword').addEventListener('input', syncDeleteButton);
+  $('formDelete').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const password = $('deletePassword').value;
+    if ($('deleteConfirmText').value.trim().toUpperCase() !== 'DELETE' || !password) return;
+    busy($('btnDelete'), true, 'Deleting…');
+    const r = await authed('/account/delete', { password });
+    busy($('btnDelete'), false);
+    if (!r.ok) { note('noteDelete', r.error || 'Could not delete the account.', 'is-error'); syncDeleteButton(); return; }
+    clearToken();
+    closeDelete();
+    show('viewAuth');
+    selectTab('login');
+    note('noteLogin', 'Your account has been deleted.' + (r.emailSent === false ? '' : ' We emailed you a confirmation.'), 'is-ok');
+  });
+
+  // ----- sign out -----
   $('btnLogout').addEventListener('click', async () => {
     busy($('btnLogout'), true, 'Signing out…');
     await api('/account/logout', {}, true);
@@ -758,20 +1455,6 @@
     note('noteLogin', '');
     show('viewAuth');
     selectTab('login');
-  });
-  $('formDelete').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const password = $('deletePassword').value;
-    if (!password) { note('noteDelete', 'Enter your password to confirm.', 'is-error'); return; }
-    busy($('btnDelete'), true, 'Deleting…');
-    const r = await authed('/account/delete', { password });
-    busy($('btnDelete'), false);
-    if (!r.ok) { note('noteDelete', r.error || 'Could not delete the account.', 'is-error'); return; }
-    clearToken();
-    $('deletePassword').value = '';
-    show('viewAuth');
-    selectTab('login');
-    note('noteLogin', 'Your account has been deleted.', 'is-ok');
   });
 
   loadSession();
