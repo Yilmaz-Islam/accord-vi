@@ -202,69 +202,130 @@
     .acct-card, .acct-spinner { animation: none; }
   }
 
-  /* ---- the account centre (signed in) ---- */
-  .acct-wrap.is-wide { max-width: 62rem; }
+  /* ---- the account centre (signed in) ----
+     Modelled on the settings screens of Instagram, WhatsApp, TikTok and Facebook: a profile card, then
+     grouped lists of icon rows. On a phone the list is the home screen and each row opens a page with a
+     back arrow; on a wide screen the same list is a sidebar beside the open page. */
+  .acct-wrap.is-wide { max-width: 60rem; }
   .acct-center { animation: acct-fade-in 0.35s ease; }
+  .ic { width: 1.15em; height: 1.15em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  @media (max-width: 859px) {
+    /* the page title is only there for the signed-out forms; on the account screens it is wasted height */
+    .acct-wrap.is-wide > .eyebrow, .acct-wrap.is-wide > .page-title { display: none; }
+  }
 
+  /* profile card */
   .acct-profile-head {
-    display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap;
-    padding: 1.3rem 1.4rem; margin-bottom: 1.2rem;
-    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px;
+    display: flex; align-items: center; gap: 1.1rem; padding: 1.3rem 1.3rem; margin-bottom: 0.9rem;
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 20px;
   }
   .acct-avatar-lg {
-    flex: none; width: 4.4rem; height: 4.4rem; border-radius: 50%; display: grid; place-items: center;
+    flex: none; width: 4.6rem; height: 4.6rem; border-radius: 50%; display: grid; place-items: center;
     background: var(--acct-avatar, var(--color-primary)); color: #0e0f12;
-    font-family: var(--font-display); font-weight: 700; font-size: 1.9rem;
+    font-family: var(--font-display); font-weight: 700; font-size: 2rem;
     box-shadow: 0 0 0 3px var(--color-surface), 0 0 0 5px var(--acct-avatar, var(--color-primary));
+    transition: background 0.25s ease, box-shadow 0.25s ease;
   }
-  .acct-head-text { flex: 1 1 14rem; min-width: 0; }
-  .acct-head-text h2 { font-family: var(--font-display); font-size: 1.45rem; margin: 0 0 0.15rem; word-break: break-word; }
-  .acct-head-text p { margin: 0; color: var(--color-text-dim); font-size: 0.9rem; word-break: break-all; }
-  .acct-head-text .acct-meta { color: var(--color-text-faint); font-size: 0.8rem; margin-top: 0.2rem; }
-  .acct-profile-head .acct-badge { margin: 0; }
+  .acct-head-text { flex: 1 1 auto; min-width: 0; }
+  .acct-head-text h2 { font-family: var(--font-display); font-size: 1.35rem; line-height: 1.2; margin: 0 0 0.15rem; overflow-wrap: anywhere; }
+  .acct-head-text p { margin: 0; color: var(--color-text-dim); font-size: 0.88rem; overflow-wrap: anywhere; }
+  .acct-head-text .acct-meta { color: var(--color-text-faint); font-size: 0.78rem; margin-top: 0.15rem; }
+  .acct-head-text .acct-badge { margin: 0.6rem 0 0; }
+  .acct-badge { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.22rem 0.7rem 0.22rem 0.55rem; border: 0; background: color-mix(in oklab, currentColor 14%, transparent); }
+  .acct-badge::before { content: ""; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: currentColor; }
+
+  /* the two quick actions under the card (phones only) */
+  .acct-quick { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 0.4rem; }
+  .acct-qbtn {
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.9rem; border-radius: 12px;
+    border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text);
+    font-size: 0.92rem; font-weight: 600; text-decoration: none;
+  }
+  .acct-qbtn.is-primary { border-color: transparent; background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark)); color: #17130a; }
 
   .acct-layout { display: grid; gap: 1.2rem; align-items: start; }
-  @media (min-width: 860px) { .acct-layout { grid-template-columns: 15.5rem minmax(0, 1fr); } }
-
-  /* the section list: a sidebar on desktop, a scrolling row on phones */
-  .acct-nav {
-    display: flex; gap: 0.4rem; overflow-x: auto; padding: 0.35rem; -webkit-overflow-scrolling: touch;
-    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 14px;
-  }
-  .acct-nav a, .acct-nav .acct-nav-out {
-    flex: none; display: block; padding: 0.7rem 0.95rem; border-radius: 10px; border: 0; background: none;
-    color: var(--color-text-dim); font: inherit; font-size: 0.92rem; text-decoration: none; cursor: pointer; white-space: nowrap; text-align: left;
-    min-height: 2.75rem;
-  }
-  .acct-nav a:hover, .acct-nav .acct-nav-out:hover { color: var(--color-text); background: var(--color-bg); }
-  .acct-nav a[aria-current="page"] { color: var(--color-text); background: var(--color-bg); box-shadow: inset 3px 0 0 var(--color-primary); font-weight: 600; }
-  .acct-nav .acct-nav-out { color: #e0555a; }
+  .acct-layout > * { min-width: 0; }
   @media (min-width: 860px) {
-    .acct-nav { flex-direction: column; position: sticky; top: 5.5rem; overflow: visible; }
-    .acct-nav .acct-nav-out { margin-top: 0.5rem; border-top: 1px solid var(--color-border); border-radius: 0 0 10px 10px; padding-top: 0.9rem; }
+    .acct-layout { grid-template-columns: 18.5rem minmax(0, 1fr); gap: 1.8rem; }
+    .acct-side { position: sticky; top: 5.5rem; }
+    .acct-quick, .acct-back { display: none; }
   }
-  @media (max-width: 859px) { .acct-nav a[aria-current="page"] { box-shadow: inset 0 -3px 0 var(--color-primary); } }
+  /* on a phone: the list, or one open page, never both */
+  @media (max-width: 859px) {
+    .acct-layout[data-view="home"] .acct-main { display: none; }
+    .acct-layout[data-view="detail"] .acct-side { display: none; }
+  }
 
+  /* grouped icon rows */
+  .acct-group-title { margin: 1.15rem 0.4rem 0.45rem; font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-faint); }
+  .acct-group { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; overflow: hidden; margin-bottom: 1rem; }
+  .acct-side .acct-group { margin-bottom: 0; }
+  .acct-row {
+    display: flex; align-items: center; gap: 0.85rem; width: 100%; padding: 0.8rem 0.95rem; min-height: 3.5rem;
+    background: none; border: 0; border-bottom: 1px solid var(--color-border); color: var(--color-text);
+    font: inherit; text-decoration: none; text-align: left; cursor: pointer; transition: background 0.15s ease, scale 140ms var(--ax-ease);
+  }
+  .acct-group > :last-child { border-bottom: 0; }
+  .acct-row:hover { background: color-mix(in oklab, var(--color-surface) 88%, #fff 5%); }
+  .acct-row[aria-current="page"] { background: color-mix(in oklab, var(--color-primary) 11%, var(--color-surface)); }
+  .acct-row-ic {
+    flex: none; display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 10px; font-size: 1.15rem;
+    background: var(--tone-bg, rgba(255, 255, 255, 0.07)); color: var(--tone, var(--color-text-dim));
+  }
+  .acct-row-main { flex: 1; min-width: 0; display: grid; }
+  .acct-row-main b { font-weight: 600; font-size: 0.97rem; }
+  .acct-row-main small { color: var(--color-text-dim); font-size: 0.8rem; line-height: 1.35; }
+  .acct-row-nav small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .acct-row-chev { flex: none; color: var(--color-text-faint); font-size: 1rem; transition: transform 0.2s ease; }
+  .acct-row.is-danger, .acct-row.is-danger b { color: #ff7b80; }
+  .acct-row.is-danger { --tone: #ff7b80; --tone-bg: rgba(255, 123, 128, 0.12); }
+  [data-tone="gold"] { --tone: #e0b455; --tone-bg: rgba(224, 180, 85, 0.14); }
+  [data-tone="blue"] { --tone: #6aa8ff; --tone-bg: rgba(106, 168, 255, 0.14); }
+  [data-tone="green"] { --tone: #5fcf8f; --tone-bg: rgba(95, 207, 143, 0.14); }
+  [data-tone="purple"] { --tone: #b184ff; --tone-bg: rgba(177, 132, 255, 0.14); }
+  [data-tone="red"] { --tone: #ff7b80; --tone-bg: rgba(255, 123, 128, 0.14); }
+
+  /* one open page */
   .acct-panel[hidden] { display: none; }
-  .acct-panel-title { font-family: var(--font-display); font-size: 1.5rem; margin: 0 0 1rem; outline: none; }
-  .acct-block {
-    margin-bottom: 1.1rem; padding: 1.3rem 1.3rem 1.2rem;
-    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 14px;
+  .acct-panel-head { display: flex; align-items: center; gap: 0.3rem; margin: 0 0 1.1rem; }
+  .acct-back {
+    display: grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; margin-left: -0.7rem; border-radius: 50%;
+    color: var(--color-text); font-size: 1.45rem;
   }
-  .acct-block h3 { font-family: var(--font-display); font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .acct-back:hover { background: rgba(255, 255, 255, 0.07); }
+  @media (min-width: 860px) { .acct-panel-head .acct-back { display: none; } } /* the sidebar is always there, so no back arrow */
+  .acct-panel-title { font-family: var(--font-display); font-size: 1.45rem; margin: 0; outline: none; }
+  .acct-block {
+    margin-bottom: 1rem; padding: 1.2rem 1.2rem 1.1rem;
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px;
+  }
+  .acct-block h3 { font-family: var(--font-display); font-size: 1.02rem; margin: 0 0 0.3rem; }
   .acct-block-sub { color: var(--color-text-dim); font-size: 0.88rem; line-height: 1.55; margin: 0 0 1.1rem; }
-  .acct-block-sub strong { color: var(--color-text); word-break: break-all; }
-  .acct-block .acct-form { max-width: 26rem; }
-  .acct-block .btn { min-height: 2.75rem; }
-  .acct-block .acct-note { min-height: 0; margin-top: 0.8rem; }
-  .acct-block .acct-note:empty { display: none; }
+  .acct-block-sub strong { color: var(--color-text); overflow-wrap: anywhere; }
+  .acct-block .acct-form, .acct-acc-body .acct-form { max-width: 26rem; }
+  .acct-block .btn, .acct-acc-body .btn { min-height: 2.75rem; }
+  .acct-block .acct-note, .acct-acc-body .acct-note { min-height: 0; margin-top: 0.8rem; }
+  .acct-block .acct-note:empty, .acct-acc-body .acct-note:empty { display: none; }
+  #emailRowVal { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .acct-subnote { margin: -0.4rem 0.4rem 1rem; }
+  .acct-subnote:empty { display: none; }
 
-  .acct-swatches { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  /* a row that opens into a form (Change password, Email address, Delete account) */
+  .acct-acc { border-bottom: 1px solid var(--color-border); }
+  .acct-acc:last-child { border-bottom: 0; }
+  .acct-acc > summary { list-style: none; display: flex; align-items: center; gap: 0.85rem; padding: 0.8rem 0.95rem; min-height: 3.5rem; cursor: pointer; transition: background 0.15s ease, scale 140ms var(--ax-ease); }
+  .acct-acc > summary::-webkit-details-marker { display: none; }
+  .acct-acc > summary:hover { background: color-mix(in oklab, var(--color-surface) 88%, #fff 5%); }
+  .acct-acc[open] > summary .acct-row-chev { transform: rotate(90deg); }
+  .acct-acc-body { padding: 0.5rem 1rem 1.2rem; }
+  .acct-acc.is-danger > summary b { color: #ff7b80; }
+  .acct-danger-group { border-color: rgba(224, 85, 90, 0.5); }
+
+  .acct-swatches { display: flex; flex-wrap: wrap; gap: 0.7rem; }
   .acct-swatch {
     width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 3px solid transparent; cursor: pointer; padding: 0;
     background: var(--sw); box-shadow: 0 0 0 2px var(--color-surface) inset;
   }
-  .acct-swatch:hover { transform: scale(1.06); }
   .acct-swatch[aria-checked="true"] { border-color: var(--color-text); }
   .acct-swatch:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
 
@@ -273,38 +334,86 @@
   .acct-meter-bar span { display: block; height: 100%; width: 0; background: #e0555a; border-radius: 999px; transition: width 0.25s ease, background 0.25s ease; }
   .acct-meter-label { font-size: 0.8rem; color: var(--color-text-faint); min-width: 9rem; }
 
-  .acct-switch { display: flex; gap: 0.9rem; align-items: center; cursor: pointer; }
-  .acct-switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  /* a row with an on/off switch */
+  .acct-row-switch { cursor: pointer; }
+  .acct-row-switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
   .acct-switch-track { flex: none; width: 3rem; height: 1.7rem; border-radius: 999px; background: var(--color-border); position: relative; transition: background 0.2s ease; }
   .acct-switch-track::after { content: ''; position: absolute; top: 0.2rem; left: 0.2rem; width: 1.3rem; height: 1.3rem; border-radius: 50%; background: #fff; transition: transform 0.2s ease; }
-  .acct-switch input:checked + .acct-switch-track { background: #3fae72; }
-  .acct-switch input:checked + .acct-switch-track::after { transform: translateX(1.3rem); }
-  .acct-switch input:focus-visible + .acct-switch-track { outline: 2px solid var(--color-primary); outline-offset: 3px; }
-  .acct-switch input:disabled + .acct-switch-track { opacity: 0.5; }
-  .acct-switch-text b { display: block; font-size: 0.95rem; font-weight: 600; }
-  .acct-switch-text small { color: var(--color-text-dim); font-size: 0.8rem; }
+  .acct-row-switch input:checked + .acct-switch-track { background: #3fae72; }
+  .acct-row-switch input:checked + .acct-switch-track::after { transform: translateX(1.3rem); }
+  .acct-row-switch input:focus-visible + .acct-switch-track { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+  .acct-row-switch input:disabled + .acct-switch-track { opacity: 0.5; }
 
+  /* signed-in devices */
   .acct-devices { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 0.6rem; }
   .acct-device {
-    display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; padding: 0.85rem 1rem;
-    background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px;
+    display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; padding: 0.8rem 0.9rem;
+    background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 14px;
   }
   .acct-device.is-current { border-color: var(--color-primary); }
-  .acct-device-info { flex: 1 1 12rem; min-width: 0; }
-  .acct-device-info b { display: block; font-size: 0.97rem; }
+  .acct-device-info { flex: 1 1 10rem; min-width: 0; }
+  .acct-device-info b { display: block; font-size: 0.95rem; overflow-wrap: anywhere; }
   .acct-device-info small { color: var(--color-text-dim); font-size: 0.82rem; }
   .acct-chip { display: inline-block; margin-left: 0.5rem; padding: 0.1rem 0.55rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; background: rgba(224, 180, 85, 0.15); color: var(--color-primary); vertical-align: middle; }
   .acct-device button { min-height: 2.5rem; }
 
-  .acct-danger-zone { border-color: rgba(224, 85, 90, 0.55); background: rgba(224, 85, 90, 0.04); }
-  .acct-danger-zone h3 { color: #ff7b80; }
-  .acct-danger-zone .acct-form { margin-top: 1rem; }
-  .acct-danger-zone input[type="text"] { text-transform: uppercase; letter-spacing: 0.1em; }
   .btn-danger:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+  .acct-danger-zone input[type="text"] { text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* registration page */
+  .acct-banner {
+    display: flex; gap: 0.95rem; align-items: center; padding: 1rem 1.1rem; margin-bottom: 1rem; border-radius: 16px;
+    border: 1px solid color-mix(in oklab, var(--tone) 45%, transparent);
+    background: color-mix(in oklab, var(--tone) 10%, var(--color-surface));
+  }
+  .acct-banner .acct-row-ic { width: 2.9rem; height: 2.9rem; border-radius: 50%; font-size: 1.4rem; }
+  .acct-banner b { display: block; font-family: var(--font-display); font-size: 1.05rem; }
+  .acct-banner p { margin: 0.2rem 0 0; font-size: 0.88rem; line-height: 1.5; color: var(--color-text-dim); }
+  .acct-steps { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.3rem; margin: 0 0 1rem; padding: 0.3rem 0 0; counter-reset: step; }
+  .acct-steps li { position: relative; padding-top: 2rem; text-align: center; font-size: 0.74rem; line-height: 1.3; color: var(--color-text-faint); counter-increment: step; }
+  .acct-steps li::before {
+    content: counter(step); position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 1;
+    display: grid; place-items: center; width: 1.55rem; height: 1.55rem; border-radius: 50%;
+    background: var(--color-border); color: var(--color-text); font-size: 0.75rem; font-weight: 700;
+  }
+  .acct-steps li::after { content: ""; position: absolute; top: 0.72rem; left: calc(-50% + 0.78rem); width: calc(100% - 1.56rem); height: 2px; background: var(--color-border); }
+  .acct-steps li:first-child::after { display: none; }
+  .acct-steps li.is-done { color: var(--color-text); }
+  .acct-steps li.is-done::before { content: "\2713"; background: #3fae72; color: #fff; }
+  .acct-steps li.is-done + li::after { background: #3fae72; }
+  .acct-steps li.is-current { color: var(--color-text); }
+  .acct-steps li.is-current::before { background: var(--color-primary); color: #17130a; }
+  .acct-facts { margin: 0 0 1rem; padding: 0; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; overflow: hidden; }
+  .acct-fact { display: flex; align-items: center; gap: 0.8rem; padding: 0.7rem 0.95rem; border-bottom: 1px solid var(--color-border); }
+  .acct-fact:last-child { border-bottom: 0; }
+  .acct-fact .ic { color: var(--color-text-faint); font-size: 1.1rem; }
+  .acct-fact dt { flex: 1; color: var(--color-text-dim); font-size: 0.88rem; }
+  .acct-fact dd { margin: 0; font-weight: 600; font-size: 0.92rem; text-align: right; overflow-wrap: anywhere; }
+  .acct-empty { text-align: center; padding: 2rem 1.2rem 1.6rem; background: var(--color-surface); border: 1px dashed var(--color-border); border-radius: 18px; }
+  .acct-empty .acct-row-ic { width: 3.4rem; height: 3.4rem; border-radius: 50%; font-size: 1.6rem; margin: 0 auto 0.9rem; }
+  .acct-empty b { display: block; font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 0.3rem; }
+  .acct-empty p { color: var(--color-text-dim); font-size: 0.9rem; margin: 0 0 1.1rem; }
+  .acct-tickets { display: grid; gap: 0.9rem; margin-top: 1.4rem; }
+  .acct-tickets:empty { display: none; }
+  .acct-tickets-title { margin: 0 0.2rem 0.1rem; font-family: var(--font-display); font-size: 1.02rem; display: flex; align-items: center; gap: 0.5rem; }
+  .acct-tk { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center; padding: 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 18px; }
+  .acct-tk-qr { width: 6.4rem; height: 6.4rem; padding: 0.4rem; background: #fff; border-radius: 10px; }
+  .acct-tk-qr svg { display: block; width: 100%; height: 100%; }
+  .acct-tk-info { min-width: 0; }
+  .acct-tk-info b { display: block; font-family: var(--font-display); font-size: 1.02rem; overflow-wrap: anywhere; line-height: 1.25; }
+  .acct-tk-info small { display: block; color: var(--color-text-dim); font-size: 0.8rem; margin: 0.15rem 0 0; }
+  .acct-tk-ref { margin: 0.1rem 0 0.6rem; color: var(--color-text-faint); font-size: 0.76rem; letter-spacing: 0.09em; font-variant-numeric: tabular-nums; }
+  .acct-tk-info .btn { padding: 0.5rem 0.95rem; font-size: 0.82rem; min-height: 2.4rem; }
+  .acct-tk.is-used { opacity: 0.6; }
+  .acct-tk.is-used .acct-tk-qr { opacity: 0.45; }
 
   @media (prefers-reduced-motion: reduce) {
-    .acct-center, .acct-meter-bar span, .acct-switch-track, .acct-switch-track::after { animation: none; transition: none; }
+    .acct-center, .acct-meter-bar span, .acct-switch-track, .acct-switch-track::after, .acct-row-chev, .acct-avatar-lg { animation: none; transition: none; }
   }
+
+  /* sign-out confirmation, same card as the Terms popup */
+  .acct-confirm-actions { display: grid; gap: 0.6rem; margin-top: 1.1rem; }
+  .acct-confirm-actions .btn { min-height: 2.9rem; }
 
   /* ---- the "accept the Terms and the Privacy Policy" popup shown when creating an account ---- */
   .tc-overlay {
@@ -361,6 +470,35 @@
     </g>
     <circle cx="60" cy="60" r="4" fill="currentColor"></circle>
   </symbol>
+</svg>
+
+<!-- icons for the account screens -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="a-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="a-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="a-ticket" viewBox="0 0 24 24"><path d="M3 9a2 2 0 0 0 0 6v3h18v-3a2 2 0 0 1 0-6V6H3z"/><path d="M14 6v12" stroke-dasharray="2 2.4"/></symbol>
+  <symbol id="a-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+  <symbol id="a-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.7a3.5 3.5 0 0 1 0 6.6M18 14.3c2.2.6 3.5 2.6 3.5 5.7"/></symbol>
+  <symbol id="a-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2.2 2.2L15.5 10"/></symbol>
+  <symbol id="a-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/></symbol>
+  <symbol id="a-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="a-download" viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M4 21h16"/></symbol>
+  <symbol id="a-logout" viewBox="0 0 24 24"><path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M16 8l4 4-4 4M20 12H9"/></symbol>
+  <symbol id="a-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7.5 2 7.5H4S6 15 6 9z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="a-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></symbol>
+  <symbol id="a-laptop" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="2"/><path d="M2 20h20"/></symbol>
+  <symbol id="a-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+  <symbol id="a-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+  <symbol id="a-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="a-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></symbol>
+  <symbol id="a-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="a-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
+  <symbol id="a-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></symbol>
+  <symbol id="a-extern" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></symbol>
+  <symbol id="a-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="a-cash" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 10v.01M18 14v.01"/></symbol>
+  <symbol id="a-wallet" viewBox="0 0 24 24"><path d="M16 4H6a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2H6"/><circle cx="16.5" cy="13.5" r="1.1"/></symbol>
+  <symbol id="a-bank" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></symbol>
 </svg>
 
 <header class="site-header">
@@ -476,38 +614,94 @@
 
     <!-- signed in: the account centre -->
     <div id="viewAccount" class="acct-center" hidden>
+      <div class="acct-layout" id="acctLayout" data-view="home">
 
-      <header class="acct-profile-head">
-        <div class="acct-avatar-lg" id="avatar" aria-hidden="true"></div>
-        <div class="acct-head-text">
-          <h2 id="helloName"></h2>
-          <p id="helloEmail"></p>
-          <p class="acct-meta" id="helloMeta"></p>
-        </div>
-        <span class="acct-badge" id="headStatus" hidden></span>
-      </header>
+        <aside class="acct-side">
+          <header class="acct-profile-head">
+            <div class="acct-avatar-lg" id="avatar" aria-hidden="true"></div>
+            <div class="acct-head-text">
+              <h2 id="helloName"></h2>
+              <p id="helloEmail"></p>
+              <p class="acct-meta" id="helloMeta"></p>
+              <span class="acct-badge" id="headStatus" hidden></span>
+            </div>
+          </header>
 
-      <div class="acct-layout">
-        <nav class="acct-nav" id="acctNav" aria-label="Account sections">
-          <a href="#registration" data-section="registration">Registration &amp; tickets</a>
-          <a href="#profile" data-section="profile">Profile</a>
-          <a href="#security" data-section="security">Password &amp; security</a>
-          <a href="#data" data-section="data">Your data &amp; privacy</a>
-          <button type="button" class="acct-nav-out" id="btnLogout">Sign out</button>
-        </nav>
+          <div class="acct-quick" id="acctQuick">
+            <a class="acct-qbtn" href="#profile"><svg class="ic" aria-hidden="true"><use href="#a-edit"/></svg>Edit profile</a>
+            <a class="acct-qbtn is-primary" href="#registration" id="quickTickets"><svg class="ic" aria-hidden="true"><use href="#a-ticket"/></svg><span>My tickets</span></a>
+          </div>
+
+          <nav class="acct-nav" id="acctNav" aria-label="Account sections">
+            <p class="acct-group-title">Event</p>
+            <div class="acct-group">
+              <a class="acct-row acct-row-nav" href="#registration" data-section="registration">
+                <span class="acct-row-ic" data-tone="gold"><svg class="ic" aria-hidden="true"><use href="#a-ticket"/></svg></span>
+                <span class="acct-row-main"><b>Registration &amp; tickets</b><small id="navRegVal">Your pass and QR tickets</small></span>
+                <svg class="ic acct-row-chev" aria-hidden="true"><use href="#a-chev"/></svg>
+              </a>
+            </div>
+
+            <p class="acct-group-title">Account</p>
+            <div class="acct-group">
+              <a class="acct-row acct-row-nav" href="#profile" data-section="profile">
+                <span class="acct-row-ic" data-tone="blue"><svg class="ic" aria-hidden="true"><use href="#a-user"/></svg></span>
+                <span class="acct-row-main"><b>Profile</b><small>Name and avatar colour</small></span>
+                <svg class="ic acct-row-chev" aria-hidden="true"><use href="#a-chev"/></svg>
+              </a>
+              <a class="acct-row acct-row-nav" href="#security" data-section="security">
+                <span class="acct-row-ic" data-tone="green"><svg class="ic" aria-hidden="true"><use href="#a-shield"/></svg></span>
+                <span class="acct-row-main"><b>Password &amp; security</b><small>Password, email, devices</small></span>
+                <svg class="ic acct-row-chev" aria-hidden="true"><use href="#a-chev"/></svg>
+              </a>
+            </div>
+
+            <p class="acct-group-title">Privacy &amp; help</p>
+            <div class="acct-group">
+              <a class="acct-row acct-row-nav" href="#data" data-section="data">
+                <span class="acct-row-ic" data-tone="purple"><svg class="ic" aria-hidden="true"><use href="#a-download"/></svg></span>
+                <span class="acct-row-main"><b>Your data &amp; privacy</b><small>Download or delete your data</small></span>
+                <svg class="ic acct-row-chev" aria-hidden="true"><use href="#a-chev"/></svg>
+              </a>
+              <a class="acct-row acct-row-nav" href="privacy-policy.html">
+                <span class="acct-row-ic"><svg class="ic" aria-hidden="true"><use href="#a-lock"/></svg></span>
+                <span class="acct-row-main"><b>Privacy Policy</b></span>
+                <svg class="ic acct-row-chev" aria-hidden="true"><use href="#a-extern"/></svg>
+              </a>
+              <a class="acct-row acct-row-nav" href="terms.html">
+                <span class="acct-row-ic"><svg class="ic" aria-hidden="true"><use href="#a-file"/></svg></span>
+                <span class="acct-row-main"><b>Terms</b></span>
+                <svg class="ic acct-row-chev" aria-hidden="true"><use href="#a-extern"/></svg>
+              </a>
+            </div>
+
+            <div class="acct-group" style="margin-top:1rem;">
+              <button type="button" class="acct-row is-danger" id="btnLogout">
+                <span class="acct-row-ic"><svg class="ic" aria-hidden="true"><use href="#a-logout"/></svg></span>
+                <span class="acct-row-main"><b>Sign out</b></span>
+              </button>
+            </div>
+          </nav>
+        </aside>
 
         <div class="acct-main">
 
           <!-- registration and tickets -->
-          <section class="acct-panel" data-panel="registration" aria-labelledby="h-registration">
-            <h2 class="acct-panel-title" id="h-registration" tabindex="-1">Registration &amp; tickets</h2>
+          <section class="acct-panel" data-panel="registration" aria-labelledby="h-registration" hidden>
+            <div class="acct-panel-head">
+              <a class="acct-back" href="#home" aria-label="Back to your account"><svg class="ic" aria-hidden="true"><use href="#a-back"/></svg></a>
+              <h2 class="acct-panel-title" id="h-registration" tabindex="-1">Registration &amp; tickets</h2>
+            </div>
             <div id="ticketBody" aria-live="polite"></div>
             <div id="myTickets" class="acct-tickets" aria-live="polite"></div>
           </section>
 
           <!-- profile -->
           <section class="acct-panel" data-panel="profile" aria-labelledby="h-profile" hidden>
-            <h2 class="acct-panel-title" id="h-profile" tabindex="-1">Profile</h2>
+            <div class="acct-panel-head">
+              <a class="acct-back" href="#home" aria-label="Back to your account"><svg class="ic" aria-hidden="true"><use href="#a-back"/></svg></a>
+              <h2 class="acct-panel-title" id="h-profile" tabindex="-1">Profile</h2>
+            </div>
 
             <div class="acct-block">
               <h3>Avatar colour</h3>
@@ -530,58 +724,72 @@
 
           <!-- password and security -->
           <section class="acct-panel" data-panel="security" aria-labelledby="h-security" hidden>
-            <h2 class="acct-panel-title" id="h-security" tabindex="-1">Password &amp; security</h2>
+            <div class="acct-panel-head">
+              <a class="acct-back" href="#home" aria-label="Back to your account"><svg class="ic" aria-hidden="true"><use href="#a-back"/></svg></a>
+              <h2 class="acct-panel-title" id="h-security" tabindex="-1">Password &amp; security</h2>
+            </div>
 
-            <div class="acct-block">
-              <h3>Change password</h3>
-              <p class="acct-block-sub">You will stay signed in here and be signed out everywhere else. We email you a notice when it changes.</p>
-              <form id="formPassword" class="acct-form" novalidate>
-                <label class="acct-label" for="pwCurrent">Current password</label>
-                <input type="password" id="pwCurrent" autocomplete="current-password" required>
-                <label class="acct-label" for="pwNew">New password</label>
-                <input type="password" id="pwNew" autocomplete="new-password" minlength="10" maxlength="128" required aria-describedby="pwMeter">
-                <div class="acct-meter" id="pwMeter" aria-live="polite">
-                  <div class="acct-meter-bar"><span id="pwMeterFill"></span></div>
-                  <span class="acct-meter-label" id="pwMeterLabel">At least 10 characters</span>
+            <div class="acct-group">
+              <details class="acct-acc" id="accPassword">
+                <summary>
+                  <span class="acct-row-ic" data-tone="green"><svg class="ic" aria-hidden="true"><use href="#a-key"/></svg></span>
+                  <span class="acct-row-main"><b>Change password</b><small>You stay signed in here and are signed out everywhere else</small></span>
+                  <svg class="ic acct-row-chev" aria-hidden="true"><use href="#a-chev"/></svg>
+                </summary>
+                <div class="acct-acc-body">
+                  <form id="formPassword" class="acct-form" novalidate>
+                    <label class="acct-label" for="pwCurrent">Current password</label>
+                    <input type="password" id="pwCurrent" autocomplete="current-password" required>
+                    <label class="acct-label" for="pwNew">New password</label>
+                    <input type="password" id="pwNew" autocomplete="new-password" minlength="10" maxlength="128" required aria-describedby="pwMeter">
+                    <div class="acct-meter" id="pwMeter" aria-live="polite">
+                      <div class="acct-meter-bar"><span id="pwMeterFill"></span></div>
+                      <span class="acct-meter-label" id="pwMeterLabel">At least 10 characters</span>
+                    </div>
+                    <label class="acct-label" for="pwConfirm">Confirm new password</label>
+                    <input type="password" id="pwConfirm" autocomplete="new-password" maxlength="128" required>
+                    <label class="acct-check"><input type="checkbox" id="pwShow"><span>Show passwords</span></label>
+                    <button type="submit" class="btn btn-primary" id="btnPassword">Change password</button>
+                    <p class="acct-note" id="notePassword" role="status"></p>
+                  </form>
                 </div>
-                <label class="acct-label" for="pwConfirm">Confirm new password</label>
-                <input type="password" id="pwConfirm" autocomplete="new-password" maxlength="128" required>
-                <label class="acct-check"><input type="checkbox" id="pwShow"><span>Show passwords</span></label>
-                <button type="submit" class="btn btn-primary" id="btnPassword">Change password</button>
-                <p class="acct-note" id="notePassword" role="status"></p>
-              </form>
-            </div>
+              </details>
 
-            <div class="acct-block">
-              <h3>Email address</h3>
-              <p class="acct-block-sub">Signed in as <strong id="emailNow"></strong>. To change it, confirm your password and we send a code to the new address. We also tell your old address.</p>
-              <form id="formEmail" class="acct-form" novalidate>
-                <label class="acct-label" for="emailNew">New email address</label>
-                <input type="email" id="emailNew" autocomplete="email" required>
-                <label class="acct-label" for="emailPw">Your password</label>
-                <input type="password" id="emailPw" autocomplete="current-password" required>
-                <button type="submit" class="btn btn-ghost" id="btnEmail">Send code to new address</button>
-                <p class="acct-note" id="noteEmail" role="status"></p>
-              </form>
-              <form id="formEmailCode" class="acct-form" novalidate hidden>
-                <div class="acct-dev" id="devBoxEmail" hidden>Local preview: the code is <code id="devCodeEmail"></code></div>
-                <label class="acct-label" for="emailCode">6-digit code</label>
-                <input type="text" id="emailCode" class="code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required>
-                <button type="submit" class="btn btn-primary" id="btnEmailCode">Confirm new email</button>
-                <button type="button" class="acct-link" id="emailCancel" style="margin-left:1rem;">Cancel</button>
-                <p class="acct-note" id="noteEmailCode" role="status"></p>
-              </form>
-            </div>
+              <details class="acct-acc" id="accEmail">
+                <summary>
+                  <span class="acct-row-ic" data-tone="blue"><svg class="ic" aria-hidden="true"><use href="#a-mail"/></svg></span>
+                  <span class="acct-row-main"><b>Email address</b><small id="emailRowVal">Change where we send your emails</small></span>
+                  <svg class="ic acct-row-chev" aria-hidden="true"><use href="#a-chev"/></svg>
+                </summary>
+                <div class="acct-acc-body">
+                  <p class="acct-block-sub">Signed in as <strong id="emailNow"></strong>. To change it, confirm your password and we send a code to the new address. We also tell your old address.</p>
+                  <form id="formEmail" class="acct-form" novalidate>
+                    <label class="acct-label" for="emailNew">New email address</label>
+                    <input type="email" id="emailNew" autocomplete="email" required>
+                    <label class="acct-label" for="emailPw">Your password</label>
+                    <input type="password" id="emailPw" autocomplete="current-password" required>
+                    <button type="submit" class="btn btn-ghost" id="btnEmail">Send code to new address</button>
+                    <p class="acct-note" id="noteEmail" role="status"></p>
+                  </form>
+                  <form id="formEmailCode" class="acct-form" novalidate hidden>
+                    <div class="acct-dev" id="devBoxEmail" hidden>Local preview: the code is <code id="devCodeEmail"></code></div>
+                    <label class="acct-label" for="emailCode">6-digit code</label>
+                    <input type="text" id="emailCode" class="code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required>
+                    <button type="submit" class="btn btn-primary" id="btnEmailCode">Confirm new email</button>
+                    <button type="button" class="acct-link" id="emailCancel" style="margin-left:1rem;">Cancel</button>
+                    <p class="acct-note" id="noteEmailCode" role="status"></p>
+                  </form>
+                </div>
+              </details>
 
-            <div class="acct-block">
-              <h3>Login alerts</h3>
-              <label class="acct-switch" for="alertsToggle">
+              <label class="acct-row acct-row-switch" for="alertsToggle">
+                <span class="acct-row-ic" data-tone="gold"><svg class="ic" aria-hidden="true"><use href="#a-bell"/></svg></span>
+                <span class="acct-row-main"><b>Login alerts</b><small>Email me when a new device signs in. Each alert uses one email. Off by default.</small></span>
                 <input type="checkbox" id="alertsToggle" role="switch">
                 <span class="acct-switch-track" aria-hidden="true"></span>
-                <span class="acct-switch-text"><b>Email me when a new device signs in</b><small>Each alert uses one email. Off by default.</small></span>
               </label>
-              <p class="acct-note" id="noteAlerts" role="status"></p>
             </div>
+            <p class="acct-note acct-subnote" id="noteAlerts" role="status"></p>
 
             <div class="acct-block">
               <h3>Where you're logged in</h3>
@@ -594,7 +802,10 @@
 
           <!-- data and privacy -->
           <section class="acct-panel" data-panel="data" aria-labelledby="h-data" hidden>
-            <h2 class="acct-panel-title" id="h-data" tabindex="-1">Your data &amp; privacy</h2>
+            <div class="acct-panel-head">
+              <a class="acct-back" href="#home" aria-label="Back to your account"><svg class="ic" aria-hidden="true"><use href="#a-back"/></svg></a>
+              <h2 class="acct-panel-title" id="h-data" tabindex="-1">Your data &amp; privacy</h2>
+            </div>
 
             <div class="acct-block">
               <h3>Download your information</h3>
@@ -604,24 +815,31 @@
             </div>
 
             <div class="acct-block">
-              <h3>Privacy</h3>
+              <h3>Terms &amp; privacy</h3>
               <p class="acct-block-sub">Read how we use your information in the <a href="privacy-policy.html" class="text-link">Privacy Policy</a> and the <a href="terms.html" class="text-link">Terms</a>.</p>
-              <p class="acct-block-sub" id="termsLine"></p>
+              <p class="acct-block-sub" id="termsLine" style="margin-bottom:0;"></p>
             </div>
 
-            <div class="acct-block acct-danger-zone">
-              <h3>Delete account</h3>
-              <p class="acct-block-sub" id="deleteIntro">This permanently erases your account, registration, receipts and tickets, and emails you to confirm. It cannot be undone.</p>
-              <button type="button" class="btn btn-danger" id="btnDeleteStart">Delete my account…</button>
-              <form id="formDelete" class="acct-form" novalidate hidden>
-                <label class="acct-label" for="deleteConfirmText">Type <b>DELETE</b> to confirm</label>
-                <input type="text" id="deleteConfirmText" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="noteDelete">
-                <label class="acct-label" for="deletePassword">Your password</label>
-                <input type="password" id="deletePassword" autocomplete="current-password" required>
-                <button type="submit" class="btn btn-danger" id="btnDelete" disabled>Permanently delete my account</button>
-                <button type="button" class="acct-link" id="deleteCancel" style="margin-left:1rem;">Cancel</button>
-                <p class="acct-note" id="noteDelete" role="status"></p>
-              </form>
+            <div class="acct-group acct-danger-group">
+              <details class="acct-acc is-danger acct-danger-zone" id="accDelete">
+                <summary>
+                  <span class="acct-row-ic" data-tone="red"><svg class="ic" aria-hidden="true"><use href="#a-trash"/></svg></span>
+                  <span class="acct-row-main"><b>Delete account</b><small id="deleteIntro">This permanently erases your account, registration, receipts and tickets, and emails you to confirm. It cannot be undone.</small></span>
+                  <svg class="ic acct-row-chev" aria-hidden="true"><use href="#a-chev"/></svg>
+                </summary>
+                <div class="acct-acc-body">
+                  <button type="button" class="btn btn-danger" id="btnDeleteStart">Delete my account…</button>
+                  <form id="formDelete" class="acct-form" novalidate hidden>
+                    <label class="acct-label" for="deleteConfirmText">Type <b>DELETE</b> to confirm</label>
+                    <input type="text" id="deleteConfirmText" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="noteDelete">
+                    <label class="acct-label" for="deletePassword">Your password</label>
+                    <input type="password" id="deletePassword" autocomplete="current-password" required>
+                    <button type="submit" class="btn btn-danger" id="btnDelete" disabled>Permanently delete my account</button>
+                    <button type="button" class="acct-link" id="deleteCancel" style="margin-left:1rem;">Cancel</button>
+                    <p class="acct-note" id="noteDelete" role="status"></p>
+                  </form>
+                </div>
+              </details>
             </div>
           </section>
 
@@ -682,6 +900,18 @@
   </div>
 </div>
 
+<!-- "Log out of your account?" (asked before signing out, like the big apps do) -->
+<div class="tc-overlay" id="outModal" hidden>
+  <div class="tc-card" role="alertdialog" aria-modal="true" aria-labelledby="outTitle" aria-describedby="outText" style="max-width:24rem;">
+    <h2 id="outTitle" tabindex="-1">Sign out of your account?</h2>
+    <p class="tc-lead" id="outText" style="margin-bottom:0;">You can sign back in any time with your email and password. Your registration and tickets stay safe.</p>
+    <div class="acct-confirm-actions">
+      <button type="button" class="btn btn-danger" id="outOk">Sign out</button>
+      <button type="button" class="btn btn-ghost" id="outCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (() => {
   'use strict';
@@ -695,6 +925,19 @@
 
   const $ = (id) => document.getElementById(id);
   const views = ['viewLoading', 'viewAuth', 'viewVerify', 'viewForgot', 'viewAccount'];
+  // a small inline icon from the sprite at the top of the page
+  const icon = (id, cls) => {
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('class', 'ic' + (cls ? ' ' + cls : ''));
+    s.setAttribute('aria-hidden', 'true');
+    const u = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    u.setAttribute('href', '#' + id);
+    s.appendChild(u);
+    return s;
+  };
+  const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  // on a phone the account is a menu with one page open at a time; on a wide screen both show
+  const isPhone = window.matchMedia('(max-width: 859px)');
 
   document.getElementById('year').textContent = new Date().getFullYear();
   const navToggle = $('navToggle');
@@ -714,7 +957,8 @@
     views.forEach((v) => { $(v).hidden = v !== id; });
     $('acctWrap').classList.toggle('is-wide', id === 'viewAccount');
     const first = $(id).querySelector('input:not([type=checkbox]):not([hidden]), button');
-    if (id !== 'viewLoading' && first && !matchMedia('(pointer: coarse)').matches) first.focus({ preventScroll: true });
+    // (not on the account screens: the first button there would be Sign out)
+    if (id !== 'viewLoading' && id !== 'viewAccount' && first && !matchMedia('(pointer: coarse)').matches) first.focus({ preventScroll: true });
   }
   function note(id, text, kind) {
     const el = $(id);
@@ -789,64 +1033,68 @@
   const METHOD_LABEL = { jazzcash: 'JazzCash', bank: 'Bank transfer', cash: 'Cash, in person', none: '—' };
   const money = (n) => 'Rs ' + Number(n).toLocaleString('en-US');
 
+  const METHOD_ICON = { jazzcash: 'a-wallet', bank: 'a-bank', cash: 'a-cash' };
+  const fmtDate = (iso) => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); };
+
   function renderTicket(ticket) {
     const box = $('ticketBody');
     box.textContent = '';
-    const card = document.createElement('div');
-    card.className = 'acct-ticket-card';
 
     if (!ticket) {
-      const p = document.createElement('p');
-      p.textContent = 'You have not registered yet. It only takes a minute.';
-      card.appendChild(p);
-      card.appendChild(linkButton('Register for the event', 'btn btn-primary btn-block'));
+      const card = mk('div', 'acct-empty');
+      const ic = mk('span', 'acct-row-ic');
+      ic.dataset.tone = 'gold';
+      ic.appendChild(icon('a-ticket'));
+      card.append(ic, mk('b', '', 'No registration yet'),
+        mk('p', '', 'Register for Accord VI and your tickets appear here once your payment is confirmed. It only takes a minute.'),
+        linkButton('Register for the event', 'btn btn-primary btn-block'));
       box.appendChild(card);
+      $('myTickets').textContent = '';
       return;
     }
 
-    const badge = document.createElement('span');
     const states = {
-      pending: ['is-pending', 'Pending verification'],
-      confirmed: ['is-confirmed', 'Payment confirmed'],
-      interest: ['is-interest', 'Interest received'],
-    };
-    const [cls, text] = states[ticket.status] || states.pending;
-    badge.className = 'acct-badge ' + cls;
-    badge.textContent = text;
-    card.appendChild(badge);
-
-    const dl = document.createElement('dl');
-    const rows = [['Pass', PASS_LABEL[ticket.pass] || ticket.pass]];
-    if (ticket.persona === 'group') rows.push(['Group size', String(ticket.attendeeCount)]);
-    if (ticket.pass !== 'sponsor') {
-      rows.push(['Amount', money(ticket.amountPkr)], ['Paid by', METHOD_LABEL[ticket.payMethod] || '—']);
-    }
-    rows.forEach(([k, v]) => {
-      const dt = document.createElement('dt'); dt.textContent = k;
-      const dd = document.createElement('dd'); dd.textContent = v;
-      dl.appendChild(dt); dl.appendChild(dd);
-    });
-    card.appendChild(dl);
-
-    const note = document.createElement('p');
-    if (ticket.status === 'pending') {
-      note.textContent = ticket.payMethod === 'cash'
+      pending: { tone: 'gold', ic: 'a-clock', title: 'Payment under review', text: ticket.payMethod === 'cash'
         ? 'We will confirm your registration once we receive your cash payment.'
-        : 'An organiser will check your receipt and email you as soon as your payment is confirmed.';
-    } else if (ticket.status === 'confirmed') {
-      note.textContent = 'You are all set. See you at Beaconhouse Cantt Campus, Multan.';
-    } else {
-      note.textContent = 'Our team will be in touch about next steps.';
+        : 'An organiser will check your receipt and email you as soon as your payment is confirmed.' },
+      confirmed: { tone: 'green', ic: 'a-check', title: 'Payment confirmed', text: 'You are all set. Your QR tickets are below. See you at Beaconhouse Cantt Campus, Multan.' },
+      interest: { tone: 'blue', ic: 'a-star', title: 'Interest received', text: 'Our team will be in touch about next steps.' },
+    };
+    const st = states[ticket.status] || states.pending;
+    const banner = mk('div', 'acct-banner');
+    banner.dataset.tone = st.tone;
+    const bic = mk('span', 'acct-row-ic');
+    bic.appendChild(icon(st.ic));
+    const btxt = mk('div');
+    btxt.append(mk('b', '', st.title), mk('p', '', st.text));
+    banner.append(bic, btxt);
+    box.appendChild(banner);
+
+    // where they are in the process, like a delivery tracker
+    if (ticket.pass !== 'sponsor') {
+      const conf = ticket.status === 'confirmed';
+      const steps = mk('ol', 'acct-steps');
+      [['Registered', 'is-done'], ['Payment checked', conf ? 'is-done' : 'is-current'], ['Tickets ready', conf ? 'is-done' : '']]
+        .forEach(([label, cls]) => steps.appendChild(mk('li', cls, label)));
+      box.appendChild(steps);
     }
-    card.appendChild(note);
+
+    const dl = mk('dl', 'acct-facts');
+    const fact = (ic, k, v) => { const row = mk('div', 'acct-fact'); row.append(icon(ic), mk('dt', '', k), mk('dd', '', v)); dl.appendChild(row); };
+    fact('a-ticket', 'Pass', PASS_LABEL[ticket.pass] || ticket.pass);
+    if (ticket.persona === 'group') fact('a-users', 'Group size', String(ticket.attendeeCount));
+    if (ticket.pass !== 'sponsor') {
+      fact('a-cash', ticket.status === 'confirmed' ? 'Amount paid' : 'Amount due', money(ticket.amountPkr));
+      fact(METHOD_ICON[ticket.payMethod] || 'a-wallet', 'Paid by', METHOD_LABEL[ticket.payMethod] || '—');
+    }
+    if (ticket.submittedAt) fact('a-calendar', 'Registered on', fmtDate(ticket.submittedAt));
+    if (ticket.confirmedAt) fact('a-check', 'Confirmed on', fmtDate(ticket.confirmedAt));
+    box.appendChild(dl);
 
     if (ticket.status === 'confirmed') renderMyTickets();
     else $('myTickets').textContent = '';
 
-    if (ticket.status === 'pending') {
-      card.appendChild(linkButton('Update my payment or receipt', 'btn btn-ghost btn-block'));
-    }
-    box.appendChild(card);
+    if (ticket.status === 'pending') box.appendChild(linkButton('Update my payment or receipt', 'btn btn-ghost btn-block'));
   }
 
   // Loads the QR library only when there is something to draw.
@@ -870,24 +1118,23 @@
     const r = await api('/account/tickets', {}, true);
     if (!r.ok || !r.tickets || !r.tickets.length) return;
     try { await loadQrLib(); } catch { return; }
+    const heading = mk('h3', 'acct-tickets-title');
+    heading.append(icon('a-ticket'), r.tickets.length > 1 ? `Your tickets (${r.tickets.length})` : 'Your ticket');
+    box.appendChild(heading);
     r.tickets.forEach((tk) => {
-      const row = document.createElement('div');
-      row.className = 'acct-tk' + (tk.used ? ' is-used' : '');
-      const q = document.createElement('div');
-      q.className = 'acct-tk-qr';
+      const row = mk('div', 'acct-tk' + (tk.used ? ' is-used' : ''));
+      const q = mk('div', 'acct-tk-qr');
       const qr = window.qrcode(0, 'M');
       qr.addData(tk.code);
       qr.make();
       q.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
-      const info = document.createElement('div');
-      const name = document.createElement('b');
-      name.textContent = tk.holderName;
-      const sub = document.createElement('small');
-      sub.textContent = (tk.of > 1 ? 'Ticket ' + tk.seq + ' of ' + tk.of : 'Admit one') + (tk.used ? ' · already used' : '');
-      const open = document.createElement('a');
+      const info = mk('div', 'acct-tk-info');
+      info.appendChild(mk('b', '', tk.holderName));
+      info.appendChild(mk('small', '', (tk.of > 1 ? 'Ticket ' + tk.seq + ' of ' + tk.of : 'Admit one') + (tk.used ? ' · already used' : '')));
+      if (tk.ref) info.appendChild(mk('p', 'acct-tk-ref', 'Ref ' + tk.ref));
+      const open = mk('a', 'btn btn-ghost', 'Open ticket');
       open.href = 'ticket.html#' + tk.code;
-      open.textContent = 'Open full-screen ticket';
-      info.append(name, sub, open);
+      info.appendChild(open);
       row.append(q, info);
       box.appendChild(row);
     });
@@ -910,19 +1157,28 @@
   function sectionFromHash() {
     const h = location.hash.slice(1);
     if (h === 'forgot') return 'security'; // emails link to #forgot; a signed-in person changes the password here
-    return SECTIONS.includes(h) ? h : 'registration';
+    if (SECTIONS.includes(h)) return h;
+    return isPhone.matches ? '' : 'registration'; // '' = the account menu, which is the home screen on a phone
   }
   function showSection(name, focusHeading) {
+    $('acctLayout').dataset.view = name ? 'detail' : 'home';
     document.querySelectorAll('[data-panel]').forEach((p) => { p.hidden = p.dataset.panel !== name; });
     document.querySelectorAll('#acctNav a').forEach((a) => {
-      if (a.dataset.section === name) a.setAttribute('aria-current', 'page');
+      if (a.dataset.section && a.dataset.section === name) a.setAttribute('aria-current', 'page');
       else a.removeAttribute('aria-current');
     });
     if (name === 'security') loadSessions();
-    if (focusHeading) { const h = $('h-' + name); if (h) h.focus(); }
+    if (focusHeading) {
+      const h = name && $('h-' + name);
+      if (h) h.focus({ preventScroll: true });
+      if (isPhone.matches) window.scrollTo(0, 0);
+    }
   }
   window.addEventListener('hashchange', () => {
     if (!$('viewAccount').hidden) showSection(sectionFromHash(), true);
+  });
+  isPhone.addEventListener('change', () => {
+    if (!$('viewAccount').hidden) showSection(sectionFromHash(), false);
   });
 
   function buildSwatches() {
@@ -961,6 +1217,8 @@
       ? 'You accepted the Terms and the Privacy Policy on ' + accepted.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + ' (version ' + (user.termsVersion || 'unknown') + ').'
       : 'We have no record of you accepting the Terms and the Privacy Policy, because your account was created before we asked at sign-up.';
 
+    $('emailRowVal').textContent = user.email;
+
     const badge = $('headStatus');
     const t = me.ticket;
     if (t && STATUS_TEXT[t.status]) {
@@ -970,6 +1228,12 @@
     } else {
       badge.hidden = true;
     }
+    // the captions on the menu and the quick button change with where they are in the process
+    const caption = { pending: 'Payment under review', confirmed: 'Confirmed. Your QR tickets are ready', interest: 'Interest received' };
+    $('navRegVal').textContent = t ? (caption[t.status] || 'Your pass and QR tickets') : 'Not registered yet';
+    const quick = $('quickTickets');
+    quick.querySelector('span').textContent = !t ? 'Register' : t.status === 'confirmed' ? 'My tickets' : 'Registration';
+    quick.setAttribute('href', t ? '#registration' : 'register.html');
   }
 
   function renderAccount(user, ticket) {
@@ -1357,6 +1621,10 @@
     r.sessions.forEach((s) => {
       const li = document.createElement('li');
       li.className = 'acct-device' + (s.current ? ' is-current' : '');
+      const dic = mk('span', 'acct-row-ic');
+      dic.dataset.tone = s.current ? 'gold' : 'blue';
+      dic.appendChild(icon(/iphone|android|mobile|phone|ipad|tablet/i.test(s.device) ? 'a-phone' : 'a-laptop'));
+      li.appendChild(dic);
       const info = document.createElement('div');
       info.className = 'acct-device-info';
       const b = document.createElement('b');
@@ -1450,12 +1718,44 @@
   });
 
   // ----- sign out -----
+  // Asked before signing out, like the big apps do. Resolves true only on "Sign out".
+  function askSignOut() {
+    return new Promise((resolve) => {
+      const m = $('outModal');
+      const ok = $('outOk');
+      const cancel = $('outCancel');
+      const returnTo = document.activeElement;
+      m.hidden = false;
+      document.body.style.overflow = 'hidden';
+      cancel.focus({ preventScroll: true });
+      function done(answer) {
+        m.hidden = true;
+        document.body.style.overflow = '';
+        ok.removeEventListener('click', onOk);
+        cancel.removeEventListener('click', onCancel);
+        m.removeEventListener('click', onBackdrop);
+        document.removeEventListener('keydown', onKey, true);
+        if (!answer && returnTo && returnTo.focus) returnTo.focus({ preventScroll: true });
+        resolve(answer);
+      }
+      const onOk = () => done(true);
+      const onCancel = () => done(false);
+      const onBackdrop = (e) => { if (e.target === m) done(false); };
+      const onKey = (e) => { if (e.key === 'Escape') { e.stopImmediatePropagation(); done(false); } };
+      ok.addEventListener('click', onOk);
+      cancel.addEventListener('click', onCancel);
+      m.addEventListener('click', onBackdrop);
+      document.addEventListener('keydown', onKey, true);
+    });
+  }
   $('btnLogout').addEventListener('click', async () => {
-    busy($('btnLogout'), true, 'Signing out…');
+    if (!(await askSignOut())) return;
+    $('btnLogout').disabled = true;
     await api('/account/logout', {}, true);
     clearToken();
-    busy($('btnLogout'), false);
+    $('btnLogout').disabled = false;
     note('noteLogin', '');
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
     show('viewAuth');
     selectTab('login');
   });

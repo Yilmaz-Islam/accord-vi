@@ -48,19 +48,40 @@
   /* the full-screen result: big and obvious in daylight */
   .gt-overlay { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 1rem; background: rgba(6, 7, 10, 0.86); }
   .gt-overlay[hidden] { display: none; }
-  .gt-res { width: min(100%, 30rem); border-radius: 22px; overflow: hidden; background: var(--color-surface); border: 3px solid var(--color-border); text-align: center; box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6); }
+  .gt-res { width: min(100%, 30rem); max-height: calc(100dvh - 2rem); display: flex; flex-direction: column; border-radius: 22px; overflow: hidden; background: var(--color-surface); border: 3px solid var(--color-border); text-align: center; box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6); }
+  .gt-res-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+  .gt-ic { width: 1.15em; height: 1.15em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .gt-res[data-kind="ready"] { border-color: #3fae72; }
   .gt-res[data-kind="admitted"] { border-color: #3fae72; }
   .gt-res[data-kind="used"], .gt-res[data-kind="bad"] { border-color: #e0555a; }
   .gt-res-top { padding: 0.8rem 1rem; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; }
   .gt-res[data-kind="ready"] .gt-res-top, .gt-res[data-kind="admitted"] .gt-res-top { background: #2c8a57; }
   .gt-res[data-kind="used"] .gt-res-top, .gt-res[data-kind="bad"] .gt-res-top { background: #b83a3f; }
-  .gt-res-body { padding: 1.4rem 1.2rem 1rem; }
-  .gt-res-name { font-family: var(--font-display); font-size: clamp(1.7rem, 8vw, 2.4rem); font-weight: 700; line-height: 1.15; word-break: break-word; margin-bottom: 0.5rem; }
-  .gt-res-line { color: var(--color-text-dim); font-size: 1rem; margin-bottom: 0.25rem; }
-  .gt-res-ask { margin: 1rem 0 0; padding: 0.7rem 0.9rem; border: 1px dashed var(--color-primary); border-radius: 10px; color: var(--color-text); font-size: 1rem; }
-  .gt-res-ask strong { color: var(--color-primary); }
-  .gt-res-actions { display: grid; gap: 0.7rem; padding: 0.4rem 1.2rem 1.3rem; }
+  .gt-res-body { padding: 1.2rem 1.2rem 0.6rem; }
+  .gt-res-name { font-family: var(--font-display); font-size: clamp(1.7rem, 8vw, 2.4rem); font-weight: 700; line-height: 1.15; word-break: break-word; margin: 0 0 0.35rem; }
+  .gt-res-ref { margin: 0; color: var(--color-text-faint); font-size: 0.85rem; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
+  .gt-res-used { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin: 0.9rem 0 0; padding: 0.7rem 0.9rem; border-radius: 12px; background: rgba(224, 85, 90, 0.14); border: 1px solid rgba(224, 85, 90, 0.5); color: #ffb4b6; font-weight: 600; font-size: 1rem; }
+  .gt-res-used[hidden] { display: none; }
+  /* the details a person can be asked to confirm: who bought it, with which email, when */
+  .gt-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin: 0.8rem 1.2rem 0; padding: 0; text-align: left; }
+  .gt-fact { display: grid; grid-template-columns: auto 1fr; column-gap: 0.6rem; align-items: center; padding: 0.5rem 0.7rem; min-width: 0; border-radius: 12px; background: var(--color-bg); border: 1px solid var(--color-border); }
+  .gt-fact.is-wide { grid-column: 1 / -1; }
+  .gt-fact .gt-ic { grid-row: span 2; color: var(--color-primary); font-size: 1.1rem; }
+  .gt-fact dt { font-family: var(--font-display); font-size: 0.62rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--color-text-faint); }
+  .gt-fact dd { margin: 0; font-size: 0.92rem; color: var(--color-text); overflow-wrap: anywhere; line-height: 1.3; }
+  .gt-party { margin: 0.9rem 1.2rem 0; text-align: left; }
+  .gt-party h3 { font-family: var(--font-display); font-size: 0.66rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--color-text-faint); margin: 0 0 0.45rem; }
+  .gt-party[hidden] { display: none; }
+  .gt-party ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; counter-reset: gp; }
+  .gt-party li { counter-increment: gp; display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0.7rem; border-radius: 10px; border: 1px solid var(--color-border); font-size: 0.92rem; color: var(--color-text-dim); }
+  .gt-party li::before { content: counter(gp); display: grid; place-items: center; width: 1.45rem; height: 1.45rem; border-radius: 50%; background: rgba(255,255,255,.07); font-size: 0.72rem; flex: none; }
+  .gt-party li.is-you { border-color: var(--color-primary); color: var(--color-text); background: rgba(224, 180, 85, 0.08); }
+  .gt-party li.is-you::after { content: "This ticket"; margin-left: auto; color: var(--color-primary); font-size: 0.7rem; font-family: var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; }
+  .gt-party li.is-in:not(.is-you)::after { content: "In"; margin-left: auto; color: #5fcf8f; font-size: 0.7rem; font-family: var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; }
+  .gt-check { display: flex; align-items: center; gap: 0.8rem; padding: 0.75rem 0.9rem; border: 1px dashed var(--color-primary); border-radius: 12px; text-align: left; font-size: 0.95rem; line-height: 1.3; cursor: pointer; }
+  .gt-check[hidden] { display: none; }
+  .gt-check input { width: 1.6rem; height: 1.6rem; flex: none; accent-color: var(--color-primary); }
+  .gt-res-actions { display: grid; gap: 0.7rem; padding: 0.7rem 1.2rem 1.3rem; border-top: 1px solid var(--color-border); background: var(--color-surface); }
   .gt-big { appearance: none; border: 0; border-radius: 14px; padding: 1.05rem 1rem; font: inherit; font-size: 1.15rem; font-weight: 700; cursor: pointer; }
   .gt-big.is-admit { background: linear-gradient(135deg, #3fae72, #2c8a57); color: #fff; }
   .gt-big.is-cancel { background: transparent; color: var(--color-text-dim); border: 1px solid var(--color-border); font-weight: 600; }
@@ -71,6 +92,18 @@
   <link rel="stylesheet" href="css/apple.css">
 </head>
 <body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="g-ticket" viewBox="0 0 24 24"><path d="M3 9a2 2 0 0 0 0 6v3h18v-3a2 2 0 0 1 0-6V6H3z"/><path d="M14 6v12" stroke-dasharray="2 2.4"/></symbol>
+  <symbol id="g-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.7a3.5 3.5 0 0 1 0 6.6M18 14.3c2.2.6 3.5 2.6 3.5 5.7"/></symbol>
+  <symbol id="g-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+  <symbol id="g-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+  <symbol id="g-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="g-wallet" viewBox="0 0 24 24"><path d="M16 4H6a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2H6"/><circle cx="16.5" cy="13.5" r="1.1"/></symbol>
+  <symbol id="g-bank" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></symbol>
+  <symbol id="g-cash" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 10v.01M18 14v.01"/></symbol>
+  <symbol id="g-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+</svg>
 
 <section class="section" id="main" style="padding-top:1.5rem;">
   <div class="container gt-wrap">
@@ -120,14 +153,20 @@
 <div class="gt-overlay" id="overlay" hidden>
   <div class="gt-res" id="res" data-kind="ready" role="dialog" aria-modal="true" aria-labelledby="resTop">
     <div class="gt-res-top" id="resTop"></div>
-    <div class="gt-res-body">
-      <p class="gt-res-name" id="resName"></p>
-      <p class="gt-res-line" id="resPass"></p>
-      <p class="gt-res-line" id="resBuyer"></p>
-      <p class="gt-res-line" id="resUsed"></p>
-      <p class="gt-res-ask" id="resAsk" hidden><strong>Ask:</strong> "What name is this ticket under?" Check it matches, and check their student card or ID.</p>
+    <div class="gt-res-scroll">
+      <div class="gt-res-body">
+        <p class="gt-res-name" id="resName"></p>
+        <p class="gt-res-ref" id="resRef"></p>
+        <p class="gt-res-used" id="resUsed" hidden></p>
+      </div>
+      <dl class="gt-facts" id="resFacts"></dl>
+      <section class="gt-party" id="resParty" hidden>
+        <h3>Everyone on this booking</h3>
+        <ol id="resPartyList"></ol>
+      </section>
     </div>
     <div class="gt-res-actions">
+      <label class="gt-check" id="resCheckWrap" hidden><input type="checkbox" id="resCheck"><span>I checked their ID or student card. The name matches.</span></label>
       <button class="gt-big is-admit" id="btnAdmit" type="button" hidden>Admit</button>
       <button class="gt-big is-cancel" id="btnClose" type="button">Close</button>
     </div>
@@ -142,6 +181,8 @@
   const TOKEN_KEY = 'accord_gate_token';
   const ADMIN_TOKEN_KEY = 'accord_admin_token'; // the same key admin.html uses
   const PASS = { concert: 'Live Concert only (18 Oct)', both: 'Both nights (18 + 19 Oct)' };
+  const PERSONA = { student: 'Student', group: 'Group leader', guest: 'Guest', sponsor: 'Sponsor' };
+  const METHOD = { jazzcash: ['JazzCash', 'g-wallet'], bank: ['Bank transfer', 'g-bank'], cash: ['Cash', 'g-cash'] };
   const $ = (id) => document.getElementById(id);
   // Either a gate token or an admin token opens the scanner (the server accepts both).
   const getToken = () => { try { return localStorage.getItem(TOKEN_KEY) || localStorage.getItem(ADMIN_TOKEN_KEY) || ''; } catch { return ''; } };
@@ -210,6 +251,51 @@
   let overlayOpen = false;
   const overlay = $('overlay');
   const fmtTime = (iso) => new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  const fmtWhen = (iso) => new Date(iso).toLocaleString([], { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+  function ago(iso) {
+    const m = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
+    if (m < 1) return 'just now';
+    if (m < 60) return `${m} min ago`;
+    const h = Math.round(m / 60);
+    return h < 24 ? `${h} h ago` : `${Math.round(h / 24)} d ago`;
+  }
+  const icon = (id) => { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'gt-ic'); s.setAttribute('aria-hidden', 'true'); const u = document.createElementNS('http://www.w3.org/2000/svg', 'use'); u.setAttribute('href', '#' + id); s.appendChild(u); return s; };
+
+  // The details door staff can ask the person about: who bought it, which email, when, how it was paid.
+  function fillFacts(ticket) {
+    const dl = $('resFacts');
+    dl.textContent = '';
+    if (!ticket) return;
+    const add = (ic, label, value, wide) => {
+      if (!value) return;
+      const d = document.createElement('div');
+      d.className = 'gt-fact' + (wide ? ' is-wide' : '');
+      const dt = document.createElement('dt'); dt.textContent = label;
+      const dd = document.createElement('dd'); dd.textContent = value;
+      d.append(icon(ic), dt, dd);
+      dl.appendChild(d);
+    };
+    const m = METHOD[ticket.payMethod];
+    add('g-ticket', 'Pass', PASS[ticket.pass] || ticket.pass, true);
+    if (ticket.of > 1) add('g-users', 'Ticket', `${ticket.seq} of ${ticket.of}`);
+    add(ticket.persona === 'group' ? 'g-users' : 'g-user', 'Registered as', PERSONA[ticket.persona] || ticket.persona, ticket.of <= 1);
+    add('g-mail', 'Bought by', ticket.purchaser + (ticket.purchaserEmail ? '  ·  ' + ticket.purchaserEmail : ''), true);
+    if (ticket.confirmedAt) add('g-calendar', 'Confirmed', fmtWhen(ticket.confirmedAt), !m);
+    if (m) add(m[1], 'Paid by', m[0], !ticket.confirmedAt);
+
+    const box = $('resParty');
+    const list = $('resPartyList');
+    list.textContent = '';
+    const party = ticket.party || [];
+    box.hidden = party.length < 2;
+    party.forEach((p) => {
+      const li = document.createElement('li');
+      li.textContent = p.holderName;
+      if (p.you) li.classList.add('is-you');
+      if (p.admittedAt) li.classList.add('is-in');
+      list.appendChild(li);
+    });
+  }
 
   function showResult(kind, ticket, topText) {
     overlayOpen = true;
@@ -217,17 +303,24 @@
     $('res').dataset.kind = kind;
     $('resTop').textContent = topText;
     $('resName').textContent = ticket ? ticket.holderName : '';
-    $('resPass').textContent = ticket ? `${PASS[ticket.pass] || ticket.pass}${ticket.of > 1 ? `  ·  Ticket ${ticket.seq} of ${ticket.of}` : ''}` : '';
-    $('resBuyer').textContent = ticket ? `Bought by ${ticket.purchaser}` : '';
-    $('resUsed').textContent = ticket && ticket.admittedAt ? `Already admitted at ${fmtTime(ticket.admittedAt)}` : '';
-    $('resAsk').hidden = kind !== 'ready';
+    $('resRef').textContent = ticket && ticket.ref ? `Ref ${ticket.ref}` : '';
+    const used = $('resUsed');
+    used.hidden = !(ticket && ticket.admittedAt && kind === 'used');
+    used.textContent = '';
+    if (!used.hidden) { used.append(icon('g-clock'), `Already admitted at ${fmtTime(ticket.admittedAt)} (${ago(ticket.admittedAt)})`); }
+    fillFacts(kind === 'admitted' ? null : ticket);
+    // Must be ticked before Admit works: the ID check is the real protection against a copied QR code.
+    $('resCheck').checked = false;
+    $('resCheckWrap').hidden = kind !== 'ready';
     $('btnAdmit').hidden = kind !== 'ready';
-    $('btnAdmit').disabled = false;
+    $('btnAdmit').disabled = true;
     $('btnClose').textContent = kind === 'ready' ? 'Not a match: close' : kind === 'admitted' ? 'Next' : 'Close';
     overlay.hidden = false;
+    $('res').querySelector('.gt-res-scroll').scrollTop = 0;
     if (navigator.vibrate) navigator.vibrate(kind === 'ready' || kind === 'admitted' ? 80 : [120, 80, 120]);
-    ($('btnAdmit').hidden ? $('btnClose') : $('btnAdmit')).focus({ preventScroll: true });
+    ($('btnAdmit').hidden ? $('btnClose') : $('resCheck')).focus({ preventScroll: true });
   }
+  $('resCheck').addEventListener('change', () => { $('btnAdmit').disabled = !$('resCheck').checked; });
   function closeResult() {
     overlay.hidden = true;
     overlayOpen = false;
@@ -248,7 +341,6 @@
     if (!r.ok) { $('btnAdmit').disabled = false; note('noteScan', r.error || 'Could not admit. Try again.', true); showResult('bad', null, r.error || 'Could not admit'); return; }
     if (r.admitted) {
       showResult('admitted', { ...r.ticket }, 'Admitted');
-      $('resUsed').textContent = '';
       setTimeout(() => { if (overlayOpen && $('res').dataset.kind === 'admitted') closeResult(); }, 1600);
     } else {
       showResult('used', r.ticket, 'Already used: do not admit');
@@ -295,7 +387,12 @@
         if (m.admittedAt) state.className = 'is-used';
         sub.appendChild(state);
         b.append(name, sub);
-        b.addEventListener('click', () => showTicket(m, null));
+        // a list row is slim on purpose; tapping it fetches the full details (email, party, when booked)
+        b.addEventListener('click', async () => {
+          const r = await api('/gate/lookup', { id: m.id });
+          if (!r.ok || !r.valid) { showResult('bad', null, r.error || 'Could not open this ticket'); return; }
+          showTicket(r.ticket, null);
+        });
         li.appendChild(b);
         list.appendChild(li);
       });

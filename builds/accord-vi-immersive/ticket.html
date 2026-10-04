@@ -29,6 +29,8 @@
   .tk-qr svg { display: block; width: 100%; height: 100%; }
   .tk-name { font-family: var(--font-display); font-size: 1.55rem; font-weight: 700; line-height: 1.2; word-break: break-word; margin-bottom: 0.3rem; }
   .tk-meta { color: var(--color-text-dim); font-size: 0.92rem; }
+  .tk-ref { margin-top: 0.3rem; color: var(--color-text-faint); font-size: 0.8rem; letter-spacing: 0.1em; font-variant-numeric: tabular-nums; }
+  .tk-ref[hidden] { display: none; }
   .tk-state {
     display: inline-block; margin: 1rem 0 0; padding: 0.3rem 0.9rem; border-radius: 999px; border: 1px solid currentColor;
     font-family: var(--font-display); font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase;
@@ -73,10 +75,11 @@
         <div class="tk-qr" id="tkQr" role="img" aria-label="Your ticket QR code"></div>
         <p class="tk-name" id="tkName"></p>
         <p class="tk-meta" id="tkPass"></p>
+        <p class="tk-ref" id="tkRef" hidden></p>
         <span class="tk-state" id="tkState"></span>
       </div>
       <div class="tk-foot">
-        <p><strong>At the gate:</strong> staff scan this code and ask for the name above. Have your student card or ID ready.</p>
+        <p><strong>At the gate:</strong> staff scan this code and check it against your student card or ID. They may also ask who booked the ticket, the first letter of the booking email, or the ref number above.</p>
         <p style="margin-top:0.6rem;">This ticket admits <strong>one person, once</strong>. Please don't share it. A copy won't get anyone in after the first scan.</p>
         <p style="margin-top:0.6rem;">Tip: take a screenshot now, in case your signal is weak at the gate. Turn your screen brightness up when it's scanned.</p>
       </div>
@@ -136,6 +139,7 @@
     $('tkQr').innerHTML = qr.createSvgTag({ cellSize: 6, margin: 0, scalable: true });
     $('tkName').textContent = t.holderName;
     $('tkPass').textContent = PASS[t.pass] || t.pass;
+    if (t.ref) { $('tkRef').textContent = `Ref ${t.ref}`; $('tkRef').hidden = false; }
     $('tkSeq').textContent = t.of > 1 ? `Ticket ${t.seq} of ${t.of}` : 'Admit one';
     const state = $('tkState');
     state.textContent = t.used ? 'Already used' : 'Valid';

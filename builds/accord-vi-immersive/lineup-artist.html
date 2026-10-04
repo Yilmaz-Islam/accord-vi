@@ -94,7 +94,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    [data-reveal="wipe"], [data-reveal="materialize"] { transform: none; filter: none; clip-path: none; transition-duration: 220ms; }
+    [data-reveal="wipe"], [data-reveal="materialize"], .artist-name[data-reveal="wipe"], .artist-name[data-reveal="wipe"].sc-in { transform: none; filter: none; clip-path: none; transition-duration: 220ms; }
     .reveal-ring { display: none; }
   }
 
@@ -343,7 +343,12 @@
     margin: 0 0 0.6rem;
     text-align: center;
     color: var(--accent-bright);
+    /* The reveal wipe clips to this box; give the glyphs room so no letter edge is shaved. */
+    padding: 0.12em 0.2em 0.18em;
+    overflow-wrap: anywhere;
   }
+  .artist-name[data-reveal="wipe"] { clip-path: inset(100% -0.5em -0.3em -0.5em); }
+  .artist-name[data-reveal="wipe"].sc-in { clip-path: inset(-0.2em -0.5em -0.3em -0.5em); }
   .genre-row {
     display: flex;
     justify-content: center;
@@ -543,14 +548,21 @@
   @media (max-width: 600px) {
     /* No real hover on touch — keep it always expanded instead of stuck
        collapsed with no way to reach the button. */
-    .disc-player {
+    /* The hover/focus rule above (width:auto, its own max-width and padding) beats a bare
+       .disc-player, and a tap puts hover + focus-within on the player, so the pill used to
+       resize the moment it was touched. Naming those states here pins one size. The pill
+       is only as wide as its content (fit-content) instead of stretching to the cap. */
+    .disc-player,
+    .disc-player:hover,
+    .disc-player:focus-within {
       position: static;
       flex-direction: row;
-      width: auto;
+      width: fit-content;
       height: auto;
       margin: 0 auto 1.6rem;
-      max-width: 15rem;
-      padding: 0.4rem 0.8rem 0.4rem 0.4rem;
+      max-width: min(100%, 13rem);
+      padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+      transition: none;
     }
     .disc-player__body, .disc-player__toggle, .disc-player__note { opacity: 1; pointer-events: auto; }
     .card { padding-top: 1.6rem; }

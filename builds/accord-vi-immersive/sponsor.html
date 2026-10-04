@@ -49,9 +49,11 @@
 
   /* per-tier color identity + animated spinning border + a slow flashing
      glow behind each card, staggered so they don't pulse in unison. */
+  /* No overflow clipping on the card: the "Most popular" / "Title sponsor" badge sits 12px
+     above its top edge and overflow:hidden sliced it in half. The glow below stays inside
+     the card instead (inset:0 + the card's own radius), so nothing needs clipping. */
   .tier-card {
     position: relative;
-    overflow: hidden;
     isolation: isolate;
   }
   .tier-card[data-tier="bronze"]   { --tier-accent: #c17a45; }
@@ -82,7 +84,9 @@
   .tier-card::before {
     content: "";
     position: absolute;
-    inset: -15%;
+    inset: 0;
+    border-radius: inherit;
+    transform: none;
     z-index: 0;
     background: radial-gradient(circle at 50% 0%, color-mix(in oklab, var(--tier-accent) 30%, transparent), transparent 70%);
     opacity: 0;
@@ -461,5 +465,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script src="js/main.js"></script>
+<script src="js/marquee.js"></script>
 </body>
 </html>

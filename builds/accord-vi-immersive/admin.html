@@ -20,230 +20,58 @@
 <style>
   .admin-wrap { max-width: 68rem; margin: 0 auto; }
 
-  .admin-loading {
-    text-align: center;
-    padding: 4rem 1rem;
-    color: var(--color-text-dim);
-    font-size: 0.9rem;
-  }
+  .admin-loading { text-align: center; padding: 4rem 1rem; color: var(--color-text-dim); font-size: 0.9rem; }
   .admin-spinner {
-    width: 2rem;
-    height: 2rem;
-    border: 2px solid var(--color-border);
-    border-top-color: var(--color-primary);
-    border-radius: 50%;
-    margin: 0 auto 1rem;
-    animation: admin-spin 0.8s linear infinite;
+    width: 2rem; height: 2rem; border: 2px solid var(--color-border); border-top-color: var(--color-primary);
+    border-radius: 50%; margin: 0 auto 1rem; animation: admin-spin 0.8s linear infinite;
   }
   @keyframes admin-spin { to { transform: rotate(360deg); } }
 
-  .admin-login {
-    max-width: 26rem;
-    margin: 0 auto;
-    animation: admin-fade-in 0.4s ease;
-  }
+  .admin-login { max-width: 26rem; margin: 0 auto; animation: admin-fade-in 0.4s ease; }
   .admin-login label {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-text-dim);
-    margin-bottom: 0.5rem;
+    display: block; font-family: var(--font-display); font-size: 0.8rem; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--color-text-dim); margin-bottom: 0.5rem;
   }
   .admin-login input {
-    width: 100%;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    padding: 0.9rem 1rem;
-    color: var(--color-text);
-    font-size: 1.05rem;
-    font-family: inherit;
-    margin-bottom: 1.25rem;
+    width: 100%; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+    padding: 0.9rem 1rem; color: var(--color-text); font-size: 1.05rem; font-family: inherit; margin-bottom: 1.25rem;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
-  .admin-login input:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(224, 180, 85, 0.15);
-  }
+  .admin-login input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(224, 180, 85, 0.15); }
   .admin-login label.show-password-toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-    margin: -0.75rem 0 1.25rem;
-    text-transform: none;
-    letter-spacing: normal;
-    font-family: inherit;
-    font-size: 0.85rem;
-    color: var(--color-text-dim);
-    cursor: pointer;
+    display: flex; align-items: center; gap: 0.55rem; margin: -0.75rem 0 1.25rem; text-transform: none;
+    letter-spacing: normal; font-family: inherit; font-size: 0.85rem; color: var(--color-text-dim); cursor: pointer;
   }
-  .admin-login input[type="checkbox"] {
-    width: auto;
-    margin: 0;
-    padding: 0;
-    background: none;
-    border: none;
-    accent-color: var(--color-primary);
-    cursor: pointer;
-  }
-  .admin-note {
-    margin-top: 0.9rem;
-    font-size: 0.85rem;
-    color: var(--color-text-dim);
-    min-height: 1.2em;
-  }
+  .admin-login input[type="checkbox"] { width: auto; margin: 0; padding: 0; background: none; border: none; accent-color: var(--color-primary); cursor: pointer; }
+  .admin-note { margin-top: 0.9rem; font-size: 0.85rem; color: var(--color-text-dim); min-height: 1.2em; }
   .admin-note.is-error { color: #e0555a; }
 
   #logView { animation: admin-fade-in 0.4s ease; }
-  @keyframes admin-fade-in {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes admin-fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-  .admin-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  .admin-search-wrap {
-    position: relative;
-    flex: 1 1 16rem;
-    max-width: 22rem;
-  }
-  .admin-search-wrap svg {
-    position: absolute;
-    left: 0.9rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1rem;
-    height: 1rem;
-    color: var(--color-text-faint);
-    pointer-events: none;
-  }
-  .admin-search {
-    width: 100%;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    padding: 0.65rem 1rem 0.65rem 2.4rem;
-    color: var(--color-text);
-    font-size: 0.9rem;
-    font-family: inherit;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-  .admin-search:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(224, 180, 85, 0.15);
-  }
-  .admin-search::-webkit-search-cancel-button { cursor: pointer; }
-  .admin-toolbar-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-left: auto;
-  }
-  .admin-count {
-    font-family: var(--font-display);
-    font-size: 0.85rem;
-    color: var(--color-text-dim);
-    white-space: nowrap;
-  }
-  .admin-count strong { color: var(--color-primary); }
+  /* ---------- icons ---------- */
+  .ic { width: 1.1em; height: 1.1em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-  .admin-table-scroll {
-    overflow: auto;
-    max-height: 70vh;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    background: var(--color-surface);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+  /* ---------- page head ---------- */
+  .ad-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.4rem; }
+  .ad-title { font-family: var(--font-display); font-size: clamp(1.7rem, 5vw, 2.3rem); line-height: 1.1; margin: 0.15rem 0 0.35rem; }
+  .ad-sub { margin: 0; color: var(--color-text-dim); font-size: 0.85rem; }
+  .ad-head-actions { display: flex; gap: 0.5rem; }
+  .ad-icon-btn {
+    appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-width: 2.7rem; height: 2.7rem;
+    padding: 0 0.85rem; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface);
+    color: var(--color-text-dim); font: inherit; font-size: 0.82rem; cursor: pointer; text-decoration: none; white-space: nowrap;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, scale 140ms var(--ax-ease);
   }
-  table.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.88rem;
-    min-width: 46rem;
-  }
-  .admin-table th, .admin-table td {
-    padding: 0.85rem 1.1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--color-border);
-    vertical-align: top;
-  }
-  .admin-table th {
-    font-family: var(--font-display);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-text-faint);
-    background: var(--color-bg-alt);
-    white-space: nowrap;
-    position: sticky;
-    top: 0;
-  }
-  .admin-table tr:last-child td { border-bottom: none; }
-  .admin-table tbody tr {
-    transition: background 0.15s ease;
-    animation: admin-row-in 0.35s ease both;
-  }
-  .admin-table tbody tr:hover { background: var(--color-bg-alt); }
-  @keyframes admin-row-in {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .admin-table td.admin-cell-when { white-space: nowrap; color: var(--color-text-dim); font-size: 0.82rem; }
-  .admin-table td.admin-cell-type { white-space: nowrap; }
-  .admin-table td.admin-cell-type span {
-    display: inline-block;
-    padding: 0.22rem 0.65rem;
-    border-radius: 999px;
-    background: rgba(224, 180, 85, 0.12);
-    color: var(--color-primary);
-    font-size: 0.76rem;
-    font-family: var(--font-display);
-  }
-  .admin-table td.admin-cell-details { color: var(--color-text-dim); font-size: 0.82rem; }
-  .admin-table mark {
-    background: rgba(224, 180, 85, 0.4);
-    color: inherit;
-    border-radius: 2px;
-    padding: 0 0.1em;
-  }
-  .admin-empty {
-    padding: 3.5rem 1.5rem;
-    text-align: center;
-    color: var(--color-text-dim);
-  }
+  .ad-icon-btn:hover { color: var(--color-text); border-color: var(--color-text-dim); }
+  .ad-icon-btn .ic { font-size: 1.15rem; }
+  .ad-icon-btn .lbl { display: none; }
+  .ad-icon-btn.is-spinning .ic { animation: admin-spin 0.8s linear infinite; }
+  /* these set their own display, which would otherwise beat the hidden attribute */
+  .ad-head-actions[hidden], .ad-icon-btn[hidden], .ad-empty[hidden], .ad-list[hidden], .admin-btn[hidden] { display: none !important; }
+  @media (min-width: 720px) { .ad-icon-btn .lbl { display: inline; } .ad-icon-btn { padding: 0 1.05rem; } }
 
-  @media (prefers-reduced-motion: reduce) {
-    .admin-spinner { animation: none; }
-    .admin-login, #logView, .admin-table tbody tr { animation: none; }
-  }
-
-  .admin-logout {
-    background: none;
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    padding: 0.5rem 1.1rem;
-    color: var(--color-text-dim);
-    font-size: 0.85rem;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: color 0.2s ease, border-color 0.2s ease;
-  }
-  .admin-logout:hover { color: var(--color-text); border-color: var(--color-text-dim); }
-
-  @media (max-width: 640px) {
-    .admin-toolbar-right { margin-left: 0; width: 100%; justify-content: space-between; }
-  }
-
-  /* ---- tickets tab, receipt viewer ---- */
+  /* ---------- tabs ---------- */
   .admin-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--color-border); }
   .admin-tab {
     appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
@@ -256,31 +84,214 @@
     display: inline-block; min-width: 1.35rem; margin-left: 0.4rem; padding: 0.05rem 0.4rem; border-radius: 999px;
     background: var(--color-primary); color: var(--color-bg); font-size: 0.7rem; font-weight: 700; text-align: center;
   }
-  .admin-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
+
+  /* ---------- summary tiles (they are also the status filter) ---------- */
+  .ad-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.65rem; margin-bottom: 0.9rem; }
+  @media (min-width: 720px) { .ad-stats { grid-template-columns: repeat(4, 1fr); gap: 0.8rem; } }
+  .ad-stat {
+    appearance: none; text-align: left; display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 0.7rem; row-gap: 0.05rem;
+    padding: 0.85rem 0.95rem; border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface);
+    color: var(--color-text); font: inherit; cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, scale 140ms var(--ax-ease);
+  }
+  .ad-stat:hover { border-color: var(--color-text-dim); }
+  .ad-stat[aria-pressed="true"] { border-color: var(--color-primary); background: color-mix(in oklab, var(--color-primary) 9%, var(--color-surface)); }
+  .ad-stat-ic { grid-row: span 2; display: grid; place-items: center; width: 2.3rem; height: 2.3rem; border-radius: 50%; background: var(--tone-bg, rgba(255,255,255,.06)); color: var(--tone, var(--color-text-dim)); font-size: 1.15rem; }
+  .ad-stat-n { font-family: var(--font-display); font-size: 1.45rem; font-weight: 700; line-height: 1.05; }
+  .ad-stat-l { font-size: 0.76rem; color: var(--color-text-dim); line-height: 1.25; }
+  .ad-stat[data-status="pending"] { --tone: #e0b455; --tone-bg: rgba(224,180,85,.14); }
+  .ad-stat[data-status="confirmed"] { --tone: #5fcf8f; --tone-bg: rgba(95,207,143,.14); }
+  .ad-stat[data-status="interest"] { --tone: #8fb4ff; --tone-bg: rgba(143,180,255,.14); }
+  .ad-totals { display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; margin: 0 0 1.1rem; padding: 0; list-style: none; font-size: 0.8rem; color: var(--color-text-dim); }
+  .ad-totals li { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .ad-totals b { color: var(--color-text); font-weight: 600; }
+
+  /* ---------- search + sort ---------- */
+  .ad-bar { display: flex; gap: 0.6rem; margin-bottom: 0.7rem; }
+  .ad-search { position: relative; flex: 1 1 auto; min-width: 0; }
+  .ad-search > .ic { position: absolute; left: 0.95rem; top: 50%; transform: translateY(-50%); color: var(--color-text-faint); pointer-events: none; font-size: 1.05rem; }
+  .ad-search input {
+    width: 100%; height: 2.9rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 999px;
+    padding: 0 2.9rem 0 2.6rem; color: var(--color-text); font-size: 0.92rem; font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .ad-search input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(224, 180, 85, 0.15); }
+  .ad-search input::-webkit-search-cancel-button { display: none; }
+  .ad-search kbd {
+    position: absolute; right: 0.95rem; top: 50%; transform: translateY(-50%); font: inherit; font-size: 0.72rem; color: var(--color-text-faint);
+    border: 1px solid var(--color-border); border-radius: 6px; padding: 0.05rem 0.4rem; pointer-events: none; display: none;
+  }
+  @media (hover: hover) and (min-width: 720px) { .ad-search kbd { display: block; } .ad-search.has-text kbd { display: none; } }
+  .ad-search-clear {
+    position: absolute; right: 0.35rem; top: 50%; transform: translateY(-50%); width: 2.2rem; height: 2.2rem; display: none; place-items: center;
+    appearance: none; border: 0; border-radius: 50%; background: none; color: var(--color-text-dim); cursor: pointer;
+  }
+  .ad-search.has-text .ad-search-clear { display: grid; }
+  .ad-search-clear:hover { color: var(--color-text); background: rgba(255,255,255,.07); }
+  /* the sort button and its menu: both fully rounded, drawn by us (a native <select> menu cannot be styled) */
+  .ad-sort { position: relative; flex: none; }
+  .ad-sort-btn {
+    appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 2.9rem; min-width: 2.9rem;
+    padding: 0; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface);
+    color: var(--color-text); font: inherit; font-size: 0.85rem; cursor: pointer; white-space: nowrap;
+    transition: border-color 0.2s ease, background 0.2s ease, scale 140ms var(--ax-ease);
+  }
+  .ad-sort-btn:hover, .ad-sort-btn[aria-expanded="true"] { border-color: var(--color-text-dim); }
+  .ad-sort-btn[aria-expanded="true"] { border-color: var(--color-primary); }
+  .ad-sort-btn > .ic { color: var(--color-text-dim); font-size: 1.1rem; }
+  .ad-sort-btn .ad-sort-label, .ad-sort-btn .ad-sort-chev { display: none; }
+  .ad-sort-btn[aria-expanded="true"] .ad-sort-chev { transform: rotate(180deg); }
+  @media (min-width: 720px) {
+    .ad-sort-btn { padding: 0 1rem 0 1.05rem; }
+    .ad-sort-btn .ad-sort-label { display: inline; }
+    .ad-sort-btn .ad-sort-chev { display: inline-block; font-size: 0.95rem; transition: transform 0.2s ease; }
+  }
+  .ad-menu {
+    position: absolute; right: 0; top: calc(100% + 0.5rem); z-index: 30; display: block; min-width: 14rem; max-width: calc(100vw - 2rem);
+    margin: 0; padding: 0.4rem; list-style: none; background: var(--color-surface); color: var(--color-text);
+    border: 1px solid var(--color-border); border-radius: 26px; box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+    transition: opacity 0.16s ease-out, transform 0.18s var(--ax-ease), display 0.18s allow-discrete;
+    transform-origin: top right;
+  }
+  .ad-menu[hidden] { display: none; opacity: 0; transform: translateY(-6px) scale(0.97); pointer-events: none; }
+  @starting-style { .ad-menu { opacity: 0; transform: translateY(-6px) scale(0.97); } }
+  .ad-menu-title { margin: 0.45rem 0.9rem 0.3rem; font-family: var(--font-display); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-faint); }
+  .ad-menu li[role="option"] {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.7rem 0.9rem 0.7rem 1rem; border-radius: 999px;
+    color: var(--color-text); font-size: 0.9rem; cursor: pointer; user-select: none; transition: background 0.12s ease;
+  }
+  .ad-menu li[role="option"]:hover, .ad-menu li[role="option"]:focus-visible { background: rgba(255, 255, 255, 0.08); outline: none; }
+  .ad-menu li[role="option"][aria-selected="true"] { color: var(--color-primary); font-weight: 600; background: color-mix(in oklab, var(--color-primary) 10%, transparent); }
+  .ad-menu li .ic { font-size: 1rem; visibility: hidden; color: var(--color-primary); }
+  .ad-menu li[aria-selected="true"] .ic { visibility: visible; }
+  .ad-sort-btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .ad-menu { transition: none; } .ad-sort-btn .ad-sort-chev { transition: none; } }
+  @media (prefers-reduced-transparency: reduce) { .ad-menu { box-shadow: none; } }
+
+  /* ---------- filter chips ---------- */
+  .ad-filters { display: grid; gap: 0.5rem; margin-bottom: 0.8rem; }
+  .ad-fgroup { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+  .ad-flabel { flex: none; width: 4.4rem; font-family: var(--font-display); font-size: 0.68rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--color-text-faint); }
+  .ad-chiprow { display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: none; padding: 2px 1px; margin: -2px -1px; min-width: 0; }
+  .ad-chiprow::-webkit-scrollbar { display: none; }
   .admin-filter {
-    appearance: none; border: 1px solid var(--color-border); background: none; border-radius: 999px;
-    padding: 0.4rem 0.9rem; color: var(--color-text-dim); font: inherit; font-size: 0.82rem; cursor: pointer;
+    appearance: none; display: inline-flex; align-items: center; gap: 0.4rem; flex: none; border: 1px solid var(--color-border); background: none;
+    border-radius: 999px; padding: 0.42rem 0.85rem; color: var(--color-text-dim); font: inherit; font-size: 0.82rem; cursor: pointer; white-space: nowrap;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, scale 140ms var(--ax-ease);
   }
   .admin-filter:hover { border-color: var(--color-text-dim); }
-  .admin-filter[aria-pressed="true"] { border-color: var(--color-primary); color: var(--color-primary); }
-  .admin-status {
-    display: inline-block; padding: 0.2rem 0.65rem; border-radius: 999px; border: 1px solid currentColor;
-    font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
+  .admin-filter[aria-pressed="true"] { border-color: var(--color-primary); color: var(--color-primary); background: color-mix(in oklab, var(--color-primary) 10%, transparent); }
+  .admin-filter .n { font-size: 0.72rem; opacity: 0.7; }
+  .admin-filter.is-zero:not([aria-pressed="true"]) { opacity: 0.5; }
+
+  .ad-active { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem 0.6rem; min-height: 1.6rem; margin-bottom: 0.8rem; font-size: 0.82rem; color: var(--color-text-dim); }
+  .ad-active strong { color: var(--color-primary); }
+  .ad-tag { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.3rem 0.15rem 0.65rem; border-radius: 999px; background: rgba(255,255,255,.07); color: var(--color-text); font-size: 0.78rem; }
+  .ad-tag button { appearance: none; border: 0; background: none; color: var(--color-text-dim); cursor: pointer; display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; padding: 0; }
+  .ad-tag button:hover { color: var(--color-text); background: rgba(255,255,255,.1); }
+  .ad-clear { appearance: none; border: 0; background: none; color: var(--color-primary); font: inherit; font-size: 0.82rem; cursor: pointer; padding: 0.3rem 0.2rem; text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ---------- the list: a table on wide screens, cards on phones ---------- */
+  .ad-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+  .ad-list-head { display: none; }
+  .ad-row {
+    position: relative; display: grid; gap: 0.5rem 0.8rem; align-items: center; padding: 0.9rem 0.95rem;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "av who status" "meta meta meta" "foot foot foot";
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 14px;
+    animation: admin-row-in 0.3s ease both; transition: border-color 0.15s ease, background 0.15s ease;
   }
-  .admin-status.is-pending { color: #e0b455; }
-  .admin-status.is-confirmed { color: #5fcf8f; }
-  .admin-status.is-interest { color: #8fb4ff; }
+  .ad-row:hover { border-color: var(--color-text-faint); background: color-mix(in oklab, var(--color-surface) 90%, #fff 4%); }
+  @keyframes admin-row-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .ad-avatar {
+    grid-area: av; display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; flex: none;
+    background: var(--av, #e0b455); color: #17130a; font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.02em;
+  }
+  .ad-avatar--lg { width: 3.2rem; height: 3.2rem; font-size: 1.05rem; }
+  .ad-who { grid-area: who; min-width: 0; display: grid; }
+  .ad-name {
+    appearance: none; border: 0; background: none; padding: 0; margin: 0; text-align: left; font: inherit; color: var(--color-text);
+    font-family: var(--font-display); font-weight: 600; font-size: 0.98rem; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  /* the name is the real button; this stretches it over the whole row so a tap anywhere opens it */
+  .ad-name::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+  .ad-name:focus-visible { outline: none; }
+  .ad-row:has(.ad-name:focus-visible) { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+  .ad-email { color: var(--color-text-dim); font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ad-meta { grid-area: meta; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .ad-chip {
+    display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.6rem 0.2rem 0.5rem; border-radius: 999px;
+    background: rgba(255,255,255,.06); color: var(--color-text-dim); font-size: 0.76rem; white-space: nowrap;
+  }
+  .ad-chip .ic { font-size: 0.95rem; }
+  .ad-chip.is-jazzcash { color: #ffb36b; background: rgba(255,153,51,.12); }
+  .ad-chip.is-bank { color: #8fb4ff; background: rgba(143,180,255,.12); }
+  .ad-chip.is-cash { color: #5fcf8f; background: rgba(95,207,143,.12); }
+  .ad-chip.is-people { color: var(--color-text); }
+  .ad-chip.is-in { color: #5fcf8f; background: rgba(95,207,143,.1); }
+  .ad-status {
+    grid-area: status; justify-self: end; display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.22rem 0.7rem 0.22rem 0.55rem;
+    border-radius: 999px; background: color-mix(in oklab, currentColor 13%, transparent); font-family: var(--font-display); font-size: 0.7rem;
+    letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
+  }
+  .ad-status::before { content: ""; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: currentColor; }
+  .ad-status.is-pending { color: #e0b455; }
+  .ad-status.is-confirmed { color: #5fcf8f; }
+  .ad-status.is-interest { color: #8fb4ff; }
+  .ad-foot { grid-area: foot; display: flex; align-items: center; gap: 0.8rem; padding-top: 0.55rem; border-top: 1px solid var(--color-border); }
+  .ad-amount { font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; white-space: nowrap; }
+  .ad-when { color: var(--color-text-faint); font-size: 0.78rem; white-space: nowrap; }
+  .ad-actions { margin-left: auto; display: flex; gap: 0.4rem; position: relative; z-index: 1; }
   .admin-btn {
-    appearance: none; border: 1px solid var(--color-border); background: var(--color-bg); color: var(--color-text);
-    border-radius: 999px; padding: 0.4rem 0.9rem; font: inherit; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border: 1px solid var(--color-border); background: var(--color-bg);
+    color: var(--color-text); border-radius: 999px; padding: 0.5rem 1rem; min-height: 2.4rem; font: inherit; font-size: 0.82rem; cursor: pointer; white-space: nowrap;
+    text-decoration: none; transition: border-color 0.2s ease, background 0.2s ease;
   }
   .admin-btn:hover { border-color: var(--color-primary); }
   .admin-btn:disabled { opacity: 0.5; cursor: default; }
   .admin-btn.is-confirm { background: linear-gradient(135deg, #3fae72, #2c8a57); border-color: transparent; color: #fff; font-weight: 600; }
   .admin-btn.is-confirm:hover { box-shadow: 0 6px 18px rgba(63, 174, 114, 0.35); }
-  .admin-table td.admin-cell-money { white-space: nowrap; font-family: var(--font-display); }
-  .admin-table td small { display: block; color: var(--color-text-faint); font-size: 0.76rem; margin-top: 0.2rem; }
+
+  @media (min-width: 900px) {
+    .ad-list { gap: 0; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 14px; overflow: hidden; box-shadow: 0 16px 40px rgba(0,0,0,.18); }
+    .ad-list-head, .ad-row {
+      grid-template-columns: 2.6rem minmax(0, 1.5fr) minmax(0, 1.5fr) 6.2rem 7.4rem 5.4rem 7.6rem;
+      grid-template-areas: "av who meta amount status when actions";
+    }
+    .ad-list-head {
+      display: grid; gap: 0 0.8rem; padding: 0.7rem 0.95rem; background: var(--color-bg-alt); border-bottom: 1px solid var(--color-border);
+      font-family: var(--font-display); font-size: 0.68rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--color-text-faint);
+    }
+    .ad-list-head span:nth-child(1) { grid-column: 2; }
+    .ad-row { border: 0; border-bottom: 1px solid var(--color-border); border-radius: 0; background: none; padding: 0.7rem 0.95rem; gap: 0 0.8rem; }
+    .ad-row:last-child { border-bottom: 0; }
+    .ad-foot { display: contents; }
+    .ad-amount { grid-area: amount; }
+    .ad-when { grid-area: when; }
+    .ad-actions { grid-area: actions; justify-self: end; margin-left: 0; }
+    .ad-status { justify-self: start; }
+  }
+
+  .ad-empty { display: grid; justify-items: center; gap: 0.5rem; padding: 3rem 1.5rem; text-align: center; color: var(--color-text-dim); background: var(--color-surface); border: 1px dashed var(--color-border); border-radius: 14px; }
+  .ad-empty .ic { width: 2.2rem; height: 2.2rem; color: var(--color-text-faint); }
+  .ad-empty p { margin: 0; }
+  .ad-empty b { color: var(--color-text); font-family: var(--font-display); }
+  mark { background: rgba(224, 180, 85, 0.4); color: inherit; border-radius: 2px; padding: 0 0.1em; }
+
+  /* ---------- older submissions (the previous log) ---------- */
+  .admin-table-scroll { overflow: auto; max-height: 70vh; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); }
+  table.admin-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 46rem; }
+  .admin-table th, .admin-table td { padding: 0.85rem 1.1rem; text-align: left; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  .admin-table th { font-family: var(--font-display); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-faint); background: var(--color-bg-alt); white-space: nowrap; position: sticky; top: 0; }
+  .admin-table tr:last-child td { border-bottom: none; }
+  .admin-table tbody tr:hover { background: var(--color-bg-alt); }
+  .admin-table td.admin-cell-when { white-space: nowrap; color: var(--color-text-dim); font-size: 0.82rem; }
+  .admin-table td.admin-cell-type { white-space: nowrap; }
+  .admin-table td.admin-cell-type span { display: inline-block; padding: 0.22rem 0.65rem; border-radius: 999px; background: rgba(224, 180, 85, 0.12); color: var(--color-primary); font-size: 0.76rem; font-family: var(--font-display); }
+  .admin-table td.admin-cell-details { color: var(--color-text-dim); font-size: 0.82rem; }
+  .admin-empty { padding: 3.5rem 1.5rem; text-align: center; color: var(--color-text-dim); }
+
+  /* ---------- toast ---------- */
   .admin-toast {
     position: fixed; left: 50%; bottom: 1.5rem; z-index: 10000; transform: translateX(-50%); max-width: 90vw;
     padding: 0.75rem 1.1rem; border-radius: 10px; background: var(--color-surface); border: 1px solid var(--color-primary);
@@ -289,28 +300,67 @@
   .admin-toast.is-error { border-color: #e0555a; color: #ffb4b6; }
   .admin-toast[hidden] { display: none; }
 
+  /* ---------- details sheet (bottom sheet on phones, centred card on wide screens) ---------- */
   .rmodal { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 1.2rem; background: rgba(8, 9, 12, 0.8); backdrop-filter: blur(4px); }
   .rmodal[hidden] { display: none; }
   .rmodal-card {
     width: min(100%, 38rem); max-height: 92vh; overflow: auto; padding: 1.3rem 1.3rem 1.2rem;
-    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 14px;
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 14px; box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+    overscroll-behavior: contain;
   }
-  .rmodal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.9rem; }
-  .rmodal-head h2 { font-family: var(--font-display); font-size: 1.15rem; margin: 0; }
-  .rmodal-head p { color: var(--color-text-dim); font-size: 0.85rem; margin: 0.2rem 0 0; word-break: break-all; }
-  .rmodal-close { appearance: none; border: 0; background: none; color: var(--color-text-dim); font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0 0.3rem; }
+  #receiptModal .rmodal-card { padding: 0; }
+  .sh-grab { display: none; width: 2.6rem; height: 4px; border-radius: 4px; background: var(--color-border); margin: 0.6rem auto 0; }
+  .sh-head { display: flex; align-items: center; gap: 0.9rem; padding: 1.2rem 1.3rem 0.9rem; }
+  .sh-head h2 { font-family: var(--font-display); font-size: 1.2rem; margin: 0; line-height: 1.2; }
+  .sh-head p { color: var(--color-text-dim); font-size: 0.85rem; margin: 0.15rem 0 0; overflow-wrap: anywhere; }
+  .sh-who { min-width: 0; flex: 1; }
+  .rmodal-close { appearance: none; border: 0; background: none; color: var(--color-text-dim); font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0.4rem 0.7rem; margin: -0.4rem -0.5rem -0.4rem 0; }
   .rmodal-close:hover { color: var(--color-text); }
-  .rmodal-body { display: grid; place-items: center; min-height: 8rem; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 10px; padding: 0.6rem; color: var(--color-text-dim); }
-  .rmodal-body img { max-width: 100%; max-height: 62vh; object-fit: contain; border-radius: 6px; }
-  .rm-hist { margin-top: 1rem; }
-  .rm-hist h3 { font-family: var(--font-display); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-faint); margin: 0 0 0.6rem; }
+  .sh-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0 1.3rem 1rem; }
+  .sh-ref { color: var(--color-text-faint); font-size: 0.78rem; align-self: center; }
+  .sh-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 0; padding: 0 1.3rem 1rem; }
+  .sh-fact { display: grid; grid-template-columns: auto 1fr; column-gap: 0.65rem; align-items: center; padding: 0.65rem 0.75rem; border-radius: 12px; background: var(--color-bg); border: 1px solid var(--color-border); min-width: 0; }
+  .sh-fact .ic { grid-row: span 2; font-size: 1.15rem; color: var(--color-primary); }
+  .sh-fact dt { font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-faint); font-family: var(--font-display); }
+  .sh-fact dd { margin: 0; font-size: 0.88rem; color: var(--color-text); overflow-wrap: anywhere; }
+  .sh-fact.is-wide { grid-column: 1 / -1; }
+  .sh-sec { padding: 0 1.3rem 1rem; }
+  .sh-sec h3 { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--color-text-faint); margin: 0 0 0.55rem; display: flex; align-items: center; gap: 0.4rem; }
+  .sh-people { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.35rem; counter-reset: p; }
+  .sh-people li { counter-increment: p; display: flex; align-items: center; gap: 0.65rem; font-size: 0.9rem; padding: 0.45rem 0.7rem; border-radius: 10px; background: var(--color-bg); border: 1px solid var(--color-border); }
+  .sh-people li::before { content: counter(p); display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: rgba(255,255,255,.07); color: var(--color-text-dim); font-size: 0.72rem; flex: none; }
+  .sh-people li.is-in::after { content: "In"; margin-left: auto; color: #5fcf8f; font-size: 0.72rem; font-family: var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; }
+  .sh-note { margin: 0.5rem 0 0; font-size: 0.78rem; color: var(--color-text-faint); }
+  .rmodal-body { display: grid; place-items: center; min-height: 6rem; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px; padding: 0.6rem; color: var(--color-text-dim); font-size: 0.88rem; text-align: center; }
+  .rmodal-body img { max-width: 100%; max-height: 52vh; object-fit: contain; border-radius: 6px; cursor: zoom-in; }
+  .rmodal-body img.is-open, .rm-hist-item img.is-open { position: fixed; inset: 5vh 5vw; width: 90vw; height: 90vh; max-height: none; object-fit: contain; z-index: 10001; background: #000; cursor: zoom-out; }
+  .rm-hist { margin-top: 0.9rem; }
+  .rm-hist h3 { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-faint); margin: 0 0 0.6rem; }
   .rm-hist-item { display: flex; gap: 0.8rem; align-items: center; padding: 0.6rem; margin-bottom: 0.5rem; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 10px; font-size: 0.82rem; color: var(--color-text-dim); }
   .rm-hist-item img { width: 4.5rem; height: 4.5rem; object-fit: cover; border-radius: 6px; cursor: zoom-in; flex: none; }
-  .rm-hist-item img.is-open { position: fixed; inset: 5vh 5vw; width: 90vw; height: 90vh; object-fit: contain; z-index: 10001; background: #000; cursor: zoom-out; }
+  .sh-actions { position: sticky; bottom: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; padding: 0.9rem 1.3rem 1.1rem; background: linear-gradient(to top, var(--color-surface) 72%, transparent); }
+  .sh-actions .admin-btn { flex: 1 1 8rem; }
+  .sh-actions .admin-btn.is-confirm { flex: 2 1 12rem; order: -1; min-height: 2.9rem; font-size: 0.92rem; }
   .rmodal-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.8rem; margin-top: 1rem; }
-  .rmodal-amount { color: var(--color-text-dim); font-size: 0.88rem; }
-  .rmodal-amount strong { color: var(--color-primary); font-family: var(--font-display); font-size: 1.1rem; }
+
+  @media (max-width: 640px) {
+    #receiptModal { place-items: end center; padding: 0; }
+    #receiptModal .rmodal-card { width: 100%; max-height: 94vh; border-radius: 22px 22px 0 0; border-bottom: 0; }
+    #receiptModal .rmodal-card, .rmodal[hidden] .rmodal-card { transform-origin: bottom center; }
+    #receiptModal[hidden] .rmodal-card { transform: translateY(40px); }
+    .sh-grab { display: block; }
+    .sh-facts { gap: 0.5rem; }
+    .sh-fact { grid-template-columns: 1fr; padding: 0.55rem 0.7rem; row-gap: 0.1rem; }
+    .sh-fact .ic { display: none; }
+    .sh-fact dd { font-size: 0.85rem; }
+  }
+  @starting-style { #receiptModal .rmodal-card { transform: translateY(8px) scale(0.98); opacity: 0; } }
+  @media (max-width: 640px) { @starting-style { #receiptModal .rmodal-card { transform: translateY(40px); opacity: 1; } } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .admin-spinner, .ad-icon-btn.is-spinning .ic { animation: none; }
+    .admin-login, #logView, .ad-row { animation: none; }
+  }
 </style>
   <meta name="theme-color" content="#0e0f12">
   <meta name="color-scheme" content="dark">
@@ -333,6 +383,37 @@
     </g>
     <circle cx="60" cy="60" r="4" fill="currentColor"></circle>
   </symbol>
+</svg>
+
+<!-- icon set: 24px outline icons used across this page -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.7a3.5 3.5 0 0 1 0 6.6M18 14.3c2.2.6 3.5 2.6 3.5 5.7"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M16 4H6a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2H6"/><circle cx="16.5" cy="13.5" r="1.1"/></symbol>
+  <symbol id="i-bank" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></symbol>
+  <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 10v.01M18 14v.01"/></symbol>
+  <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 9a2 2 0 0 0 0 6v3h18v-3a2 2 0 0 1 0-6V6H3z"/><path d="M14 6v12" stroke-dasharray="2 2.4"/></symbol>
+  <symbol id="i-sort" viewBox="0 0 24 24"><path d="M8 4v16M4.5 16.5L8 20l3.5-3.5M16 20V4M12.5 7.5L16 4l3.5 3.5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M4 21h16"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></symbol>
+  <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M4 12h16"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M16 8l4 4-4 4M20 12H9"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M5 21V4a1 1 0 0 1 1-1h9l4 3v15M3 21h18M12 12v.01"/></symbol>
+  <symbol id="i-search-x" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8.5 8.5l5 5M13.5 8.5l-5 5"/></symbol>
+  <symbol id="i-tick" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-chevdown" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3 13l3-8h12l3 8v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M3 13h5l1.5 2.5h5L16 13h5"/></symbol>
 </svg>
 
 <header class="site-header">
@@ -360,8 +441,20 @@
 
 <section class="section" id="main">
   <div class="container admin-wrap">
-    <p class="eyebrow" style="text-align:center;">Executives only</p>
-    <h1 class="page-title" style="text-align:center; margin-bottom:2.5rem;">Registration log</h1>
+
+    <header class="ad-head">
+      <div>
+        <p class="eyebrow" style="margin:0;">Executives only</p>
+        <h1 class="ad-title">Registrations</h1>
+        <p class="ad-sub" id="adSub" aria-live="polite"></p>
+      </div>
+      <div class="ad-head-actions" id="headActions" hidden>
+        <button type="button" class="ad-icon-btn" id="refreshBtn" aria-label="Refresh"><svg class="ic"><use href="#i-refresh"/></svg><span class="lbl">Refresh</span></button>
+        <button type="button" class="ad-icon-btn" id="exportBtn" aria-label="Export to CSV"><svg class="ic"><use href="#i-download"/></svg><span class="lbl">Export</span></button>
+        <a class="ad-icon-btn" href="gate.html" aria-label="Gate scanner"><svg class="ic"><use href="#i-scan"/></svg><span class="lbl">Gate</span></a>
+        <button type="button" class="ad-icon-btn" id="logoutBtn" aria-label="Sign out"><svg class="ic"><use href="#i-logout"/></svg><span class="lbl">Sign out</span></button>
+      </div>
+    </header>
 
     <div id="loadingView" class="admin-loading">
       <div class="admin-spinner" aria-hidden="true"></div>
@@ -387,60 +480,83 @@
         <button class="admin-tab" role="tab" id="tabLegacy" aria-selected="false" aria-controls="legacyPanel" type="button">Older submissions</button>
       </div>
 
-      <div class="admin-toolbar">
-        <div class="admin-search-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="11" cy="11" r="7"></circle>
-            <path d="M21 21l-4.3-4.3"></path>
-          </svg>
-          <input type="search" id="adminSearch" class="admin-search" placeholder="Search by name or email…" aria-label="Search registrations">
-        </div>
-        <div class="admin-toolbar-right">
-          <p class="admin-count" id="adminCount"></p>
-          <a class="admin-logout" href="gate.html" style="text-decoration:none;">Gate scanner</a>
-          <button type="button" class="admin-logout" id="logoutBtn">Sign out</button>
-        </div>
-      </div>
-
       <div id="ticketsPanel" role="tabpanel" aria-labelledby="tabTickets">
-        <div class="admin-filters" role="group" aria-label="Filter by status">
-          <button type="button" class="admin-filter" data-status="all" aria-pressed="false">All</button>
-          <button type="button" class="admin-filter" data-status="pending" aria-pressed="true">Pending payment</button>
-          <button type="button" class="admin-filter" data-status="confirmed" aria-pressed="false">Confirmed</button>
-          <button type="button" class="admin-filter" data-status="interest" aria-pressed="false">Sponsors</button>
+        <div class="ad-stats" role="group" aria-label="Show">
+          <button type="button" class="ad-stat" data-status="all" aria-pressed="false"><span class="ad-stat-ic"><svg class="ic"><use href="#i-list"/></svg></span><span class="ad-stat-n" data-n="all">0</span><span class="ad-stat-l">All registrations</span></button>
+          <button type="button" class="ad-stat" data-status="pending" aria-pressed="true"><span class="ad-stat-ic"><svg class="ic"><use href="#i-clock"/></svg></span><span class="ad-stat-n" data-n="pending">0</span><span class="ad-stat-l" data-l="pending">Waiting for review</span></button>
+          <button type="button" class="ad-stat" data-status="confirmed" aria-pressed="false"><span class="ad-stat-ic"><svg class="ic"><use href="#i-check"/></svg></span><span class="ad-stat-n" data-n="confirmed">0</span><span class="ad-stat-l" data-l="confirmed">Confirmed</span></button>
+          <button type="button" class="ad-stat" data-status="interest" aria-pressed="false"><span class="ad-stat-ic"><svg class="ic"><use href="#i-star"/></svg></span><span class="ad-stat-n" data-n="interest">0</span><span class="ad-stat-l">Sponsor interest</span></button>
         </div>
-        <div class="admin-table-scroll">
-          <table class="admin-table" id="ticketsTable" style="min-width:56rem;">
-            <thead>
-              <tr>
-                <th>Submitted</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Pass</th>
-                <th>Amount</th>
-                <th>Paid by</th>
-                <th>Status</th>
-                <th>Receipt</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="ticketsBody"></tbody>
-          </table>
+        <ul class="ad-totals" id="adTotals" aria-label="Totals"></ul>
+
+        <div class="ad-bar">
+          <div class="ad-search" id="searchWrap">
+            <svg class="ic"><use href="#i-search"/></svg>
+            <input type="search" id="adminSearch" placeholder="Search name, email, member…" title="Searches name, email, group members, pass, payment method and amount" aria-label="Search registrations by name, email, group member, pass, payment method or amount" autocomplete="off" spellcheck="false">
+            <kbd aria-hidden="true">/</kbd>
+            <button type="button" class="ad-search-clear" id="searchClear" aria-label="Clear search"><svg class="ic"><use href="#i-x"/></svg></button>
+          </div>
+          <div class="ad-sort" id="sortWrap">
+            <button type="button" class="ad-sort-btn" id="sortBtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="sortMenu" aria-label="Sort registrations">
+              <svg class="ic" aria-hidden="true"><use href="#i-sort"/></svg>
+              <span class="ad-sort-label" id="sortLabel">Newest first</span>
+              <svg class="ic ad-sort-chev" aria-hidden="true"><use href="#i-chevdown"/></svg>
+            </button>
+            <ul class="ad-menu" id="sortMenu" role="listbox" aria-label="Sort by" tabindex="-1" hidden>
+              <li class="ad-menu-title" role="presentation" aria-hidden="true">Sort by</li>
+              <li role="option" data-sort="newest" tabindex="-1"><span>Newest first</span><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg></li>
+              <li role="option" data-sort="oldest" tabindex="-1"><span>Oldest first</span><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg></li>
+              <li role="option" data-sort="name-az" tabindex="-1"><span>Name A to Z</span><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg></li>
+              <li role="option" data-sort="name-za" tabindex="-1"><span>Name Z to A</span><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg></li>
+              <li role="option" data-sort="amount-high" tabindex="-1"><span>Amount, high to low</span><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg></li>
+              <li role="option" data-sort="amount-low" tabindex="-1"><span>Amount, low to high</span><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg></li>
+              <li role="option" data-sort="group" tabindex="-1"><span>Largest group first</span><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg></li>
+              <li role="option" data-sort="confirmed" tabindex="-1"><span>Recently confirmed</span><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg></li>
+              <li role="option" data-sort="pending" tabindex="-1"><span>Pending first</span><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg></li>
+            </ul>
+          </div>
         </div>
-        <p class="admin-empty" id="ticketsEmpty" hidden>No tickets yet.</p>
+
+        <div class="ad-filters">
+          <div class="ad-fgroup"><span class="ad-flabel" id="lblMethod">Paid by</span>
+            <div class="ad-chiprow" role="group" aria-labelledby="lblMethod" id="methodChips">
+              <button type="button" class="admin-filter" data-method="all" aria-pressed="true">All</button>
+              <button type="button" class="admin-filter" data-method="jazzcash" aria-pressed="false"><svg class="ic"><use href="#i-wallet"/></svg>JazzCash <span class="n"></span></button>
+              <button type="button" class="admin-filter" data-method="bank" aria-pressed="false"><svg class="ic"><use href="#i-bank"/></svg>Bank <span class="n"></span></button>
+              <button type="button" class="admin-filter" data-method="cash" aria-pressed="false"><svg class="ic"><use href="#i-cash"/></svg>Cash <span class="n"></span></button>
+            </div>
+          </div>
+          <div class="ad-fgroup"><span class="ad-flabel" id="lblPersona">Type</span>
+            <div class="ad-chiprow" role="group" aria-labelledby="lblPersona" id="personaChips">
+              <button type="button" class="admin-filter" data-persona="all" aria-pressed="true">All</button>
+              <button type="button" class="admin-filter" data-persona="student" aria-pressed="false"><svg class="ic"><use href="#i-user"/></svg>Student <span class="n"></span></button>
+              <button type="button" class="admin-filter" data-persona="group" aria-pressed="false"><svg class="ic"><use href="#i-users"/></svg>Group <span class="n"></span></button>
+              <button type="button" class="admin-filter" data-persona="guest" aria-pressed="false"><svg class="ic"><use href="#i-user"/></svg>Guest <span class="n"></span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ad-active" id="adActive" aria-live="polite"></div>
+
+        <div id="listWrap">
+          <ul class="ad-list" id="ticketsList">
+          </ul>
+        </div>
+        <div class="ad-empty" id="ticketsEmpty" hidden></div>
       </div>
 
       <div id="legacyPanel" role="tabpanel" aria-labelledby="tabLegacy" hidden>
+        <div class="ad-bar">
+          <div class="ad-search" id="legacyWrap">
+            <svg class="ic"><use href="#i-search"/></svg>
+            <input type="search" id="legacySearch" placeholder="Search by name or email…" aria-label="Search older submissions" autocomplete="off">
+            <button type="button" class="ad-search-clear" id="legacyClear" aria-label="Clear search"><svg class="ic"><use href="#i-x"/></svg></button>
+          </div>
+        </div>
         <div class="admin-table-scroll">
           <table class="admin-table" id="adminTable">
             <thead>
-              <tr>
-                <th>Submitted</th>
-                <th>Type</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Details</th>
-              </tr>
+              <tr><th>Submitted</th><th>Type</th><th>Name</th><th>Email</th><th>Details</th></tr>
             </thead>
             <tbody id="adminTableBody"></tbody>
           </table>
@@ -451,20 +567,34 @@
   </div>
 </section>
 
+<!-- registration details: a bottom sheet on phones, a card on wide screens -->
 <div class="rmodal" id="receiptModal" hidden>
   <div class="rmodal-card" role="dialog" aria-modal="true" aria-labelledby="rmodalName">
-    <div class="rmodal-head">
-      <div>
+    <div class="sh-grab" aria-hidden="true"></div>
+    <div class="sh-head">
+      <span class="ad-avatar ad-avatar--lg" id="shAvatar" aria-hidden="true"></span>
+      <div class="sh-who">
         <h2 id="rmodalName"></h2>
         <p id="rmodalEmail"></p>
       </div>
       <button type="button" class="rmodal-close" id="rmodalClose" aria-label="Close">&times;</button>
     </div>
-    <div class="rmodal-body" id="rmodalBody"></div>
-    <div id="rmodalHistory"></div>
-    <div class="rmodal-actions">
-      <p class="rmodal-amount" id="rmodalAmount"></p>
-      <button type="button" class="admin-btn is-confirm" id="rmodalConfirm" hidden>Payment confirmed</button>
+    <div class="sh-pills" id="shPills"></div>
+    <dl class="sh-facts" id="shFacts"></dl>
+    <section class="sh-sec" id="shGroup" hidden>
+      <h3><svg class="ic"><use href="#i-users"/></svg><span id="shGroupTitle">Group</span></h3>
+      <ol class="sh-people" id="shPeople"></ol>
+      <p class="sh-note" id="shGroupNote" hidden></p>
+    </section>
+    <section class="sh-sec">
+      <h3><svg class="ic"><use href="#i-receipt"/></svg>Payment receipt</h3>
+      <div class="rmodal-body" id="rmodalBody"></div>
+      <div id="rmodalHistory"></div>
+    </section>
+    <div class="sh-actions">
+      <button type="button" class="admin-btn is-confirm" id="rmodalConfirm" hidden><svg class="ic"><use href="#i-check"/></svg>Payment confirmed</button>
+      <a class="admin-btn" id="shMail" href="#"><svg class="ic"><use href="#i-mail"/></svg>Email</a>
+      <button type="button" class="admin-btn" id="shCopy"><svg class="ic"><use href="#i-copy"/></svg>Copy email</button>
     </div>
   </div>
 </div>
@@ -512,24 +642,24 @@
   const WORKER_URL = ['localhost', '127.0.0.1'].includes(location.hostname)
     ? 'http://127.0.0.1:8787'
     : 'https://accord-vi-verify.accordbccmvi.workers.dev';
-  const loadingView = document.getElementById('loadingView');
-  const loginView = document.getElementById('loginView');
-  const logView = document.getElementById('logView');
-  const loginForm = document.getElementById('loginForm');
-  const loginBtn = document.getElementById('loginBtn');
-  const loginNote = document.getElementById('loginNote');
-  const adminPasswordInput = document.getElementById('adminPassword');
-  const showPasswordToggle = document.getElementById('showPassword');
+  const $ = (id) => document.getElementById(id);
+  const loadingView = $('loadingView');
+  const loginView = $('loginView');
+  const logView = $('logView');
+  const loginForm = $('loginForm');
+  const loginBtn = $('loginBtn');
+  const loginNote = $('loginNote');
+  const adminPasswordInput = $('adminPassword');
+  const showPasswordToggle = $('showPassword');
   showPasswordToggle.addEventListener('change', () => {
     adminPasswordInput.type = showPasswordToggle.checked ? 'text' : 'password';
   });
-  const adminCount = document.getElementById('adminCount');
-  const adminSearch = document.getElementById('adminSearch');
-  const adminTableBody = document.getElementById('adminTableBody');
-  const adminEmpty = document.getElementById('adminEmpty');
-  const adminTable = document.getElementById('adminTable');
 
   let allRegistrations = [];
+  let allTickets = [];
+  let ticketsError = '';
+  let currentTab = 'tickets';
+  let loadedAt = null;
 
   function setNote(text, kind) {
     loginNote.textContent = text;
@@ -538,15 +668,11 @@
   }
 
   function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, (c) => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-    }[c]));
+    return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
-  // Wraps the first match of `query` in <mark>, working on the already
-  // HTML-escaped string so it can't reopen a tag — escape first, search
-  // in the escaped text (fine: query never contains the few characters
-  // escaping changes), then splice the mark in around that index.
+  // Wraps the first match of `query` in <mark>. It escapes first and searches the escaped text
+  // (the query never contains the few characters escaping changes), so it cannot reopen a tag.
   function highlight(raw, query) {
     const safe = escapeHtml(raw);
     if (!query) return safe;
@@ -555,104 +681,13 @@
     return safe.slice(0, idx) + '<mark>' + safe.slice(idx, idx + query.length) + '</mark>' + safe.slice(idx + query.length);
   }
 
-  function renderRegistrations(registrations, query) {
-    const total = allRegistrations.length;
-    adminCount.innerHTML = query
-      ? `<strong>${registrations.length}</strong> of ${total} registration${total === 1 ? '' : 's'}`
-      : `<strong>${total}</strong> registration${total === 1 ? '' : 's'}`;
-
-    adminTableBody.innerHTML = '';
-    if (!registrations.length) {
-      adminTable.hidden = true;
-      adminEmpty.hidden = false;
-      adminEmpty.textContent = query ? `No registrations match "${query}".` : 'No registrations yet.';
-      return;
-    }
-    adminTable.hidden = false;
-    adminEmpty.hidden = true;
-    registrations.forEach((r, i) => {
-      const tr = document.createElement('tr');
-      tr.style.animationDelay = `${Math.min(i, 24) * 20}ms`;
-      const when = r.submittedAt ? new Date(r.submittedAt).toLocaleString() : '—';
-      tr.innerHTML = `
-        <td class="admin-cell-when">${escapeHtml(when)}</td>
-        <td class="admin-cell-type"><span>${escapeHtml(r.form_type || '—')}</span></td>
-        <td>${highlight(r.name || '—', query)}</td>
-        <td>${highlight(r.email || '—', query)}</td>
-        <td class="admin-cell-details">${escapeHtml(r.details || '—')}</td>
-      `;
-      adminTableBody.appendChild(tr);
-    });
-  }
-
-  function applyLegacyFilter() {
-    const query = adminSearch.value.trim();
-    const q = query.toLowerCase();
-    const filtered = query
-      ? allRegistrations.filter((r) => (r.name || '').toLowerCase().includes(q) || (r.email || '').toLowerCase().includes(q))
-      : allRegistrations;
-    renderRegistrations(filtered, query);
-  }
-  adminSearch.addEventListener('input', applyFilter);
-
-  // A bearer token in localStorage, not a cookie: the page (github.io)
-  // and the worker (workers.dev) are different sites, and browsers that
-  // block third-party cookies (Safari by default, and others) silently
-  // drop a cookie set from a cross-site fetch response — which is why
-  // sign-in could succeed server-side yet still show "Not signed in".
+  // A bearer token in localStorage, not a cookie: the page (github.io) and the worker
+  // (workers.dev) are different sites, and browsers that block third-party cookies silently
+  // drop a cookie set from a cross-site fetch response.
   const TOKEN_KEY = 'accord_admin_token';
-  function getToken() {
-    try { return localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; }
-  }
-  function setToken(token) {
-    try { localStorage.setItem(TOKEN_KEY, token); } catch {}
-  }
-  function clearToken() {
-    try { localStorage.removeItem(TOKEN_KEY); } catch {}
-  }
-
-  async function loadRegistrations() {
-    const res = await fetch(`${WORKER_URL}/admin/registrations`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-      body: '{}',
-    });
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error || 'Could not load registrations');
-    return data.registrations;
-  }
-
-  function showLogin() {
-    loadingView.hidden = true;
-    logView.hidden = true;
-    loginView.hidden = false;
-  }
-
-  // ---------- Tickets: load, list, review receipts, confirm payments ----------
-  let allTickets = [];
-  let ticketsError = '';
-  let currentTab = 'tickets';
-  let statusFilter = 'pending';
-
-  const PASS_LABEL = { concert: 'Concert only (18 Oct)', both: 'Both nights', sponsor: 'Sponsor' };
-  const METHOD_LABEL = { jazzcash: 'JazzCash', bank: 'Bank transfer', cash: 'Cash', none: '—' };
-  const STATUS_LABEL = { pending: 'Pending', confirmed: 'Confirmed', interest: 'Sponsor interest' };
-  const money = (n) => 'Rs ' + Number(n).toLocaleString('en-US');
-
-  const ticketsBody = document.getElementById('ticketsBody');
-  const ticketsTable = document.getElementById('ticketsTable');
-  const ticketsEmpty = document.getElementById('ticketsEmpty');
-  const pendingBadge = document.getElementById('pendingBadge');
-  const toast = document.getElementById('adminToast');
-  let toastTimer = 0;
-
-  function showToast(text, isError) {
-    toast.textContent = text;
-    toast.classList.toggle('is-error', !!isError);
-    toast.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { toast.hidden = true; }, isError ? 7000 : 4000);
-  }
+  const getToken = () => { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; } };
+  const setToken = (token) => { try { localStorage.setItem(TOKEN_KEY, token); } catch {} };
+  const clearToken = () => { try { localStorage.removeItem(TOKEN_KEY); } catch {} };
 
   async function adminPost(path, body) {
     const res = await fetch(`${WORKER_URL}${path}`, {
@@ -677,130 +712,493 @@
     };
   }
 
-  function visibleTickets(query) {
-    const q = (query || '').toLowerCase();
-    return allTickets.filter((t) => {
-      if (statusFilter !== 'all' && t.status !== statusFilter) return false;
-      return !q || (t.name || '').toLowerCase().includes(q) || (t.email || '').toLowerCase().includes(q);
+  function showLogin() {
+    loadingView.hidden = true;
+    logView.hidden = true;
+    $('headActions').hidden = true;
+    $('adSub').textContent = '';
+    loginView.hidden = false;
+  }
+
+  // ---------- labels, formatting ----------
+  const PASS_LABEL = { concert: 'Concert only (18 Oct)', both: 'Both nights (18 + 19 Oct)', sponsor: 'Sponsor' };
+  const PASS_SHORT = { concert: 'Concert only', both: 'Both nights', sponsor: 'Sponsor' };
+  const METHOD_LABEL = { jazzcash: 'JazzCash', bank: 'Bank transfer', cash: 'Cash', none: 'No payment' };
+  const METHOD_ICON = { jazzcash: 'i-wallet', bank: 'i-bank', cash: 'i-cash' };
+  const STATUS_LABEL = { pending: 'Pending', confirmed: 'Confirmed', interest: 'Sponsor' };
+  const PERSONA_LABEL = { student: 'Student', group: 'Group leader', guest: 'Guest', sponsor: 'Sponsor' };
+  const money = (n) => 'Rs ' + Number(n || 0).toLocaleString('en-US');
+  const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString([], { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' }) : '—');
+  function relTime(iso) {
+    if (!iso) return '—';
+    const s = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (s < 45) return 'just now';
+    if (s < 3600) return Math.round(s / 60) + ' min ago';
+    if (s < 86400) return Math.round(s / 3600) + ' h ago';
+    if (s < 7 * 86400) return Math.round(s / 86400) + ' d ago';
+    return new Date(iso).toLocaleDateString([], { day: 'numeric', month: 'short' });
+  }
+  const AVATAR_COLORS = ['#e0b455', '#5fcf8f', '#8fb4ff', '#d98cc1', '#e8895f', '#7fd9e8'];
+  function avatarFor(t) {
+    let h = 0;
+    for (const ch of String(t.email || t.name)) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    const parts = String(t.name || '?').trim().split(/\s+/);
+    const initials = ((parts[0] || '')[0] || '?') + (parts.length > 1 ? parts[parts.length - 1][0] : '');
+    return { color: AVATAR_COLORS[h % AVATAR_COLORS.length], initials: initials.toUpperCase() };
+  }
+  const icon = (id) => `<svg class="ic" aria-hidden="true"><use href="#${id}"/></svg>`;
+  const groupList = (t) => String(t.groupNames || '').split(/\n|,/).map((s) => s.trim()).filter(Boolean);
+
+  // ---------- view state (remembered between visits) ----------
+  const VIEW_KEY = 'accord_admin_view';
+  const SORTS = ['newest', 'oldest', 'name-az', 'name-za', 'amount-high', 'amount-low', 'group', 'confirmed', 'pending'];
+  const view = { status: 'pending', method: 'all', persona: 'all', sort: 'newest' };
+  try {
+    const saved = JSON.parse(localStorage.getItem(VIEW_KEY) || '{}');
+    if (['all', 'pending', 'confirmed', 'interest'].includes(saved.status)) view.status = saved.status;
+    if (['all', 'jazzcash', 'bank', 'cash'].includes(saved.method)) view.method = saved.method;
+    if (['all', 'student', 'group', 'guest'].includes(saved.persona)) view.persona = saved.persona;
+    if (SORTS.includes(saved.sort)) view.sort = saved.sort;
+  } catch { /* first visit */ }
+  const saveView = () => { try { localStorage.setItem(VIEW_KEY, JSON.stringify(view)); } catch {} };
+  let query = '';
+
+  // ---------- filtering and sorting ----------
+  const tokensOf = (q) => q.toLowerCase().split(/\s+/).filter(Boolean);
+  function haystack(t) {
+    return [t.name, t.email, t.groupNames, t.hearAbout, t.sponsorTier, PASS_LABEL[t.pass], METHOD_LABEL[t.payMethod],
+      PERSONA_LABEL[t.persona], STATUS_LABEL[t.status], '#' + t.id, String(t.amountPkr)].join('\n').toLowerCase();
+  }
+  // `skip` leaves one facet out, so a chip's count is "what you would get if you picked this one".
+  function passes(t, tokens, skip) {
+    if (skip !== 'status' && view.status !== 'all' && t.status !== view.status) return false;
+    if (skip !== 'method' && view.method !== 'all' && t.payMethod !== view.method) return false;
+    if (skip !== 'persona' && view.persona !== 'all' && t.persona !== view.persona) return false;
+    if (tokens.length) { const h = haystack(t); if (!tokens.every((tok) => h.includes(tok))) return false; }
+    return true;
+  }
+  const byNewest = (a, b) => (b.submittedAt || '').localeCompare(a.submittedAt || '') || b.id - a.id;
+  const byName = (a, b) => String(a.name).localeCompare(String(b.name), undefined, { sensitivity: 'base' }) || byNewest(a, b);
+  const SORTERS = {
+    newest: byNewest,
+    oldest: (a, b) => -byNewest(a, b),
+    'name-az': byName,
+    'name-za': (a, b) => -byName(a, b),
+    'amount-high': (a, b) => (b.amountPkr || 0) - (a.amountPkr || 0) || byNewest(a, b),
+    'amount-low': (a, b) => (a.amountPkr || 0) - (b.amountPkr || 0) || byNewest(a, b),
+    group: (a, b) => (b.attendeeCount || 1) - (a.attendeeCount || 1) || byName(a, b),
+    confirmed: (a, b) => (b.confirmedAt || '').localeCompare(a.confirmedAt || '') || byNewest(a, b),
+    pending: (a, b) => (b.status === 'pending') - (a.status === 'pending') || byNewest(a, b),
+  };
+  function visibleTickets() {
+    const tokens = tokensOf(query);
+    return allTickets.filter((t) => passes(t, tokens)).sort(SORTERS[view.sort] || byNewest);
+  }
+
+  // ---------- rendering the tickets tab ----------
+  const ticketsList = $('ticketsList');
+  const ticketsEmpty = $('ticketsEmpty');
+  const adActive = $('adActive');
+
+  function renderStats() {
+    const by = (s) => allTickets.filter((t) => t.status === s);
+    const pending = by('pending');
+    const confirmed = by('confirmed');
+    const set = (k, v) => { const el = document.querySelector(`[data-n="${k}"]`); if (el) el.textContent = String(v); };
+    set('all', allTickets.length);
+    set('pending', pending.length);
+    set('confirmed', confirmed.length);
+    set('interest', by('interest').length);
+    const sum = (list) => list.reduce((n, t) => n + (t.amountPkr || 0), 0);
+    document.querySelector('[data-l="pending"]').textContent = pending.length ? `Waiting · ${money(sum(pending))}` : 'Waiting for review';
+    document.querySelector('[data-l="confirmed"]').textContent = confirmed.length ? `Confirmed · ${money(sum(confirmed))}` : 'Confirmed';
+    document.querySelectorAll('.ad-stat').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.status === view.status)));
+
+    const people = confirmed.reduce((n, t) => n + (t.attendeeCount || 1), 0);
+    const inside = confirmed.reduce((n, t) => n + (t.admittedCount || 0), 0);
+    $('adTotals').innerHTML = confirmed.length
+      ? `<li>${icon('i-users')}<b>${people}</b> ${people === 1 ? 'person has' : 'people have'} tickets</li>` +
+        `<li>${icon('i-door')}<b>${inside}</b> of ${people} entered the gate</li>`
+      : '';
+    const pendingN = pending.length;
+    $('pendingBadge').hidden = pendingN === 0;
+    $('pendingBadge').textContent = String(pendingN);
+  }
+
+  function renderChips() {
+    const tokens = tokensOf(query);
+    document.querySelectorAll('#methodChips .admin-filter').forEach((b) => {
+      const m = b.dataset.method;
+      b.setAttribute('aria-pressed', String(view.method === m));
+      if (m === 'all') return;
+      const n = allTickets.filter((t) => t.payMethod === m && passes(t, tokens, 'method')).length;
+      b.querySelector('.n').textContent = String(n);
+      b.classList.toggle('is-zero', n === 0);
+    });
+    document.querySelectorAll('#personaChips .admin-filter').forEach((b) => {
+      const p = b.dataset.persona;
+      b.setAttribute('aria-pressed', String(view.persona === p));
+      if (p === 'all') return;
+      const n = allTickets.filter((t) => t.persona === p && passes(t, tokens, 'persona')).length;
+      b.querySelector('.n').textContent = String(n);
+      b.classList.toggle('is-zero', n === 0);
     });
   }
 
-  function renderTickets(query) {
-    const pending = allTickets.filter((t) => t.status === 'pending').length;
-    pendingBadge.hidden = pending === 0;
-    pendingBadge.textContent = String(pending);
+  const hasFilters = () => view.method !== 'all' || view.persona !== 'all' || view.status !== 'all' || !!query.trim();
 
-    const CHIP_LABEL = { all: 'All', pending: 'Pending payment', confirmed: 'Confirmed', interest: 'Sponsors' };
-    document.querySelectorAll('.admin-filter').forEach((btn) => {
-      const s = btn.dataset.status;
-      const n = s === 'all' ? allTickets.length : allTickets.filter((x) => x.status === s).length;
-      btn.textContent = `${CHIP_LABEL[s]} (${n})`;
-    });
+  function renderActive(shown) {
+    adActive.textContent = '';
+    const span = document.createElement('span');
+    span.innerHTML = `Showing <strong>${shown}</strong> of ${allTickets.length}`;
+    adActive.appendChild(span);
+    const tag = (label, onRemove) => {
+      const s = document.createElement('span');
+      s.className = 'ad-tag';
+      s.append(label);
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'Remove filter ' + label);
+      b.innerHTML = icon('i-x');
+      b.addEventListener('click', onRemove);
+      s.appendChild(b);
+      adActive.appendChild(s);
+    };
+    if (view.status !== 'all') tag(STATUS_LABEL[view.status], () => setView({ status: 'all' }));
+    if (view.method !== 'all') tag(METHOD_LABEL[view.method], () => setView({ method: 'all' }));
+    if (view.persona !== 'all') tag(PERSONA_LABEL[view.persona], () => setView({ persona: 'all' }));
+    if (query.trim()) tag('"' + query.trim() + '"', () => { setQuery(''); });
+    if (hasFilters()) {
+      const c = document.createElement('button');
+      c.type = 'button';
+      c.className = 'ad-clear';
+      c.textContent = 'Clear all';
+      c.addEventListener('click', () => { query = ''; $('adminSearch').value = ''; setView({ status: 'all', method: 'all', persona: 'all' }); });
+      adActive.appendChild(c);
+    }
+  }
 
-    const list = visibleTickets(query);
-    adminCount.innerHTML = `<strong>${list.length}</strong> of ${allTickets.length} ticket${allTickets.length === 1 ? '' : 's'}`;
-    ticketsBody.innerHTML = '';
+  function rowHtml(t, q) {
+    const av = avatarFor(t);
+    const methodChip = t.payMethod && t.payMethod !== 'none'
+      ? `<span class="ad-chip is-${escapeHtml(t.payMethod)}">${icon(METHOD_ICON[t.payMethod] || 'i-wallet')}${escapeHtml(METHOD_LABEL[t.payMethod] || t.payMethod)}</span>` : '';
+    const passChip = `<span class="ad-chip">${icon('i-ticket')}${escapeHtml(PASS_SHORT[t.pass] || t.pass)}</span>`;
+    const people = t.persona === 'group' ? `<span class="ad-chip is-people">${icon('i-users')}${escapeHtml(t.attendeeCount)} people</span>` : '';
+    const tier = t.persona === 'sponsor' && t.sponsorTier ? `<span class="ad-chip">${icon('i-star')}${escapeHtml(t.sponsorTier)}</span>` : '';
+    const receipt = (t.hasReceipt || t.receiptCount) ? `<span class="ad-chip">${icon('i-receipt')}Receipt${t.receiptCount ? ' +' + escapeHtml(t.receiptCount) : ''}</span>` : '';
+    const entered = t.status === 'confirmed' && t.admittedCount ? `<span class="ad-chip is-in">${icon('i-door')}${escapeHtml(t.admittedCount)}/${escapeHtml(t.attendeeCount)} in</span>` : '';
+    const confirmBtn = t.status === 'pending'
+      ? `<button type="button" class="admin-btn is-confirm" data-confirm="${t.id}">${icon('i-check')}Confirm</button>` : '';
+    const amount = t.pass === 'sponsor' ? '—' : money(t.amountPkr);
+    return `<span class="ad-avatar" style="--av:${av.color}" aria-hidden="true">${escapeHtml(av.initials)}</span>
+      <div class="ad-who"><button type="button" class="ad-name" data-open="${t.id}">${highlight(t.name || '—', q)}</button><span class="ad-email">${highlight(t.email || '—', q)}</span></div>
+      <div class="ad-meta">${methodChip}${passChip}${people}${tier}${entered}${receipt}</div>
+      <span class="ad-status is-${escapeHtml(t.status)}">${escapeHtml(STATUS_LABEL[t.status] || t.status)}</span>
+      <div class="ad-foot"><span class="ad-amount">${escapeHtml(amount)}</span><time class="ad-when" datetime="${escapeHtml(t.submittedAt || '')}" title="${escapeHtml(fmtDate(t.submittedAt))}">${escapeHtml(relTime(t.submittedAt))}</time><div class="ad-actions">${confirmBtn}</div></div>`;
+  }
 
+  function renderTickets() {
+    renderStats();
+    renderChips();
+    const list = visibleTickets();
+    renderActive(list.length);
+    $('adSub').textContent = allTickets.length
+      ? `${allTickets.length} registration${allTickets.length === 1 ? '' : 's'}${loadedAt ? ' · updated ' + loadedAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : ''}`
+      : '';
+    syncSort();
+    $('exportBtn').disabled = !list.length;
+
+    ticketsList.textContent = '';
     if (!list.length) {
-      ticketsTable.hidden = true;
+      ticketsList.hidden = true;
       ticketsEmpty.hidden = false;
-      ticketsEmpty.textContent = ticketsError
-        ? `Tickets are not available yet: ${ticketsError}`
-        : query
-          ? `No tickets match "${query}".`
-          : statusFilter === 'pending'
-            ? 'No payments are waiting for review.'
-            : 'No tickets here yet.';
+      ticketsEmpty.innerHTML = '';
+      const none = !allTickets.length;
+      const search = !!query.trim();
+      ticketsEmpty.insertAdjacentHTML('beforeend', `<svg class="ic" aria-hidden="true"><use href="#${none ? 'i-inbox' : 'i-search-x'}"/></svg>`);
+      const p = document.createElement('p');
+      if (ticketsError) p.innerHTML = `<b>Tickets are not available yet</b><br>${escapeHtml(ticketsError)}`;
+      else if (none) p.innerHTML = '<b>No registrations yet</b><br>They will show up here as people sign up.';
+      else if (search) p.innerHTML = `<b>Nothing matches "${escapeHtml(query.trim())}"</b><br>Try fewer words, or part of an email.`;
+      else if (view.status === 'pending' && view.method === 'all' && view.persona === 'all') p.innerHTML = '<b>All caught up</b><br>No payments are waiting for review.';
+      else p.innerHTML = '<b>Nothing here with these filters</b>';
+      ticketsEmpty.appendChild(p);
+      if (hasFilters() && !none) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'admin-btn';
+        b.textContent = 'Clear filters';
+        b.addEventListener('click', () => { query = ''; $('adminSearch').value = ''; setView({ status: 'all', method: 'all', persona: 'all' }); });
+        ticketsEmpty.appendChild(b);
+      }
       return;
     }
-    ticketsTable.hidden = false;
     ticketsEmpty.hidden = true;
-
+    ticketsList.hidden = false;
+    const head = document.createElement('li');
+    head.className = 'ad-list-head';
+    head.setAttribute('aria-hidden', 'true');
+    head.innerHTML = '<span>Person</span><span>Details</span><span>Amount</span><span>Status</span><span>Submitted</span><span></span>';
+    ticketsList.appendChild(head);
+    const q = query.trim();
     list.forEach((t, i) => {
-      const tr = document.createElement('tr');
-      tr.style.animationDelay = `${Math.min(i, 24) * 20}ms`;
-      const when = t.submittedAt ? new Date(t.submittedAt).toLocaleString() : '—';
-      const people = t.persona === 'group' ? `<small>Group of ${escapeHtml(t.attendeeCount)}</small>` : '';
-      const extra = t.persona === 'sponsor' && t.sponsorTier ? `<small>Tier: ${escapeHtml(t.sponsorTier)}</small>` : '';
-      const receiptCell = (t.hasReceipt || t.receiptCount)
-        ? `<button type="button" class="admin-btn" data-view="${t.id}">${t.hasReceipt ? 'View receipt' : 'View history'}</button>${t.receiptCount ? `<small>${t.receiptCount} earlier</small>` : ''}`
-        : '<span style="color:var(--color-text-faint)">—</span>';
-      let action = '';
-      if (t.status === 'pending') action = `<button type="button" class="admin-btn is-confirm" data-confirm="${t.id}">Payment confirmed</button>`;
-      else if (t.status === 'confirmed') action = `<small>${t.confirmedAt ? escapeHtml(new Date(t.confirmedAt).toLocaleString()) : ''}</small>`;
-      tr.innerHTML = `
-        <td class="admin-cell-when">${escapeHtml(when)}</td>
-        <td>${highlight(t.name || '—', query)}</td>
-        <td>${highlight(t.email || '—', query)}</td>
-        <td>${escapeHtml(PASS_LABEL[t.pass] || t.pass)}${people}${extra}</td>
-        <td class="admin-cell-money">${t.pass === 'sponsor' ? '—' : escapeHtml(money(t.amountPkr))}</td>
-        <td>${escapeHtml(METHOD_LABEL[t.payMethod] || t.payMethod)}${t.payMethod === 'cash' ? '<small>No receipt: confirm once cash is received</small>' : ''}</td>
-        <td><span class="admin-status is-${escapeHtml(t.status)}">${escapeHtml(STATUS_LABEL[t.status] || t.status)}</span></td>
-        <td>${receiptCell}</td>
-        <td>${action}</td>`;
-      ticketsBody.appendChild(tr);
+      const li = document.createElement('li');
+      li.className = 'ad-row';
+      li.style.animationDelay = `${Math.min(i, 14) * 18}ms`;
+      li.innerHTML = rowHtml(t, q);
+      ticketsList.appendChild(li);
     });
   }
 
-  function applyFilter() {
-    const query = adminSearch.value.trim();
-    if (currentTab === 'tickets') renderTickets(query);
-    else applyLegacyFilter();
+  function setView(patch) {
+    Object.assign(view, patch);
+    saveView();
+    applyFilter();
+  }
+  function setQuery(q) {
+    query = q;
+    $('adminSearch').value = q;
+    $('searchWrap').classList.toggle('has-text', !!q);
+    applyFilter();
   }
 
-  // ----- tabs and status filters -----
+  // ---------- the older log ----------
+  const adminTableBody = $('adminTableBody');
+  const adminEmpty = $('adminEmpty');
+  const adminTable = $('adminTable');
+  let legacyQuery = '';
+  function renderLegacy() {
+    const q = legacyQuery.toLowerCase();
+    const rows = q ? allRegistrations.filter((r) => (r.name || '').toLowerCase().includes(q) || (r.email || '').toLowerCase().includes(q)) : allRegistrations;
+    adminTableBody.textContent = '';
+    if (!rows.length) {
+      adminTable.hidden = true;
+      adminEmpty.hidden = false;
+      adminEmpty.textContent = legacyQuery ? `No registrations match "${legacyQuery}".` : 'No registrations yet.';
+      return;
+    }
+    adminTable.hidden = false;
+    adminEmpty.hidden = true;
+    rows.forEach((r) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="admin-cell-when">${escapeHtml(r.submittedAt ? new Date(r.submittedAt).toLocaleString() : '—')}</td>
+        <td class="admin-cell-type"><span>${escapeHtml(r.form_type || '—')}</span></td>
+        <td>${highlight(r.name || '—', legacyQuery)}</td>
+        <td>${highlight(r.email || '—', legacyQuery)}</td>
+        <td class="admin-cell-details">${escapeHtml(r.details || '—')}</td>`;
+      adminTableBody.appendChild(tr);
+    });
+  }
+  $('legacySearch').addEventListener('input', (e) => {
+    legacyQuery = e.target.value.trim();
+    $('legacyWrap').classList.toggle('has-text', !!legacyQuery);
+    renderLegacy();
+  });
+  $('legacyClear').addEventListener('click', () => { $('legacySearch').value = ''; legacyQuery = ''; $('legacyWrap').classList.remove('has-text'); renderLegacy(); $('legacySearch').focus(); });
+
+  function applyFilter() {
+    if (currentTab === 'tickets') renderTickets();
+    else renderLegacy();
+  }
+
+  // ---------- controls ----------
+  $('adminSearch').addEventListener('input', (e) => {
+    query = e.target.value;
+    $('searchWrap').classList.toggle('has-text', !!query);
+    renderTickets();
+  });
+  $('adminSearch').addEventListener('keydown', (e) => { if (e.key === 'Escape' && query) { e.stopPropagation(); setQuery(''); } });
+  $('searchClear').addEventListener('click', () => { setQuery(''); $('adminSearch').focus(); });
+
+  // ---------- sort menu: our own rounded one, since a native <select> menu cannot be styled ----------
+  const SORT_LABEL = {
+    newest: 'Newest first', oldest: 'Oldest first', 'name-az': 'Name A to Z', 'name-za': 'Name Z to A',
+    'amount-high': 'Amount, high to low', 'amount-low': 'Amount, low to high', group: 'Largest group first',
+    confirmed: 'Recently confirmed', pending: 'Pending first',
+  };
+  const sortBtn = $('sortBtn');
+  const sortMenu = $('sortMenu');
+  const sortOptions = () => Array.from(sortMenu.querySelectorAll('[role="option"]'));
+  function syncSort() {
+    $('sortLabel').textContent = SORT_LABEL[view.sort] || SORT_LABEL.newest;
+    sortOptions().forEach((o) => o.setAttribute('aria-selected', String(o.dataset.sort === view.sort)));
+  }
+  function openSort() {
+    sortMenu.hidden = false;
+    sortBtn.setAttribute('aria-expanded', 'true');
+    const current = sortOptions().find((o) => o.getAttribute('aria-selected') === 'true') || sortOptions()[0];
+    current.focus({ preventScroll: true });
+  }
+  function closeSort(returnFocus) {
+    if (sortMenu.hidden) return;
+    sortMenu.hidden = true;
+    sortBtn.setAttribute('aria-expanded', 'false');
+    if (returnFocus) sortBtn.focus({ preventScroll: true });
+  }
+  sortBtn.addEventListener('click', () => (sortMenu.hidden ? openSort() : closeSort(true)));
+  sortMenu.addEventListener('click', (e) => {
+    const o = e.target.closest('[role="option"]');
+    if (!o) return;
+    closeSort(true);
+    setView({ sort: o.dataset.sort });
+  });
+  sortMenu.addEventListener('keydown', (e) => {
+    const opts = sortOptions();
+    const i = opts.indexOf(document.activeElement);
+    const go = (n) => { e.preventDefault(); opts[(n + opts.length) % opts.length].focus({ preventScroll: true }); };
+    if (e.key === 'ArrowDown') go(i + 1);
+    else if (e.key === 'ArrowUp') go(i - 1);
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(opts.length - 1);
+    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (i >= 0) opts[i].click(); }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeSort(true); }
+    else if (e.key === 'Tab') closeSort(false);
+  });
+  document.addEventListener('pointerdown', (e) => { if (!sortMenu.hidden && !$('sortWrap').contains(e.target)) closeSort(false); });
+  document.querySelectorAll('.ad-stat').forEach((b) => b.addEventListener('click', () => setView({ status: b.dataset.status })));
+  document.querySelectorAll('#methodChips .admin-filter').forEach((b) => b.addEventListener('click', () => setView({ method: b.dataset.method })));
+  document.querySelectorAll('#personaChips .admin-filter').forEach((b) => b.addEventListener('click', () => setView({ persona: b.dataset.persona })));
+  // "/" jumps to search, like most dashboards
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (document.activeElement && document.activeElement.tagName) || '';
+    if (/INPUT|TEXTAREA|SELECT/.test(tag) || !modal.hidden || logView.hidden || currentTab !== 'tickets') return;
+    e.preventDefault();
+    $('adminSearch').focus();
+  });
+
   function selectAdminTab(tab) {
     currentTab = tab;
     const isTickets = tab === 'tickets';
-    document.getElementById('tabTickets').setAttribute('aria-selected', String(isTickets));
-    document.getElementById('tabLegacy').setAttribute('aria-selected', String(!isTickets));
-    document.getElementById('ticketsPanel').hidden = !isTickets;
-    document.getElementById('legacyPanel').hidden = isTickets;
+    $('tabTickets').setAttribute('aria-selected', String(isTickets));
+    $('tabLegacy').setAttribute('aria-selected', String(!isTickets));
+    $('ticketsPanel').hidden = !isTickets;
+    $('legacyPanel').hidden = isTickets;
+    $('exportBtn').hidden = !isTickets;
     applyFilter();
   }
-  document.getElementById('tabTickets').addEventListener('click', () => selectAdminTab('tickets'));
-  document.getElementById('tabLegacy').addEventListener('click', () => selectAdminTab('legacy'));
-  document.querySelectorAll('.admin-filter').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      statusFilter = btn.dataset.status;
-      document.querySelectorAll('.admin-filter').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-      applyFilter();
-    });
+  $('tabTickets').addEventListener('click', () => selectAdminTab('tickets'));
+  $('tabLegacy').addEventListener('click', () => selectAdminTab('legacy'));
+
+  // ---------- toast ----------
+  const toast = $('adminToast');
+  let toastTimer = 0;
+  function showToast(text, isError) {
+    toast.textContent = text;
+    toast.classList.toggle('is-error', !!isError);
+    toast.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.hidden = true; }, isError ? 7000 : 4000);
+  }
+
+  // ---------- export what you are looking at ----------
+  // A name or note that starts with = + - @ would run as a formula in Excel, so those get a quote in front.
+  const csvCell = (v) => {
+    let s = String(v == null ? '' : v);
+    if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+    return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  };
+  $('exportBtn').addEventListener('click', () => {
+    const list = visibleTickets();
+    if (!list.length) return;
+    const head = ['Submitted', 'Name', 'Email', 'Type', 'Pass', 'People', 'Group members', 'Amount (PKR)', 'Paid by', 'Status', 'Confirmed', 'Entered', 'Heard about', 'Sponsor tier'];
+    const rows = list.map((t) => [
+      t.submittedAt || '', t.name, t.email, PERSONA_LABEL[t.persona] || t.persona, PASS_LABEL[t.pass] || t.pass, t.attendeeCount,
+      groupList(t).join('; '), t.pass === 'sponsor' ? '' : t.amountPkr, METHOD_LABEL[t.payMethod] || t.payMethod, STATUS_LABEL[t.status] || t.status,
+      t.confirmedAt || '', t.status === 'confirmed' ? `${t.admittedCount || 0}/${t.attendeeCount}` : '', t.hearAbout || '', t.sponsorTier || '',
+    ]);
+    const csv = '﻿' + [head, ...rows].map((r) => r.map(csvCell).join(',')).join('\r\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = `accord-registrations-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    showToast(`Exported ${list.length} registration${list.length === 1 ? '' : 's'}.`);
   });
 
-  // ----- receipt viewer -----
-  const modal = document.getElementById('receiptModal');
-  const rBody = document.getElementById('rmodalBody');
-  const rConfirm = document.getElementById('rmodalConfirm');
+  // ---------- registration details sheet ----------
+  const modal = $('receiptModal');
+  const rBody = $('rmodalBody');
+  const rConfirm = $('rmodalConfirm');
   let modalTicket = null;
   let modalReturnFocus = null;
 
-  async function openReceipt(id) {
+  const fact = (ic, label, value, wide) => {
+    const d = document.createElement('div');
+    d.className = 'sh-fact' + (wide ? ' is-wide' : '');
+    d.innerHTML = `${icon(ic)}<dt>${escapeHtml(label)}</dt><dd></dd>`;
+    d.querySelector('dd').textContent = value;
+    return d;
+  };
+
+  function fillSheet(t) {
+    const av = avatarFor(t);
+    const avatar = $('shAvatar');
+    avatar.textContent = av.initials;
+    avatar.style.setProperty('--av', av.color);
+    $('rmodalName').textContent = t.name;
+    $('rmodalEmail').textContent = t.email;
+    $('shMail').href = 'mailto:' + encodeURIComponent(t.email).replace(/%40/g, '@');
+
+    const pills = $('shPills');
+    pills.innerHTML = `<span class="ad-status is-${escapeHtml(t.status)}">${escapeHtml(STATUS_LABEL[t.status] || t.status)}</span>`;
+    if (t.payMethod && t.payMethod !== 'none') pills.insertAdjacentHTML('beforeend', `<span class="ad-chip is-${escapeHtml(t.payMethod)}">${icon(METHOD_ICON[t.payMethod] || 'i-wallet')}${escapeHtml(METHOD_LABEL[t.payMethod] || t.payMethod)}</span>`);
+    pills.insertAdjacentHTML('beforeend', `<span class="sh-ref">Registration #${escapeHtml(t.id)}</span>`);
+
+    const facts = $('shFacts');
+    facts.textContent = '';
+    facts.appendChild(fact('i-ticket', 'Pass', PASS_LABEL[t.pass] || t.pass));
+    facts.appendChild(fact(t.persona === 'group' ? 'i-users' : 'i-user', 'Registered as', PERSONA_LABEL[t.persona] || t.persona));
+    if (t.pass !== 'sponsor') facts.appendChild(fact('i-cash', t.status === 'confirmed' ? 'Amount paid' : 'Amount due', money(t.amountPkr)));
+    if (t.persona === 'group') facts.appendChild(fact('i-users', 'People', String(t.attendeeCount)));
+    if (t.persona === 'sponsor' && t.sponsorTier) facts.appendChild(fact('i-star', 'Tier of interest', t.sponsorTier));
+    facts.appendChild(fact('i-calendar', 'Submitted', `${fmtDate(t.submittedAt)} (${relTime(t.submittedAt)})`, true));
+    if (t.confirmedAt) facts.appendChild(fact('i-check', 'Confirmed', fmtDate(t.confirmedAt), true));
+    if (t.status === 'confirmed') facts.appendChild(fact('i-door', 'At the gate', `${t.admittedCount || 0} of ${t.attendeeCount} have entered`, true));
+    if (t.hearAbout) facts.appendChild(fact('i-info', 'Heard about Accord from', t.hearAbout, true));
+
+    const names = groupList(t);
+    const groupBox = $('shGroup');
+    groupBox.hidden = t.persona !== 'group';
+    if (t.persona === 'group') {
+      $('shGroupTitle').textContent = `Group of ${t.attendeeCount}`;
+      const ol = $('shPeople');
+      ol.textContent = '';
+      const shown = names.slice(0, t.attendeeCount);
+      shown.forEach((n) => { const li = document.createElement('li'); li.textContent = n; ol.appendChild(li); });
+      const note = $('shGroupNote');
+      const missing = t.attendeeCount - shown.length;
+      note.hidden = missing <= 0;
+      if (missing > 0) note.textContent = `${missing} ${missing === 1 ? 'seat has' : 'seats have'} no name yet. They will be ticketed as "Guest" until named.`;
+    }
+  }
+
+  async function openDetails(id) {
     const t = allTickets.find((x) => x.id === id);
     if (!t) return;
     modalTicket = t;
     modalReturnFocus = document.activeElement;
-    document.getElementById('rmodalName').textContent = t.name;
-    document.getElementById('rmodalEmail').textContent = t.email;
-    const amt = document.getElementById('rmodalAmount');
-    amt.textContent = '';
-    amt.append(`${PASS_LABEL[t.pass] || t.pass}${t.persona === 'group' ? `, group of ${t.attendeeCount}` : ''}. Should be `);
-    const strong = document.createElement('strong');
-    strong.textContent = money(t.amountPkr);
-    amt.append(strong);
+    fillSheet(t);
     rConfirm.hidden = t.status !== 'pending';
-    rBody.textContent = 'Loading receipt…';
-    document.getElementById('rmodalHistory').textContent = '';
+    rConfirm.disabled = false;
+    $('rmodalHistory').textContent = '';
+    rBody.textContent = t.pass === 'sponsor' ? 'Sponsors do not pay through the site, so there is no receipt.' : 'Loading receipt…';
     modal.hidden = false;
-    document.getElementById('rmodalClose').focus();
+    modal.querySelector('.rmodal-card').scrollTop = 0;
+    $('rmodalClose').focus({ preventScroll: true });
     if (t.receiptCount) loadHistory(t);
-    if (!t.hasReceipt) { rBody.textContent = 'No current receipt (cash). See earlier receipts below.'; return; }
+    if (t.pass === 'sponsor') return;
+    if (!t.hasReceipt) { rBody.textContent = t.payMethod === 'cash' ? 'Paid in cash: there is no receipt. Confirm once the cash is in your hands.' : 'No current receipt. See earlier receipts below.'; return; }
     try {
       const data = await adminPost('/admin/ticket-receipt', { id });
       if (modalTicket !== t) return;
       const img = document.createElement('img');
-      img.alt = `Payment receipt from ${t.name}`;
+      img.alt = `Payment receipt from ${t.name}. Tap to enlarge.`;
       img.src = data.receipt;
+      img.addEventListener('click', () => img.classList.toggle('is-open'));
       rBody.textContent = '';
       rBody.appendChild(img);
     } catch (err) {
@@ -809,7 +1207,7 @@
   }
   // Receipts this person replaced while pending: kept so nothing is silently lost.
   async function loadHistory(t) {
-    const box = document.getElementById('rmodalHistory');
+    const box = $('rmodalHistory');
     try {
       const data = await adminPost('/admin/ticket-history', { id: t.id });
       if (modalTicket !== t || !data.history.length) return;
@@ -833,26 +1231,35 @@
       box.appendChild(wrap);
     } catch { /* history is a bonus; the main receipt still shows */ }
   }
-  function closeReceipt() {
+  function closeDetails() {
     modal.hidden = true;
     modalTicket = null;
     rBody.textContent = '';
-    if (modalReturnFocus && modalReturnFocus.focus) modalReturnFocus.focus();
+    if (modalReturnFocus && modalReturnFocus.focus) modalReturnFocus.focus({ preventScroll: true });
   }
-  document.getElementById('rmodalClose').addEventListener('click', closeReceipt);
-  modal.addEventListener('click', (e) => { if (e.target === modal) closeReceipt(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) closeReceipt(); });
+  $('rmodalClose').addEventListener('click', closeDetails);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeDetails(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || modal.hidden) return;
+    const zoomed = modal.querySelector('img.is-open');
+    if (zoomed) zoomed.classList.remove('is-open'); else closeDetails();
+  });
+  $('shCopy').addEventListener('click', async () => {
+    if (!modalTicket) return;
+    try { await navigator.clipboard.writeText(modalTicket.email); showToast('Email copied.'); }
+    catch { showToast('Could not copy. Long-press the email to copy it.', true); }
+  });
 
   // An in-page "are you sure?" popup. The browser's own confirm() is silently blocked
   // in some browsers (in-app browsers, some phones), which made buttons look dead.
   function askConfirm({ title, text, okLabel }) {
     return new Promise((resolve) => {
-      const m = document.getElementById('confirmModal');
-      const ok = document.getElementById('cmOk');
-      const cancel = document.getElementById('cmCancel');
+      const m = $('confirmModal');
+      const ok = $('cmOk');
+      const cancel = $('cmCancel');
       const returnTo = document.activeElement;
-      document.getElementById('cmTitle').textContent = title;
-      document.getElementById('cmText').textContent = text;
+      $('cmTitle').textContent = title;
+      $('cmText').textContent = text;
       ok.textContent = okLabel || 'Yes, confirm';
       m.hidden = false;
       cancel.focus();
@@ -882,9 +1289,7 @@
     if (!t || t.status !== 'pending') return;
     const ok = await askConfirm({
       title: `Confirm the payment from ${t.name}?`,
-      text: `Amount: ${money(t.amountPkr)}
-
-This marks it as paid, creates ${t.persona === 'group' ? t.attendeeCount + ' tickets' : 'their ticket'} and emails them the confirmation with the ticket links. It can't be undone from here.`,
+      text: `Amount: ${money(t.amountPkr)}\n\nThis marks it as paid, creates ${t.persona === 'group' ? t.attendeeCount + ' tickets' : 'their ticket'} and emails them the confirmation with the ticket links. It can't be undone from here.`,
       okLabel: 'Yes, payment confirmed',
     });
     if (!ok) return;
@@ -895,8 +1300,8 @@ This marks it as paid, creates ${t.persona === 'group' ? t.attendeeCount + ' tic
       t.confirmedAt = new Date().toISOString();
       showToast(data.emailSent === false
         ? `Confirmed ${t.name}, but the email could not be sent. Please email them yourself.`
-        : `Confirmed and moved to the Confirmed list. ${t.name} has been emailed.`, data.emailSent === false);
-      if (!modal.hidden) closeReceipt();
+        : `Confirmed. ${t.name} has been emailed their ticket${t.persona === 'group' ? 's' : ''}.`, data.emailSent === false);
+      if (!modal.hidden) closeDetails();
       applyFilter();
     } catch (err) {
       if (button) button.disabled = false;
@@ -904,23 +1309,53 @@ This marks it as paid, creates ${t.persona === 'group' ? t.attendeeCount + ' tic
     }
   }
   rConfirm.addEventListener('click', () => { if (modalTicket) confirmTicket(modalTicket.id, rConfirm); });
-  ticketsBody.addEventListener('click', (e) => {
-    const view = e.target.closest('[data-view]');
-    if (view) { openReceipt(Number(view.dataset.view)); return; }
+  ticketsList.addEventListener('click', (e) => {
     const conf = e.target.closest('[data-confirm]');
-    if (conf) confirmTicket(Number(conf.dataset.confirm), conf);
+    if (conf) { confirmTicket(Number(conf.dataset.confirm), conf); return; }
+    const open = e.target.closest('[data-open]');
+    if (open) openDetails(Number(open.dataset.open));
   });
 
+  // ---------- load, refresh, sign in / out ----------
   function showLog(all) {
     allRegistrations = all.registrations;
     allTickets = all.tickets;
     ticketsError = all.ticketsError;
+    loadedAt = new Date();
     loadingView.hidden = true;
     loginView.hidden = true;
     logView.hidden = false;
-    adminSearch.value = '';
-    selectAdminTab('tickets');
+    $('headActions').hidden = false;
+    $('adminSearch').value = query;
+    selectAdminTab(currentTab);
   }
+  async function refresh(quiet) {
+    const btn = $('refreshBtn');
+    if (btn.classList.contains('is-spinning')) return;
+    btn.classList.add('is-spinning');
+    try {
+      const all = await loadAll();
+      allRegistrations = all.registrations;
+      allTickets = all.tickets;
+      ticketsError = all.ticketsError;
+      loadedAt = new Date();
+      applyFilter();
+      renderLegacy();
+      if (!quiet) showToast('Up to date.');
+    } catch (err) {
+      if (!quiet) showToast('Could not refresh. Check your connection.', true);
+    } finally {
+      btn.classList.remove('is-spinning');
+    }
+  }
+  $('refreshBtn').addEventListener('click', () => refresh(false));
+  // pick up new sign-ups without a manual reload, but never while you are reading a receipt or typing
+  setInterval(() => {
+    if (document.hidden || logView.hidden || !modal.hidden || document.activeElement === $('adminSearch')) return;
+    refresh(true);
+  }, 90 * 1000);
+  // keep the "2 min ago" labels honest
+  setInterval(() => { if (!document.hidden && !logView.hidden && currentTab === 'tickets' && modal.hidden) renderTickets(); }, 60 * 1000);
 
   // Loading view stays up until we know which way this goes, so an
   // already-signed-in exec never sees the password form flash by first.
@@ -928,7 +1363,7 @@ This marks it as paid, creates ${t.persona === 'group' ? t.attendeeCount + ' tic
 
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const password = document.getElementById('adminPassword').value;
+    const password = $('adminPassword').value;
     setNote('Checking…');
     loginBtn.disabled = true;
     fetch(`${WORKER_URL}/admin/login`, {
@@ -950,7 +1385,7 @@ This marks it as paid, creates ${t.persona === 'group' ? t.attendeeCount + ' tic
       .finally(() => { loginBtn.disabled = false; });
   });
 
-  document.getElementById('logoutBtn').addEventListener('click', () => {
+  $('logoutBtn').addEventListener('click', () => {
     fetch(`${WORKER_URL}/admin/logout`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -959,7 +1394,7 @@ This marks it as paid, creates ${t.persona === 'group' ? t.attendeeCount + ' tic
       clearToken();
       allRegistrations = [];
       allTickets = [];
-      document.getElementById('adminPassword').value = '';
+      $('adminPassword').value = '';
       setNote('');
       showLogin();
     });
