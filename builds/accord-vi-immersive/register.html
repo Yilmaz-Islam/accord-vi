@@ -377,6 +377,9 @@
   .payment-total strong { color: var(--color-primary); font-family: var(--font-display); font-size: 1.25rem; }
 
   .receipt-box { margin: 1.2rem 0; }
+  .receipt-warn { margin: 0 0 0.7rem; padding: 0.75rem 0.9rem; font-size: 0.86rem; line-height: 1.5; color: var(--color-text);
+    background: rgba(224, 180, 85, 0.1); border: 1px solid var(--color-primary); border-radius: 10px; }
+  .receipt-warn strong { color: var(--color-primary); }
   .receipt-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
   .receipt-help { color: var(--color-text-dim); font-size: 0.86rem; margin-bottom: 0.8rem; }
   .receipt-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
@@ -577,7 +580,8 @@
 
         <div class="receipt-box" id="receiptBox" hidden>
           <p class="receipt-title">Upload your payment receipt</p>
-          <p class="receipt-help">A clear photo or screenshot that shows the amount, the date and the transaction ID. One of our team will check it against your name and email.</p>
+          <p class="receipt-warn" role="note"><strong>Please upload a clear receipt.</strong> Blurry, cropped or hard-to-read photos can't be verified, and that delays your confirmation. Make sure the <strong>amount</strong>, the <strong>date</strong>, the <strong>transaction ID</strong> and the <strong>sender's name or number</strong> are all visible.</p>
+          <p class="receipt-help">One of our team will check it against your name and email.</p>
           <input type="file" id="receiptFile" accept="image/*" class="receipt-input">
           <label for="receiptFile" class="receipt-drop" id="receiptDrop">
             <span class="receipt-placeholder" id="receiptPlaceholder">

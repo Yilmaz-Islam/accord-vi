@@ -128,6 +128,14 @@
   .acct-ticket-card dd { margin: 0; text-align: right; font-weight: 600; }
   .acct-ticket-card p { color: var(--color-text-dim); font-size: 0.86rem; margin: 0 0 0.9rem; }
 
+  .acct-tickets { display: grid; gap: 0.9rem; margin-top: 1rem; }
+  .acct-tk { display: flex; gap: 1rem; align-items: center; padding: 0.9rem; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-sm); }
+  .acct-tk-qr { flex: none; width: 5.6rem; height: 5.6rem; padding: 0.35rem; background: #fff; border-radius: 8px; }
+  .acct-tk-qr svg { display: block; width: 100%; height: 100%; }
+  .acct-tk b { display: block; font-family: var(--font-display); font-size: 1rem; word-break: break-word; }
+  .acct-tk small { display: block; color: var(--color-text-dim); font-size: 0.8rem; margin: 0.15rem 0 0.45rem; }
+  .acct-tk a { color: var(--color-primary); font-size: 0.85rem; }
+  .acct-tk.is-used { opacity: 0.6; }
   .acct-night {
     display: flex;
     align-items: flex-start;
@@ -337,6 +345,7 @@
       <div class="acct-ticket" id="ticketBox" aria-live="polite">
         <h3 class="acct-label" style="margin-bottom:0.7rem;">Your registration</h3>
         <div id="ticketBody"></div>
+        <div id="myTickets" class="acct-tickets" aria-live="polite"></div>
       </div>
 
       <div class="acct-section">
@@ -537,10 +546,57 @@
     }
     card.appendChild(note);
 
+    if (ticket.status === 'confirmed') renderMyTickets();
+    else $('myTickets').textContent = '';
+
     if (ticket.status === 'pending') {
       card.appendChild(linkButton('Update my payment or receipt', 'btn btn-ghost btn-block'));
     }
     box.appendChild(card);
+  }
+
+  // Loads the QR library only when there is something to draw.
+  let qrLibReady = null;
+  function loadQrLib() {
+    if (window.qrcode) return Promise.resolve();
+    if (!qrLibReady) {
+      qrLibReady = new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'js/vendor/qrcode.js';
+        s.onload = resolve;
+        s.onerror = () => reject(new Error('qr lib'));
+        document.head.appendChild(s);
+      });
+    }
+    return qrLibReady;
+  }
+  async function renderMyTickets() {
+    const box = $('myTickets');
+    box.textContent = '';
+    const r = await api('/account/tickets', {}, true);
+    if (!r.ok || !r.tickets || !r.tickets.length) return;
+    try { await loadQrLib(); } catch { return; }
+    r.tickets.forEach((tk) => {
+      const row = document.createElement('div');
+      row.className = 'acct-tk' + (tk.used ? ' is-used' : '');
+      const q = document.createElement('div');
+      q.className = 'acct-tk-qr';
+      const qr = window.qrcode(0, 'M');
+      qr.addData(tk.code);
+      qr.make();
+      q.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+      const info = document.createElement('div');
+      const name = document.createElement('b');
+      name.textContent = tk.holderName;
+      const sub = document.createElement('small');
+      sub.textContent = (tk.of > 1 ? 'Ticket ' + tk.seq + ' of ' + tk.of : 'Admit one') + (tk.used ? ' · already used' : '');
+      const open = document.createElement('a');
+      open.href = 'ticket.html#' + tk.code;
+      open.textContent = 'Open full-screen ticket';
+      info.append(name, sub, open);
+      row.append(q, info);
+      box.appendChild(row);
+    });
   }
 
   function linkButton(label, cls) {

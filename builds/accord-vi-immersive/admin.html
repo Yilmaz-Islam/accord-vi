@@ -303,6 +303,11 @@
   .rmodal-close:hover { color: var(--color-text); }
   .rmodal-body { display: grid; place-items: center; min-height: 8rem; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 10px; padding: 0.6rem; color: var(--color-text-dim); }
   .rmodal-body img { max-width: 100%; max-height: 62vh; object-fit: contain; border-radius: 6px; }
+  .rm-hist { margin-top: 1rem; }
+  .rm-hist h3 { font-family: var(--font-display); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-faint); margin: 0 0 0.6rem; }
+  .rm-hist-item { display: flex; gap: 0.8rem; align-items: center; padding: 0.6rem; margin-bottom: 0.5rem; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 10px; font-size: 0.82rem; color: var(--color-text-dim); }
+  .rm-hist-item img { width: 4.5rem; height: 4.5rem; object-fit: cover; border-radius: 6px; cursor: zoom-in; flex: none; }
+  .rm-hist-item img.is-open { position: fixed; inset: 5vh 5vw; width: 90vw; height: 90vh; object-fit: contain; z-index: 10001; background: #000; cursor: zoom-out; }
   .rmodal-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.8rem; margin-top: 1rem; }
   .rmodal-amount { color: var(--color-text-dim); font-size: 0.88rem; }
   .rmodal-amount strong { color: var(--color-primary); font-family: var(--font-display); font-size: 1.1rem; }
@@ -452,6 +457,7 @@
       <button type="button" class="rmodal-close" id="rmodalClose" aria-label="Close">&times;</button>
     </div>
     <div class="rmodal-body" id="rmodalBody"></div>
+    <div id="rmodalHistory"></div>
     <div class="rmodal-actions">
       <p class="rmodal-amount" id="rmodalAmount"></p>
       <button type="button" class="admin-btn is-confirm" id="rmodalConfirm" hidden>Payment confirmed</button>
@@ -670,6 +676,13 @@
     pendingBadge.hidden = pending === 0;
     pendingBadge.textContent = String(pending);
 
+    const CHIP_LABEL = { all: 'All', pending: 'Pending payment', confirmed: 'Confirmed', interest: 'Sponsors' };
+    document.querySelectorAll('.admin-filter').forEach((btn) => {
+      const s = btn.dataset.status;
+      const n = s === 'all' ? allTickets.length : allTickets.filter((x) => x.status === s).length;
+      btn.textContent = `${CHIP_LABEL[s]} (${n})`;
+    });
+
     const list = visibleTickets(query);
     adminCount.innerHTML = `<strong>${list.length}</strong> of ${allTickets.length} ticket${allTickets.length === 1 ? '' : 's'}`;
     ticketsBody.innerHTML = '';
@@ -695,8 +708,8 @@
       const when = t.submittedAt ? new Date(t.submittedAt).toLocaleString() : '—';
       const people = t.persona === 'group' ? `<small>Group of ${escapeHtml(t.attendeeCount)}</small>` : '';
       const extra = t.persona === 'sponsor' && t.sponsorTier ? `<small>Tier: ${escapeHtml(t.sponsorTier)}</small>` : '';
-      const receiptCell = t.hasReceipt
-        ? `<button type="button" class="admin-btn" data-view="${t.id}">View receipt</button>`
+      const receiptCell = (t.hasReceipt || t.receiptCount)
+        ? `<button type="button" class="admin-btn" data-view="${t.id}">${t.hasReceipt ? 'View receipt' : 'View history'}</button>${t.receiptCount ? `<small>${t.receiptCount} earlier</small>` : ''}`
         : '<span style="color:var(--color-text-faint)">—</span>';
       let action = '';
       if (t.status === 'pending') action = `<button type="button" class="admin-btn is-confirm" data-confirm="${t.id}">Payment confirmed</button>`;
@@ -763,8 +776,11 @@
     amt.append(strong);
     rConfirm.hidden = t.status !== 'pending';
     rBody.textContent = 'Loading receipt…';
+    document.getElementById('rmodalHistory').textContent = '';
     modal.hidden = false;
     document.getElementById('rmodalClose').focus();
+    if (t.receiptCount) loadHistory(t);
+    if (!t.hasReceipt) { rBody.textContent = 'No current receipt (cash). See earlier receipts below.'; return; }
     try {
       const data = await adminPost('/admin/ticket-receipt', { id });
       if (modalTicket !== t) return;
@@ -776,6 +792,32 @@
     } catch (err) {
       rBody.textContent = err.message || 'Could not load the receipt.';
     }
+  }
+  // Receipts this person replaced while pending: kept so nothing is silently lost.
+  async function loadHistory(t) {
+    const box = document.getElementById('rmodalHistory');
+    try {
+      const data = await adminPost('/admin/ticket-history', { id: t.id });
+      if (modalTicket !== t || !data.history.length) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'rm-hist';
+      const h = document.createElement('h3');
+      h.textContent = `Earlier receipts (${data.history.length}), replaced by the one above`;
+      wrap.appendChild(h);
+      data.history.forEach((x) => {
+        const row = document.createElement('div');
+        row.className = 'rm-hist-item';
+        const img = document.createElement('img');
+        img.src = x.receipt;
+        img.alt = 'Earlier receipt from ' + t.name;
+        img.addEventListener('click', () => img.classList.toggle('is-open'));
+        const txt = document.createElement('div');
+        txt.textContent = `${METHOD_LABEL[x.payMethod] || x.payMethod}, ${money(x.amountPkr)}. Submitted ${new Date(x.submittedAt).toLocaleString()}, replaced ${new Date(x.replacedAt).toLocaleString()}.`;
+        row.append(img, txt);
+        wrap.appendChild(row);
+      });
+      box.appendChild(wrap);
+    } catch { /* history is a bonus; the main receipt still shows */ }
   }
   function closeReceipt() {
     modal.hidden = true;
@@ -800,7 +842,7 @@
       t.confirmedAt = new Date().toISOString();
       showToast(data.emailSent === false
         ? `Confirmed ${t.name}, but the email could not be sent. Please email them yourself.`
-        : `Confirmed. ${t.name} has been emailed.`, data.emailSent === false);
+        : `Confirmed and moved to the Confirmed list. ${t.name} has been emailed.`, data.emailSent === false);
       if (!modal.hidden) closeReceipt();
       applyFilter();
     } catch (err) {

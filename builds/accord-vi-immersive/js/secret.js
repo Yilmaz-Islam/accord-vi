@@ -36,6 +36,7 @@
       '.secret-panel__text{color:#9a9aa8;font-size:.92rem;margin:0 0 1.3rem}' +
       '.secret-panel__link{display:block;text-align:center;text-decoration:none;font-weight:600;color:#0e0f12;' +
       'background:linear-gradient(135deg,#e0b455,#b8873a);border-radius:999px;padding:.8rem 1rem}' +
+      '.secret-panel__link--ghost{margin-top:.7rem;background:none;color:#e0b455;border:1px solid #e0b455}' +
       '.secret-panel__link:hover{box-shadow:0 8px 24px rgba(224,180,85,.35)}' +
       '.secret-panel__link:focus-visible,.secret-panel__close:focus-visible{outline:2px solid #fff;outline-offset:3px}' +
       '.secret-panel__close{position:absolute;top:.4rem;right:.55rem;appearance:none;border:0;background:none;' +
@@ -78,8 +79,11 @@
     box.appendChild(close);
     box.appendChild(make('p', 'secret-panel__eyebrow', 'Hidden'));
     box.appendChild(make('p', 'secret-panel__title', 'Executive access'));
-    box.appendChild(make('p', 'secret-panel__text', 'Registrations and payment checks. You will still need the admin password.'));
+    box.appendChild(make('p', 'secret-panel__text', 'Registrations and payment checks, or the gate scanner for door staff. Each needs its own password.'));
     box.appendChild(link);
+    var gate = make('a', 'secret-panel__link secret-panel__link--ghost', 'Open the gate scanner \u2192');
+    gate.href = 'gate.html';
+    box.appendChild(gate);
     overlay.appendChild(box);
     overlay.addEventListener('click', function (e) { if (e.target === overlay) hide(); });
     document.body.appendChild(overlay);

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accord Ticket</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .tk-wrap { max-width: 24rem; margin: 0 auto; }
+  .tk-card {
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 20px;
+    overflow: hidden; box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4); animation: tk-in 0.35s ease;
+  }
+  @keyframes tk-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .tk-head {
+    padding: 1.1rem 1.4rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark)); color: var(--color-bg);
+  }
+  .tk-head b { font-family: var(--font-display); font-size: 1.15rem; letter-spacing: 0.02em; }
+  .tk-head span { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .tk-body { padding: 1.5rem 1.4rem 1.2rem; text-align: center; }
+  .tk-qr {
+    display: block; width: min(100%, 17rem); aspect-ratio: 1; margin: 0 auto 1.2rem; padding: 0.7rem;
+    background: #fff; border-radius: 14px;
+  }
+  .tk-qr svg { display: block; width: 100%; height: 100%; }
+  .tk-name { font-family: var(--font-display); font-size: 1.55rem; font-weight: 700; line-height: 1.2; word-break: break-word; margin-bottom: 0.3rem; }
+  .tk-meta { color: var(--color-text-dim); font-size: 0.92rem; }
+  .tk-state {
+    display: inline-block; margin: 1rem 0 0; padding: 0.3rem 0.9rem; border-radius: 999px; border: 1px solid currentColor;
+    font-family: var(--font-display); font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .tk-state.is-valid { color: #5fcf8f; }
+  .tk-state.is-used { color: #e0555a; }
+  .tk-foot { padding: 1rem 1.4rem 1.3rem; border-top: 1px dashed var(--color-border); color: var(--color-text-dim); font-size: 0.84rem; line-height: 1.55; }
+  .tk-foot strong { color: var(--color-text); }
+  .tk-error { text-align: center; padding: 2rem 1rem; color: var(--color-text-dim); }
+  .tk-error h2 { font-family: var(--font-display); color: var(--color-text); margin-bottom: 0.5rem; }
+  .tk-spinner { width: 2rem; height: 2rem; margin: 2rem auto 1rem; border: 2px solid var(--color-border); border-top-color: var(--color-primary); border-radius: 50%; animation: tk-spin 0.8s linear infinite; }
+  @keyframes tk-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .tk-card, .tk-spinner { animation: none; } }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-text">Accord <span>VI</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="info.html" class="nav-link">Info</a>
+      <a href="account.html" class="nav-link">Account</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section" id="main">
+  <div class="container tk-wrap">
+    <div id="loading" class="tk-error"><div class="tk-spinner" aria-hidden="true"></div><p>Loading your ticket…</p></div>
+
+    <article id="ticket" class="tk-card" hidden aria-label="Your Accord VI ticket">
+      <div class="tk-head"><b>Accord VI</b><span id="tkSeq"></span></div>
+      <div class="tk-body">
+        <div class="tk-qr" id="tkQr" role="img" aria-label="Your ticket QR code"></div>
+        <p class="tk-name" id="tkName"></p>
+        <p class="tk-meta" id="tkPass"></p>
+        <span class="tk-state" id="tkState"></span>
+      </div>
+      <div class="tk-foot">
+        <p><strong>At the gate:</strong> staff scan this code and ask for the name above. Have your student card or ID ready.</p>
+        <p style="margin-top:0.6rem;">This ticket admits <strong>one person, once</strong>. Please don't share it. A copy won't get anyone in after the first scan.</p>
+        <p style="margin-top:0.6rem;">Tip: take a screenshot now, in case your signal is weak at the gate. Turn your screen brightness up when it's scanned.</p>
+      </div>
+    </article>
+
+    <div id="invalid" class="tk-error" hidden>
+      <h2 id="invalidTitle">This ticket link isn't valid</h2>
+      <p id="invalidText">Check that you opened the full link from your email. If it still doesn't work, sign in to your account to see your tickets.</p>
+      <p style="margin-top:1rem;"><a href="account.html" class="btn btn-primary">Go to my account</a></p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p class="footer-tag">18–19 October · Beaconhouse Cantt Campus, Multan</p>
+    <p class="footer-legal"><a href="privacy-policy.html" class="text-link">Privacy Policy</a> · <a href="terms.html" class="text-link">Terms</a></p>
+  </div>
+</footer>
+
+<script src="js/vendor/qrcode.js"></script>
+<script>
+(() => {
+  'use strict';
+  const IS_LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname);
+  const API = IS_LOCAL ? 'http://127.0.0.1:8787' : 'https://accord-vi-verify.accordbccmvi.workers.dev';
+  const PASS = { concert: 'Live Concert (18 October)', both: 'Both nights (18 + 19 October)' };
+  const $ = (id) => document.getElementById(id);
+
+  // The code lives after the # in the link, so it is never sent to any server by loading the page.
+  const code = decodeURIComponent(location.hash.slice(1) || '').trim();
+
+  function fail(title, text) {
+    $('loading').hidden = true;
+    $('ticket').hidden = true;
+    $('invalid').hidden = false;
+    if (title) $('invalidTitle').textContent = title;
+    if (text) $('invalidText').textContent = text;
+  }
+
+  async function load() {
+    if (!/^A6\.[A-Za-z0-9_-]{16}\.[A-Za-z0-9_-]{22}$/.test(code)) { fail(); return; }
+    let res;
+    try {
+      res = await fetch(API + '/ticket/info', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code }) });
+    } catch {
+      fail("Couldn't load your ticket", 'Check your connection and try again. If you took a screenshot of your ticket earlier, you can show that.');
+      return;
+    }
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) { fail(); return; }
+    const t = data.ticket;
+
+    const qr = qrcode(0, 'M');
+    qr.addData(code);
+    qr.make();
+    $('tkQr').innerHTML = qr.createSvgTag({ cellSize: 6, margin: 0, scalable: true });
+    $('tkName').textContent = t.holderName;
+    $('tkPass').textContent = PASS[t.pass] || t.pass;
+    $('tkSeq').textContent = t.of > 1 ? `Ticket ${t.seq} of ${t.of}` : 'Admit one';
+    const state = $('tkState');
+    state.textContent = t.used ? 'Already used' : 'Valid';
+    state.className = 'tk-state ' + (t.used ? 'is-used' : 'is-valid');
+    document.title = `Accord Ticket: ${t.holderName}`;
+    $('loading').hidden = true;
+    $('ticket').hidden = false;
+  }
+  load();
+})();
+</script>
+</body>
+</html>
