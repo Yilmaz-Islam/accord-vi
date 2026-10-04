@@ -1024,6 +1024,54 @@ body { font-family: var(--sc-font-text); }
   outline: 2px solid var(--sc-accent);
   outline-offset: 4px;
 }
+/* Home-page close: the two links are real buttons, built from the hero CTA's look
+   (Register filled, Sponsor outlined). The 404 page shares .av-close__links and keeps plain links. */
+.av-close__links--buttons {
+  flex-direction: row;
+  align-items: stretch;
+  width: min(100%, 32rem);
+  gap: var(--sc-3);
+}
+.av-close__links--buttons a {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  font-family: var(--sc-font-display);
+  font-weight: 700;
+  font-size: var(--sc-t-sm);
+  letter-spacing: var(--sc-track-wide);
+  line-height: 1.25;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  text-wrap: balance; /* two short lines when the label has to wrap on a narrow screen */
+  border: 2px solid var(--sc-accent);
+  border-radius: var(--sc-r-pill);
+  padding: var(--sc-4) var(--sc-5);
+  transition: transform 160ms var(--sc-ease-out), box-shadow 160ms var(--sc-ease-out), background 160ms var(--sc-ease-out);
+}
+.av-close__links--buttons a:first-child { color: var(--sc-canvas); background: var(--sc-accent); }
+.av-close__links--buttons a:first-child:hover {
+  color: var(--sc-canvas);
+  background: color-mix(in oklab, var(--sc-accent) 88%, white);
+  transform: translateY(-1px);
+  box-shadow: var(--sc-e2);
+}
+.av-close__links--buttons a:last-child { color: var(--sc-ink); background: transparent; }
+.av-close__links--buttons a:last-child:hover {
+  color: var(--sc-ink);
+  background: color-mix(in oklab, var(--sc-accent) 16%, transparent);
+  transform: translateY(-1px);
+}
+@media (max-width: 480px) {
+  .av-close__links--buttons a { font-size: 0.75rem; letter-spacing: 0.06em; padding: var(--sc-3) var(--sc-3); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .av-close__links--buttons a:hover { transform: none; }
+}
 .av-close__meta {
   margin-top: var(--sc-7);
   color: var(--sc-ink-soft);
@@ -1038,6 +1086,10 @@ body { font-family: var(--sc-font-text); }
   color: var(--sc-ink-soft);
   text-decoration: underline;
   text-underline-offset: 3px;
+  /* 44px touch area for a thumb; the negative margin cancels the added space so the row does not move */
+  display: inline-block;
+  padding: 0.85rem 0.3rem;
+  margin: -0.85rem -0.3rem;
 }
 .av-close__legal a:hover { color: var(--sc-ink); }
 .av-close__legal a:focus-visible {

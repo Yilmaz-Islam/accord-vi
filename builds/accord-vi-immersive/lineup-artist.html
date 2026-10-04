@@ -279,7 +279,9 @@
     color: var(--ink-soft);
     text-decoration: none;
     font-size: 0.85rem;
-    margin-bottom: 2rem;
+    /* padding makes a 44px touch area; the negative margins cancel it so nothing moves */
+    padding: 0.85rem 0.6rem;
+    margin: -0.85rem -0.6rem calc(2rem - 0.85rem);
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
@@ -562,6 +564,9 @@
   .site-header .logo-mark { color: var(--accent); }
   .site-header .nav-cta { background: linear-gradient(135deg, var(--accent), var(--accent-dim)); }
 </style>
+  <meta name="theme-color" content="#0e0f12">
+  <meta name="color-scheme" content="dark">
+  <link rel="stylesheet" href="css/apple.css">
 </head>
 <body>
 

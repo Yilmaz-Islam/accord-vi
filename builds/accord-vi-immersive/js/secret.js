@@ -37,12 +37,17 @@
       '.secret-panel__link{display:block;text-align:center;text-decoration:none;font-weight:600;color:#0e0f12;' +
       'background:linear-gradient(135deg,#e0b455,#b8873a);border-radius:999px;padding:.8rem 1rem}' +
       '.secret-panel__link--ghost{margin-top:.7rem;background:none;color:#e0b455;border:1px solid #e0b455}' +
+      '.secret-panel__link{transition:transform .14s cubic-bezier(.22,1,.36,1),box-shadow .14s ease}' +
       '.secret-panel__link:hover{box-shadow:0 8px 24px rgba(224,180,85,.35)}' +
+      '.secret-panel__link:active{transform:scale(.97)}' +
       '.secret-panel__link:focus-visible,.secret-panel__close:focus-visible{outline:2px solid #fff;outline-offset:3px}' +
-      '.secret-panel__close{position:absolute;top:.4rem;right:.55rem;appearance:none;border:0;background:none;' +
-      'color:#9a9aa8;font-size:1.5rem;line-height:1;cursor:pointer;padding:.25rem .45rem}' +
+      /* padding gives the close button a 44px touch area; top/right are trimmed so the x stays where it was */
+      '.secret-panel__close{position:absolute;top:0;right:.1rem;appearance:none;border:0;background:none;' +
+      'color:#9a9aa8;font-size:1.5rem;line-height:1;cursor:pointer;padding:.62rem .85rem;touch-action:manipulation}' +
       '.secret-panel__close:hover{color:#efece6}' +
-      '@media (prefers-reduced-motion:reduce){.secret-overlay,.secret-panel{transition:none}}';
+      '.secret-panel__close:active{opacity:.6}' +
+      '@media (prefers-reduced-transparency:reduce){.secret-overlay{background:rgba(8,9,12,.97);backdrop-filter:none}}' +
+      '@media (prefers-reduced-motion:reduce){.secret-overlay,.secret-panel{transition:none}.secret-panel__link:active{transform:none;opacity:.8}}';
     document.head.appendChild(s);
   }
 

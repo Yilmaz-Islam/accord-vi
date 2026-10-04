@@ -134,6 +134,20 @@
   .wizard-input:focus { outline: none; border-color: var(--color-primary); }
   .wizard-input-code { letter-spacing: 0.3em; text-align: center; font-size: 1.3rem; }
 
+  /* group registration: one card per person, first and last name side by side */
+  .wizard-people { display: grid; gap: 0.9rem; margin-bottom: 1.25rem; }
+  .wizard-person {
+    margin: 0; min-width: 0; padding: 0.8rem 0.9rem 0.9rem;
+    border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface);
+  }
+  .wizard-person legend {
+    padding: 0 0.4rem; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-dim);
+  }
+  .wizard-person-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .wizard-person .wizard-input { margin-bottom: 0; min-width: 0; font-size: 1rem; padding: 0.75rem 0.85rem; background: var(--color-bg); }
+  .wizard-person.is-missing { border-color: #e0555a; }
+  @media (max-width: 340px) { .wizard-person-fields { grid-template-columns: 1fr; } }
+
   .wizard-note {
     margin-top: 0.9rem;
     font-size: 0.85rem;
@@ -303,7 +317,9 @@
 
   .wizard-back {
     display: block;
-    margin: 1.5rem auto 0;
+    /* padding makes a 44px touch area (it was 15px tall); the smaller margin keeps the text where it was */
+    margin: 0.55rem auto 0;
+    padding: 0.95rem 1.4rem;
     background: none;
     border: none;
     color: var(--color-text-faint);
@@ -353,7 +369,7 @@
   .gate-card h2 { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 0.6rem; }
   .gate-card p { color: var(--color-text-dim); font-size: 0.95rem; margin-bottom: 1.3rem; }
   .gate-card .btn { margin-bottom: 0.65rem; }
-  .gate-close { appearance: none; border: 0; background: none; color: var(--color-text-dim); font: inherit; font-size: 0.88rem; cursor: pointer; margin-top: 0.3rem; text-decoration: underline; text-underline-offset: 3px; }
+  .gate-close { appearance: none; border: 0; background: none; color: var(--color-text-dim); font: inherit; font-size: 0.88rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; padding: 0.8rem 1rem; margin: -0.5rem 0 -0.8rem; }
   .gate-close:hover { color: var(--color-text); }
   @keyframes gate-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
 
@@ -396,6 +412,9 @@
   .receipt-placeholder[hidden], .receipt-preview[hidden], .receipt-clear[hidden], .receipt-box[hidden] { display: none; }
   .receipt-clear { appearance: none; border: 0; background: none; margin-top: 0.6rem; color: var(--color-primary); font: inherit; font-size: 0.85rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 </style>
+  <meta name="theme-color" content="#0e0f12">
+  <meta name="color-scheme" content="dark">
+  <link rel="stylesheet" href="css/apple.css">
 </head>
 <body>
 
@@ -532,9 +551,10 @@
 
       <div class="wizard-step" data-step="groupNames">
         <h2 class="wizard-question">Who's in your group?</h2>
-        <p class="wizard-subnote">List their names, one per line. Doesn't need to be exact yet.</p>
-        <textarea class="wizard-input" id="wizGroupNames" placeholder="Ali Raza&#10;Sana Tariq&#10;..."></textarea>
-        <button type="button" class="btn btn-primary btn-block wizard-next">Continue</button>
+        <p class="wizard-subnote">One card per person, with first and last name in separate boxes. Include yourself if you're attending.</p>
+        <div class="wizard-people" id="wizGroupPeople"></div>
+        <button type="button" class="btn btn-primary btn-block wizard-next" id="groupNamesNext">Continue</button>
+        <p class="wizard-note" id="groupNamesNote" role="status"></p>
       </div>
 
       <div class="wizard-step" data-step="sponsorTier">
@@ -767,6 +787,7 @@
   function render() {
     const key = sequence[index];
     steps.forEach((s) => s.classList.toggle('is-active', s.dataset.step === key));
+    if (key === 'groupNames') buildPeopleRows();
     progressBar.style.width = `${((index + 1) / sequence.length) * 100}%`;
     stepLabel.textContent = `Question ${index + 1} of ${sequence.length}`;
     backBtn.hidden = index === 0;
@@ -820,6 +841,76 @@
   document.getElementById('wizStepperMinus').addEventListener('click', () => setGroupCount(groupCount - 1));
   document.getElementById('wizStepperPlus').addEventListener('click', () => setGroupCount(groupCount + 1));
 
+  // Step: group names, one card per person with separate first and last name boxes.
+  // The server takes one "First Last" per line, splits the list on newlines AND commas, and keeps
+  // at most 1000 characters, so commas are stripped here and the total length is checked.
+  const groupPeopleBox = document.getElementById('wizGroupPeople');
+  const groupNamesNext = document.getElementById('groupNamesNext');
+  const groupNamesNote = document.getElementById('groupNamesNote');
+  const MAX_NAME_LIST_CHARS = 1000;
+  let groupPeople = [];
+  const cleanNamePart = (s) => s.replace(/[,\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
+
+  function buildPeopleRows() {
+    while (groupPeople.length < groupCount) groupPeople.push({ first: '', last: '' });
+    groupPeople.length = groupCount; // keeps what was typed when the group size changes
+    groupPeopleBox.textContent = '';
+    groupPeople.forEach((person, i) => {
+      const card = document.createElement('fieldset');
+      card.className = 'wizard-person';
+      const legend = document.createElement('legend');
+      legend.textContent = `Person ${i + 1}`;
+      const fields = document.createElement('div');
+      fields.className = 'wizard-person-fields';
+      [['first', 'First name'], ['last', 'Last name']].forEach(([key, label]) => {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'wizard-input';
+        input.placeholder = label;
+        input.setAttribute('aria-label', `Person ${i + 1}, ${label.toLowerCase()}`);
+        input.maxLength = 30;
+        input.autocomplete = 'off';
+        input.autocapitalize = 'words';
+        input.spellcheck = false;
+        input.value = person[key];
+        input.addEventListener('input', () => {
+          person[key] = input.value;
+          card.classList.remove('is-missing');
+          setNote(groupNamesNote, '');
+        });
+        fields.appendChild(input);
+      });
+      card.append(legend, fields);
+      groupPeopleBox.appendChild(card);
+    });
+  }
+
+  // What the server receives: "First Last", one person per line (empty unless this is a group)
+  function groupNamesValue() {
+    if (wizPersonaField.value !== 'group') return '';
+    return groupPeople.map((p) => `${cleanNamePart(p.first)} ${cleanNamePart(p.last)}`.trim()).join('\n');
+  }
+
+  groupNamesNext.addEventListener('click', () => {
+    for (let i = 0; i < groupPeople.length; i += 1) {
+      const hasFirst = !!cleanNamePart(groupPeople[i].first);
+      const hasLast = !!cleanNamePart(groupPeople[i].last);
+      if (hasFirst && hasLast) continue;
+      const card = groupPeopleBox.children[i];
+      card.classList.add('is-missing');
+      card.scrollIntoView({ block: 'center' });
+      card.querySelectorAll('input')[hasFirst ? 1 : 0].focus({ preventScroll: true });
+      setNote(groupNamesNote, `Add a first and last name for person ${i + 1}.`, 'is-error');
+      return;
+    }
+    if (groupNamesValue().length > MAX_NAME_LIST_CHARS) {
+      setNote(groupNamesNote, 'Those names add up to too many characters. Please shorten a few of them.', 'is-error');
+      return;
+    }
+    setNote(groupNamesNote, '');
+    goNext();
+  });
+
   // Step: persona
   const wizPersonaField = document.getElementById('wizPersonaField');
   const personaBtns = document.querySelectorAll('[data-step="persona"] .wizard-icon-btn');
@@ -869,7 +960,7 @@
       persona: wizPersonaField.value,
       hearAbout: wizHearAbout.value,
       attendeeCount: Number(wizAttendeeCount.value),
-      groupNames: document.getElementById('wizGroupNames').value,
+      groupNames: groupNamesValue(),
       ...extra
     };
     const r = await api('/account/ticket/submit', body);

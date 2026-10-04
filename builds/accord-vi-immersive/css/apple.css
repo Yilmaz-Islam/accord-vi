@@ -1,0 +1,166 @@
+/* ============================================
+   Accord VI: the "Apple design" pass
+   One shared, removable layer, loaded last on every page. It follows the
+   apple-design skill (WWDC "Designing Fluid Interfaces", "The Details of UI
+   Typography", "Principles of Great Design"), translated for the web.
+   Deleting this file and its <link> tags undoes all of it.
+   Layout, colour and the brand type are untouched; this only adds
+   feedback, comfort and craft.
+   ============================================ */
+
+:root {
+  color-scheme: dark;                                 /* native controls, scrollbars and autofill match the dark UI */
+  --ax-ease: cubic-bezier(0.22, 1, 0.36, 1);          /* iOS-style ease-out: fast start, soft landing */
+}
+
+html {
+  -webkit-text-size-adjust: 100%;                     /* no font inflation when a phone is turned sideways */
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;                /* light-on-dark text reads cleaner antialiased */
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;           /* the press states below replace the grey flash */
+}
+/* anchor jumps land below the fixed header instead of under it */
+:root:has(.site-header) { scroll-padding-top: 5rem; }
+
+/* ---------- 1. Touch: no double-tap delay on anything tappable ---------- */
+:where(a[href], button, input, select, textarea, label, summary,
+       [role="button"], [role="radio"], [role="tab"], [role="switch"]) {
+  touch-action: manipulation;
+}
+
+/* ---------- 2. Press feedback: instant on pointer-down, springs back on release ----------
+   `scale` is its own property, so it stacks on top of any existing transform (the flip card's
+   rotation, a hover lift) instead of replacing it. */
+:where(a[href], button, summary, [role="button"], [role="radio"], [role="tab"], [role="switch"],
+       label[for], .figure, .flip-card-3d) {
+  transition: scale 140ms var(--ax-ease), opacity 140ms ease-out;
+}
+:where(a[href], button, summary, [role="button"], [role="radio"], [role="tab"], [role="switch"],
+       label[for], .figure, .flip-card-3d):active {
+  scale: 0.97;
+}
+/* big surfaces move less than small controls */
+:where(.pass-card, .figure, .flip-card-3d, .wizard-icon-btn, .acct-night):active { scale: 0.985; }
+/* icon-only controls are small, so they press further */
+:where(.nav-toggle, .acct-swatch, .wizard-stepper-btn, .lineup-nav a):active { scale: 0.92; }
+/* text-style links dim instead of shrinking (shrinking inline text does nothing) */
+:where(a.text-link, .footer-ig, .nav-link, .back-link, .art-link, .art-textlink, .gate-close,
+       .wizard-back, .acct-link, .gt-link, .footer-legal a, .av-close__legal a, .faq-question):active {
+  scale: 1;
+  opacity: 0.6;
+}
+/* a disabled control does not react to a press (kept after the rules above so it wins) */
+:where(button:disabled, [aria-disabled="true"]):active { scale: 1; opacity: 1; }
+/* components that already animate `transform` keep doing so (a second scale would double up) */
+.btn:active, .av-hero__cta:active, .av-close__links--buttons a:active { transform: scale(0.97); scale: 1; }
+/* components that set their own `transition` need `scale` added to it */
+.pass-card { transition: border-color 0.2s ease, box-shadow 0.2s ease, scale 140ms var(--ax-ease); }
+.acct-tab { transition: background 0.2s, color 0.2s, scale 140ms var(--ax-ease); }
+.acct-night { transition: border-color 0.2s ease, scale 140ms var(--ax-ease); }
+.av-team-card__info-toggle { transition: opacity 160ms ease-out, border-color 160ms ease-out, scale 140ms var(--ax-ease); }
+.admin-logout { transition: color 0.2s, border-color 0.2s, scale 140ms var(--ax-ease); }
+.admin-btn { transition: border-color 0.2s, background 0.2s, scale 140ms var(--ax-ease); }
+.reveal-toggle { transition: background 0.25s, color 0.25s, scale 140ms var(--ax-ease); }
+.lineup-nav a { transition: border-color 0.2s, color 0.2s, scale 140ms var(--ax-ease); }
+.art-top__back { transition: border-color 0.16s var(--ax-ease), scale 140ms var(--ax-ease); }
+.flip-card-3d { transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1), scale 140ms var(--ax-ease); }
+/* the artists page already scales .art-btn on press (artists.css), so the shared scale stays out of it;
+   .art-cta only transitions `transform`, so it presses through that */
+.art-btn:active { scale: 1; }
+.art-cta:active { transform: scale(0.97); scale: 1; }
+
+/* ---------- 2b. Hit areas: small controls keep their look but get a 44px target ----------
+   An absolutely positioned ::after takes part in hit-testing and changes no layout. Zero-specificity
+   `position` so a component that already positions itself is left alone. */
+:where(.av-team-card__info-toggle, .av-folio__link, .admin-filter, .lineup-nav a, .art-textlink,
+       a.logo, .wizard-who button, .acct-tk a) { position: relative; }
+.av-team-card__info-toggle::after, .av-folio__link::after, .admin-filter::after, .lineup-nav a::after,
+.art-textlink::after, a.logo::after, .wizard-who button::after, .acct-tk a::after {
+  content: "";
+  position: absolute;
+}
+.av-team-card__info-toggle::after { inset: -7px -4px; }
+.av-folio__link::after, .lineup-nav a::after { inset: -3px; }
+.admin-filter::after { inset: -4px -2px; } /* rows sit 6px apart, so this stops just short of overlapping */
+.art-textlink::after { inset: -9px -4px; }
+a.logo::after { inset: -8px -4px; }
+.wizard-who button::after { inset: -12px -6px; }
+.acct-tk a::after { inset: -14px -6px; }
+
+/* ---------- 3. Materials: the header's edge fades instead of ending in a hard line ----------
+   (Apple: a scroll edge effect, only where floating chrome overlaps content.) */
+.site-header { border-bottom-color: transparent; }
+.site-header::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 100%;
+  height: 26px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(18, 20, 28, 0.5), rgba(18, 20, 28, 0));
+}
+
+/* ---------- 4. Typography: display type tightens as it grows, and its leading tightens with it ----------
+   Zero specificity on purpose: anything that already sets its own size, tracking or leading
+   (the home hero, .page-title, .wizard-question) keeps it. These only catch headings that were
+   silently inheriting body leading (1.55 to 1.62), which reads loose at display sizes. */
+:where(h1, h2, h3, h4) { line-height: var(--sc-leading-tight, 1.25); text-wrap: balance; }
+:where(h1, h2) { letter-spacing: -0.02em; }
+:where(h3) { letter-spacing: -0.01em; }
+:where(p, li, dd, blockquote, figcaption) { text-wrap: pretty; }
+.page-title, .section-title { letter-spacing: -0.022em; }
+
+/* ---------- 5. Popups leave the way they arrived (symmetrical in and out, "materialise") ----------
+   Pure CSS: the overlay fades and un-blurs while its card settles back, then display flips to none.
+   Browsers without discrete display transitions simply close instantly as before. */
+.tc-overlay, .gate, .rmodal {
+  transition: opacity 220ms ease-out, backdrop-filter 220ms ease-out, display 220ms allow-discrete;
+}
+.tc-overlay[hidden], .gate[hidden], .rmodal[hidden] {
+  opacity: 0;
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
+  pointer-events: none;
+}
+@starting-style {
+  .tc-overlay, .gate, .rmodal { opacity: 0; backdrop-filter: blur(0); }
+}
+.tc-card, .gate-card, .rmodal-card { transition: transform 220ms var(--ax-ease), opacity 220ms ease-out; }
+.tc-overlay[hidden] .tc-card,
+.gate[hidden] .gate-card,
+.rmodal[hidden] .rmodal-card { transform: translateY(8px) scale(0.98); opacity: 0; }
+
+/* ---------- 6. Accessibility settings the system exposes ---------- */
+/* Reduced motion keeps feedback but drops movement: a gentle dim instead of a scale. */
+@media (prefers-reduced-motion: reduce) {
+  :where(a[href], button, summary, [role="button"], [role="radio"], [role="tab"], [role="switch"],
+         label[for], .figure, .flip-card-3d, .pass-card, .wizard-icon-btn, .acct-night,
+         .nav-toggle, .acct-swatch, .wizard-stepper-btn, .lineup-nav a):active { scale: 1; opacity: 0.8; }
+  .btn:active, .av-hero__cta:active, .av-close__links--buttons a:active,
+  .art-btn:active, .art-cta:active { transform: none; opacity: 0.8; }
+  .tc-overlay, .gate, .rmodal, .tc-card, .gate-card, .rmodal-card { transition: none; }
+}
+
+/* Reduced transparency: blur and see-through surfaces become solid. */
+@media (prefers-reduced-transparency: reduce) {
+  .site-header { background: #12141c; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .site-header::after { display: none; }
+  .sticky-mobile-cta { background: #0e0f12; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .tc-overlay, .gate, .rmodal { background: rgba(8, 9, 12, 0.97); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .art-top__back, .art-btn { background: var(--sc-canvas); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .disc-player { background: var(--canvas-deep); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+/* Increased contrast: stronger borders, brighter secondary text, and the header gets its line back. */
+@media (prefers-contrast: more) {
+  :root {
+    --color-border: #6b6e80;
+    --color-text-dim: #cfd0dc;
+    --color-text-faint: #b8bac9;
+    --sc-ink-soft: #d4d4d8;
+    --sc-hairline: color-mix(in oklab, var(--sc-ink) 42%, transparent);
+    --sc-hairline-strong: color-mix(in oklab, var(--sc-ink) 62%, transparent);
+  }
+  .site-header { border-bottom-color: #6b6e80; }
+  .site-header::after { display: none; }
+}
