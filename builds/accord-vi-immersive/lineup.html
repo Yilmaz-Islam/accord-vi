@@ -352,14 +352,22 @@
   }
   .figure:hover .figure__numeral, .figure:focus-visible .figure__numeral { color: var(--gold); }
   .figure__label {
-    display: block;
     font-family: 'Sora', sans-serif;
     font-weight: 600;
     font-size: 1rem;
     letter-spacing: 0.03em;
     color: var(--gold);
     margin-top: 0.2rem;
+    /* Both names sit in the same grid cell and the box is as wide as the longer one, so the
+       label never changes size or has its text swapped: some phone browsers left the old, shorter
+       text's box as a clip and showed "baat Bat" for "Sabaat Batin". */
+    display: grid;
+    justify-items: center;
   }
+  .figure__name { grid-area: 1 / 1; }
+  .figure__name--real { visibility: hidden; }
+  .stage.is-revealed .figure__name--mystery { visibility: hidden; }
+  .stage.is-revealed .figure__name--real { visibility: visible; }
   .figure__cta {
     display: block;
     font-size: 0.68rem;
@@ -475,7 +483,7 @@
       </div>
       <span class="figure__meta">
         <span class="figure__numeral">II</span>
-        <span class="figure__label" data-mystery="Artist II" data-real="Nehaal Naseem">Artist II</span>
+        <span class="figure__label"><span class="figure__name figure__name--mystery">Artist II</span><span class="figure__name figure__name--real">Nehaal Naseem</span></span>
         <span class="figure__cta">Tap for hints →</span>
       </span>
     </a>
@@ -494,7 +502,7 @@
       </div>
       <span class="figure__meta">
         <span class="figure__numeral">I</span>
-        <span class="figure__label" data-mystery="Artist I" data-real="Hasan Raheem">Artist I</span>
+        <span class="figure__label"><span class="figure__name figure__name--mystery">Artist I</span><span class="figure__name figure__name--real">Hasan Raheem</span></span>
         <span class="figure__cta">Tap for hints →</span>
       </span>
     </a>
@@ -513,7 +521,7 @@
       </div>
       <span class="figure__meta">
         <span class="figure__numeral">III</span>
-        <span class="figure__label" data-mystery="Artist III" data-real="Sabaat Batin">Artist III</span>
+        <span class="figure__label"><span class="figure__name figure__name--mystery">Artist III</span><span class="figure__name figure__name--real">Sabaat Batin</span></span>
         <span class="figure__cta">Tap for hints →</span>
       </span>
     </a>
@@ -535,7 +543,6 @@
   const stage = document.getElementById('stage');
   const title = document.getElementById('lineupTitle');
   const sub = document.getElementById('lineupSub');
-  const labels = document.querySelectorAll('.figure__label');
   let revealed = false;
   let colorsInTimer = null;
 
@@ -545,6 +552,8 @@
     fig.dataset.hintHref = fig.getAttribute('href');
     const n = fig.dataset.artist;
     fig.dataset.revealHref = 'lineup-artist.html?artist=' + n;
+    fig.dataset.hintLabel = fig.getAttribute('aria-label');
+    fig.dataset.revealLabel = fig.querySelector('.figure__name--real').textContent + ', tap to see their page';
   });
 
   // 3D tilt: rotate the card toward wherever the cursor is over it,
@@ -588,9 +597,9 @@
         if (revealed) stage.classList.add('stage-colors-in');
       }, 5000);
     }
-    labels.forEach((el) => { el.textContent = revealed ? el.dataset.real : el.dataset.mystery; });
     document.querySelectorAll('.figure').forEach((fig) => {
       fig.setAttribute('href', revealed ? fig.dataset.revealHref : fig.dataset.hintHref);
+      fig.setAttribute('aria-label', revealed ? fig.dataset.revealLabel : fig.dataset.hintLabel);
     });
     if (revealed) {
       title.textContent = 'The lights are on.';

@@ -17,8 +17,8 @@
 <meta name="twitter:title" content="Accord Register">
 <meta name="twitter:description" content="Register for Accord VI: Live Concert on 18 October and Qawwali Night on 19 October at Beaconhouse Cantt Campus, Multan.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+<link href="css/vendor/aos.css" rel="stylesheet">
+<link href="css/vendor/animate.min.css" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 <script type="application/ld+json">
 {
@@ -75,6 +75,17 @@
     pointer-events: none;
   }
 
+  /* Phones: the title block used to take over half the first screen before the first question. */
+  @media (max-width: 640px) {
+    .page-hero { padding: 5.25rem 0 2.25rem; }
+    .page-hero .hero-mark { margin-bottom: 0.6rem; }
+    .page-hero .logo-mark-hero { width: 44px; height: 44px; }
+    .page-hero .eyebrow { margin-bottom: 0.6rem; }
+    .page-hero .hero-tagline { margin-top: 0.9rem; font-size: 0.95rem; }
+    .page-hero::after { height: 36px; }
+    .page-hero + .section { padding-top: 1.25rem; }
+  }
+
   .wizard-wrap { max-width: 30rem; margin: 0 auto; }
 
   .wizard-progress {
@@ -92,7 +103,7 @@
   }
   .wizard-step-label {
     font-family: var(--font-display);
-    font-size: 0.72rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--color-text-faint);
@@ -144,7 +155,7 @@
     border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface);
   }
   .wizard-person legend {
-    padding: 0 0.4rem; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-dim);
+    padding: 0 0.4rem; font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-dim);
   }
   .wizard-person-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
   .wizard-person .wizard-input { margin-bottom: 0; min-width: 0; font-size: 1rem; padding: 0.75rem 0.85rem; background: var(--color-bg); }
@@ -266,7 +277,7 @@
     box-shadow: 0 10px 22px rgba(224, 180, 85, 0.28);
   }
   .wizard-icon-label {
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     text-align: center;
     line-height: 1.3;
   }
@@ -306,13 +317,13 @@
     display: block;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #e0555a;
     margin-bottom: 0.5rem;
   }
-  .payment-details dt { color: var(--color-text-dim); font-size: 0.78rem; margin-top: 0.5rem; }
+  .payment-details dt { color: var(--color-text-dim); font-size: 0.85rem; margin-top: 0.5rem; }
   .payment-details dd { margin: 0; font-family: var(--font-display); }
   .payment-details ul { margin: 0.5rem 0 0; padding-left: 1.1rem; }
   .payment-details li { margin-bottom: 0.3rem; }
@@ -387,7 +398,7 @@
   .pass-name { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; }
   .pass-when { color: var(--color-text-dim); font-size: 0.85rem; }
   .pass-price { color: var(--color-primary); font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-top: 0.2rem; }
-  .pass-price small { color: var(--color-text-dim); font-weight: 400; font-size: 0.78rem; }
+  .pass-price small { color: var(--color-text-dim); font-weight: 400; font-size: 0.85rem; }
 
   .payment-total {
     display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 1.1rem 0 0.2rem;
@@ -410,7 +421,7 @@
   }
   .receipt-drop:hover, .receipt-drop.is-drag { border-color: var(--color-primary); }
   .receipt-placeholder { display: grid; gap: 0.35rem; justify-items: center; font-size: 0.95rem; }
-  .receipt-placeholder small { font-size: 0.78rem; color: var(--color-text-faint); }
+  .receipt-placeholder small { font-size: 0.85rem; color: var(--color-text-faint); }
   .receipt-preview { max-width: 100%; max-height: 16rem; border-radius: 8px; object-fit: contain; }
   .receipt-placeholder[hidden], .receipt-preview[hidden], .receipt-clear[hidden], .receipt-box[hidden] { display: none; }
   .receipt-clear { appearance: none; border: 0; background: none; margin-top: 0.6rem; color: var(--color-primary); font: inherit; font-size: 0.85rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
@@ -658,7 +669,7 @@
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script src="js/vendor/aos.js"></script>
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
   if (window.AOS) AOS.init({ once: true, duration: 600, disable: () => window.matchMedia('(prefers-reduced-motion: reduce)').matches });
