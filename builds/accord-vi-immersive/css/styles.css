@@ -773,6 +773,21 @@ ul { list-style: none; }
    js/marquee.js takes over the motion (class is-js) so touch can also swipe it. */
 @media (hover: hover) { .sponsor-marquee:hover .sponsor-track { animation-play-state: paused; } }
 .sponsor-marquee { touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.marquee-toggle {
+  display: block;
+  margin: 0.9rem auto 0;
+  padding: 0.55rem 1.3rem;
+  min-height: 2.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: none;
+  color: var(--color-text-dim);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.marquee-toggle:hover { color: var(--color-text); border-color: var(--color-text-dim); }
+.marquee-toggle[hidden] { display: none; }
 .sponsor-marquee.is-js .sponsor-track { animation: none !important; will-change: transform; }
 
 .sponsor-chip {
@@ -807,12 +822,26 @@ ul { list-style: none; }
   gap: 1.25rem;
   align-items: flex-start;
 }
+.cta-banner h2,
 .cta-banner h3 {
   font-family: var(--font-display);
   font-size: 1.25rem;
   margin-bottom: 0.35rem;
+  color: var(--color-bg);
 }
-.cta-banner h3 { color: var(--color-bg); }
+
+/* Text for screen readers only (a page heading that the design shows another way). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 .cta-banner p { color: rgba(14, 15, 18, 0.82); font-size: 0.92rem; }
 .cta-banner .btn-primary {
   background: var(--color-bg);

@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Accord Account</title>
+<!-- clickjacking guard: shown only when this page is the top-level page, never inside someone else's frame -->
+<style id="antiframe">html{display:none!important}</style>
+<script>if (self === top) { var a = document.getElementById("antiframe"); if (a) a.remove(); } else { try { top.location = self.location; } catch (e) {} }</script>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="css/styles.css">
@@ -172,6 +175,14 @@
     color: var(--color-text-dim);
   }
   .acct-dev code { color: var(--color-primary); font-size: 1rem; letter-spacing: 0.15em; }
+
+  /* "No email yet?" help under the code box */
+  .acct-help { margin-top: 1.3rem; padding: 1rem 1.05rem; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 14px; font-size: 0.86rem; color: var(--color-text-dim); }
+  .acct-help > b { display: block; margin-bottom: 0.4rem; color: var(--color-text); font-size: 0.92rem; }
+  .acct-help ul { margin: 0 0 0.9rem; padding-left: 1.1rem; list-style: disc; display: grid; gap: 0.35rem; line-height: 1.5; }
+  .acct-help li b { color: var(--color-text); font-weight: 600; overflow-wrap: anywhere; }
+  .acct-help .btn { min-height: 2.75rem; }
+  .acct-help .btn:disabled { opacity: 0.55; cursor: default; }
 
   .acct-hello { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1.4rem; }
   .acct-avatar {
@@ -584,6 +595,15 @@
         <button type="submit" class="btn btn-primary btn-block" id="btnVerify">Verify and create account</button>
         <p class="acct-note" id="noteVerify" role="status"></p>
       </form>
+      <div class="acct-help" id="verifyHelp">
+        <b>No email yet?</b>
+        <ul>
+          <li>Check your <b>spam or junk</b> folder. It comes from <b>accordbccmvi@gmail.com</b> and the subject is "Accord VI: your verification code".</li>
+          <li>It can take a minute or two to arrive.</li>
+          <li>Already made an account with this email? No email is sent in that case. <button class="acct-link" type="button" id="verifySignIn">Sign in instead</button> or <button class="acct-link" type="button" id="verifyForgot">reset your password</button>.</li>
+        </ul>
+        <button type="button" class="btn btn-ghost btn-block" id="btnResend" disabled>Send the code again</button>
+      </div>
       <div class="acct-links"><button class="acct-link" type="button" data-back>Back</button></div>
     </div>
 
@@ -869,7 +889,8 @@
     <div class="tc-scroll" id="tcScroll" tabindex="0" role="region" aria-label="Summary of the Terms and the Privacy Policy">
       <h3>Terms</h3>
       <ul>
-        <li>Registering is an expression of interest, not a confirmed reservation.</li>
+        <li>Your place is only confirmed once an organiser has checked your payment and emailed you. Until then it is pending.</li>
+        <li>Each person gets their own QR ticket that admits one person, once. Staff may check a student card or ID at the gate, and entry can be refused if a ticket was already used or the details do not match.</li>
         <li>We may carry out bag checks at entry, and refuse or remove anyone who is unsafe, breaks the law or is disruptive.</li>
         <li>The line-up, schedule and activities can change.</li>
         <li>You may appear in photos and video of the event that we use to promote Accord VI. Tell event staff on the day if you would rather not.</li>
@@ -879,8 +900,8 @@
       <ul>
         <li>We store your name, your email, your password (scrambled, so nobody can read it), your registration, your payment receipt photo and your tickets.</li>
         <li>We use it to run your account, check your payment, email you and run the event. We do not sell it, and there are no advertising trackers on this site.</li>
-        <li>The committee members who check payments can see your registration and receipt. Gate staff see the name on a ticket when they scan it.</li>
-        <li>Cloudflare and EmailJS handle your information for us, to run the site and send emails.</li>
+        <li>The committee members who check payments can see your registration and receipt. When gate staff scan a ticket they see the name on it, who booked it (with the email mostly hidden) and who else is on the booking, so they can check it is you.</li>
+        <li>Cloudflare and EmailJS handle your information for us, to run the site and send emails, and their servers may be outside Pakistan.</li>
         <li>You can download your data or delete your account from your Account page. Once your payment is confirmed we keep that record, and you would need to contact us to delete it.</li>
         <li>If you are under 18, we encourage you to register with a parent, guardian or teacher knowing about it.</li>
       </ul>
@@ -1340,6 +1361,21 @@
 
   // ---- sign up (step 1: request a code) ----
   let pendingEmail = '';
+  let pendingSignup = null; // what was typed, kept in memory only so "send again" does not ask for it twice
+  let resendTimer = 0;
+  // "Send the code again" waits 30 seconds, so nobody taps it ten times and hits the sending limit
+  function startResendCooldown(seconds) {
+    const btn = $('btnResend');
+    clearInterval(resendTimer);
+    let left = seconds;
+    btn.disabled = true;
+    btn.textContent = `Send the code again (${left}s)`;
+    resendTimer = setInterval(() => {
+      left -= 1;
+      if (left <= 0) { clearInterval(resendTimer); btn.disabled = false; btn.textContent = 'Send the code again'; return; }
+      btn.textContent = `Send the code again (${left}s)`;
+    }, 1000);
+  }
   $('formSignup').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = $('signupName').value.trim();
@@ -1357,12 +1393,37 @@
     busy($('btnSignup'), false);
     if (!r.ok) { note('noteSignup', r.error || 'Could not start sign-up.', 'is-error'); return; }
     pendingEmail = email.toLowerCase();
+    pendingSignup = { name, email, password };
     $('verifyEmail').textContent = pendingEmail;
     $('devBox').hidden = !(IS_LOCAL && r.devCode);
     if (r.devCode) $('devCode').textContent = r.devCode;
     $('verifyCode').value = '';
     note('noteVerify', '');
     show('viewVerify');
+    startResendCooldown(30);
+  });
+
+  $('btnResend').addEventListener('click', async () => {
+    if (!pendingSignup) { show('viewAuth'); return; }
+    note('noteVerify', '');
+    $('btnResend').disabled = true;
+    const r = await api('/account/signup/request', { ...pendingSignup, acceptTerms: true });
+    if (!r.ok) { note('noteVerify', r.error || 'Could not send the code again.', 'is-error'); startResendCooldown(30); return; }
+    $('devBox').hidden = !(IS_LOCAL && r.devCode);
+    if (r.devCode) $('devCode').textContent = r.devCode;
+    note('noteVerify', 'Sent again. Check your inbox and your spam folder. Only the newest code works.', 'is-ok');
+    startResendCooldown(30);
+  });
+  $('verifySignIn').addEventListener('click', () => {
+    show('viewAuth');
+    selectTab('login');
+    $('loginEmail').value = pendingEmail;
+    $('loginPassword').focus();
+  });
+  $('verifyForgot').addEventListener('click', () => {
+    $('forgotEmail').value = pendingEmail;
+    $('goForgot').click();
+    $('forgotEmail').value = pendingEmail;
   });
 
   // ---- sign up (step 2: verify) ----

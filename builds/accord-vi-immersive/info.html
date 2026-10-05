@@ -191,12 +191,10 @@
         </button>
         <div class="faq-answer">
           <p>Beaconhouse Cantt Campus, Multan. <span class="ph-tag">parking/drop-off details to follow closer to the date</span></p>
-          <div class="map-embed">
-            <iframe
-              src="https://www.google.com/maps?q=Beaconhouse+Cantt+Campus+Multan&output=embed"
-              width="100%" height="280" style="border:0;" allowfullscreen loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              title="Map to Beaconhouse Cantt Campus, Multan"></iframe>
+          <!-- Google Maps is only loaded if the visitor asks for it, so just opening this page sends nothing to Google. -->
+          <div class="map-embed" id="mapBox" style="margin:0.8rem 0 0.4rem;">
+            <button type="button" class="btn btn-ghost" id="mapLoad">Show the map</button>
+            <p style="margin:0.5rem 0 0;font-size:0.8rem;color:var(--color-text-faint);">Showing the map loads Google Maps, which may set cookies.</p>
           </div>
           <a href="https://www.google.com/maps/search/?api=1&query=Beaconhouse+Cantt+Campus+Multan" target="_blank" rel="noopener" class="text-link">Get directions →</a>
         </div>
@@ -255,5 +253,25 @@
 
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script src="js/main.js"></script>
+<script>
+  // Load the Google Maps embed only when the visitor presses the button.
+  (function () {
+    var btn = document.getElementById('mapLoad');
+    var box = document.getElementById('mapBox');
+    if (!btn || !box) return;
+    btn.addEventListener('click', function () {
+      var f = document.createElement('iframe');
+      f.src = 'https://www.google.com/maps?q=Beaconhouse+Cantt+Campus+Multan&output=embed';
+      f.width = '100%';
+      f.height = '280';
+      f.style.border = '0';
+      f.allowFullscreen = true;
+      f.referrerPolicy = 'no-referrer-when-downgrade';
+      f.title = 'Map to Beaconhouse Cantt Campus, Multan';
+      box.textContent = '';
+      box.appendChild(f);
+    });
+  })();
+</script>
 </body>
 </html>
