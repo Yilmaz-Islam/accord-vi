@@ -265,8 +265,9 @@
     filter: drop-shadow(0 0 0px transparent);
     transition: color 2.4s ease, filter 2.4s ease;
   }
-  .lineup-card-corner--tl { align-self: flex-start; }
-  .lineup-card-corner--br { align-self: flex-end; transform: rotate(180deg); }
+  /* The index letters sit in the card's real corners, like a playing card, not inside its padding. */
+  .lineup-card-corner--tl { position: absolute; top: 0.28rem; left: 0.38rem; }
+  .lineup-card-corner--br { position: absolute; bottom: 0.28rem; right: 0.38rem; transform: rotate(180deg); }
   .lineup-card-mark {
     flex: 1;
     display: flex;

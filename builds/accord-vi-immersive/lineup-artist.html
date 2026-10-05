@@ -237,8 +237,9 @@
     flex: none;
   }
   .flip-card-corner svg { width: 0.8rem; height: 0.8rem; fill: var(--accent); }
-  .flip-card-corner--tl { align-self: flex-start; }
-  .flip-card-corner--br { align-self: flex-end; transform: rotate(180deg); }
+  /* The index letters sit in the card's real corners, like a playing card, not inside its padding. */
+  .flip-card-corner--tl { position: absolute; top: 0.38rem; left: 0.5rem; }
+  .flip-card-corner--br { position: absolute; bottom: 0.38rem; right: 0.5rem; transform: rotate(180deg); }
   .flip-card-mark { flex: 1; display: flex; align-items: center; justify-content: center; opacity: 0.85; color: var(--accent); }
   .flip-card-mark svg { width: 58%; }
   .flip-card-face--back {
