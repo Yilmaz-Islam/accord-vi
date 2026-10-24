@@ -540,7 +540,7 @@
 
 <section class="section" id="main">
   <div class="container acct-wrap" id="acctWrap">
-    <p class="eyebrow" style="text-align:center;">Accord VI</p>
+    <p class="eyebrow" style="text-align:center;">Accord 6.0</p>
     <h1 class="page-title" style="text-align:center; margin-bottom:2rem;">Your account</h1>
 
     <!-- checking the saved session -->
@@ -581,6 +581,7 @@
           <input type="password" id="signupPassword" autocomplete="new-password" minlength="10" maxlength="128" required aria-describedby="pwHint">
           <p class="acct-hint" id="pwHint">At least 10 characters. A few random words works well.</p>
           <label class="acct-check"><input type="checkbox" data-show="signupPassword"><span>Show password</span></label>
+          <div class="human-check" id="humanSignup"></div>
           <button type="submit" class="btn btn-primary btn-block" id="btnSignup">Send verification code</button>
           <p class="acct-note" id="noteSignup" role="status"></p>
         </form>
@@ -601,10 +602,11 @@
       <div class="acct-help" id="verifyHelp">
         <b>No email yet?</b>
         <ul>
-          <li>Check your <b>spam or junk</b> folder. It comes from <b>accordbccmvi@gmail.com</b> and the subject is "Accord VI: your verification code".</li>
+          <li>Check your <b>spam or junk</b> folder. It comes from <b>accordbccmvi@gmail.com</b> and the subject is "Accord 6.0: your verification code".</li>
           <li>It can take a minute or two to arrive.</li>
           <li>Already made an account with this email? No email is sent in that case. <button class="acct-link" type="button" id="verifySignIn">Sign in instead</button> or <button class="acct-link" type="button" id="verifyForgot">reset your password</button>.</li>
         </ul>
+        <div class="human-check" id="humanResend"></div>
         <button type="button" class="btn btn-ghost btn-block" id="btnResend" disabled>Send the code again</button>
       </div>
       <div class="acct-links"><button class="acct-link" type="button" data-back>Back</button></div>
@@ -878,9 +880,9 @@
       <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
       <span class="logo-text">Accord <span>VI</span></span>
     </span>
-    <p class="footer-tag">21–22 November · Beaconhouse Cantt Campus, Multan</p>
+    <p class="footer-tag">21–22 November · Beaconhouse Cantt Campus, Askari Bypass Road, Multan</p>
     <p class="footer-legal"><a href="privacy-policy.html" class="text-link">Privacy Policy</a> · <a href="terms.html" class="text-link">Terms</a></p>
-    <p class="footer-copy">© <span id="year"></span> Accord VI. All rights reserved.</p>
+    <p class="footer-copy">© <span id="year"></span> Accord 6.0. All rights reserved.</p>
   </div>
 </footer>
 
@@ -896,7 +898,7 @@
         <li>Each person gets their own QR ticket that admits one person, once. Staff may check a student card or ID at the gate, and entry can be refused if a ticket was already used or the details do not match.</li>
         <li>We may carry out bag checks at entry, and refuse or remove anyone who is unsafe, breaks the law or is disruptive.</li>
         <li>The line-up, schedule and activities can change.</li>
-        <li>You may appear in photos and video of the event that we use to promote Accord VI. Tell event staff on the day if you would rather not.</li>
+        <li>You may appear in photos and video of the event that we use to promote Accord 6.0. Tell event staff on the day if you would rather not.</li>
         <li>You attend at your own risk, and we are not liable for lost, stolen or damaged belongings.</li>
       </ul>
       <h3>Privacy</h3>
@@ -936,6 +938,7 @@
   </div>
 </div>
 
+<script src="js/human-check.js"></script>
 <script>
 (() => {
   'use strict';
@@ -1070,7 +1073,7 @@
       ic.dataset.tone = 'gold';
       ic.appendChild(icon('a-ticket'));
       card.append(ic, mk('b', '', 'No registration yet'),
-        mk('p', '', 'Register for Accord VI and your tickets appear here once your payment is confirmed. It only takes a minute.'),
+        mk('p', '', 'Register for Accord 6.0 and your tickets appear here once your payment is confirmed. It only takes a minute.'),
         linkButton('Register for the event', 'btn btn-primary btn-block'));
       box.appendChild(card);
       $('myTickets').textContent = '';
@@ -1081,7 +1084,7 @@
       pending: { tone: 'gold', ic: 'a-clock', title: 'Payment under review', text: ticket.payMethod === 'cash'
         ? 'We will confirm your registration once we receive your cash payment.'
         : 'An organiser will check your receipt and email you as soon as your payment is confirmed.' },
-      confirmed: { tone: 'green', ic: 'a-check', title: 'Payment confirmed', text: 'You are all set. Your QR tickets are below. See you at Beaconhouse Cantt Campus, Multan.' },
+      confirmed: { tone: 'green', ic: 'a-check', title: 'Payment confirmed', text: 'You are all set. Your QR tickets are below. See you at Beaconhouse Cantt Campus, Askari Bypass Road, Multan.' },
       interest: { tone: 'blue', ic: 'a-star', title: 'Interest received', text: 'Our team will be in touch about next steps.' },
     };
     const st = states[ticket.status] || states.pending;
@@ -1379,6 +1382,10 @@
       btn.textContent = `Send the code again (${left}s)`;
     }, 1000);
   }
+  // "Are you human" check (js/human-check.js): one slot per button that sends a code.
+  const humanSignup = AccordHumanCheck.slot($('humanSignup'));
+  const humanResend = AccordHumanCheck.slot($('humanResend'));
+  $('formSignup').addEventListener('focusin', () => humanSignup.warm(), { once: true });
   $('formSignup').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = $('signupName').value.trim();
@@ -1392,7 +1399,11 @@
       return;
     }
     busy($('btnSignup'), true, 'Sending code…');
-    const r = await api('/account/signup/request', { name, email, password, acceptTerms: true });
+    let turnstileToken;
+    try { turnstileToken = await humanSignup.token(); }
+    catch (err) { busy($('btnSignup'), false); note('noteSignup', err.message, 'is-error'); return; }
+    const r = await api('/account/signup/request', { name, email, password, acceptTerms: true, turnstileToken });
+    humanSignup.reset();
     busy($('btnSignup'), false);
     if (!r.ok) { note('noteSignup', r.error || 'Could not start sign-up.', 'is-error'); return; }
     pendingEmail = email.toLowerCase();
@@ -1410,7 +1421,11 @@
     if (!pendingSignup) { show('viewAuth'); return; }
     note('noteVerify', '');
     $('btnResend').disabled = true;
-    const r = await api('/account/signup/request', { ...pendingSignup, acceptTerms: true });
+    let turnstileToken;
+    try { turnstileToken = await humanResend.token(); }
+    catch (err) { note('noteVerify', err.message, 'is-error'); $('btnResend').disabled = false; return; }
+    const r = await api('/account/signup/request', { ...pendingSignup, acceptTerms: true, turnstileToken });
+    humanResend.reset();
     if (!r.ok) { note('noteVerify', r.error || 'Could not send the code again.', 'is-error'); startResendCooldown(30); return; }
     $('devBox').hidden = !(IS_LOCAL && r.devCode);
     if (r.devCode) $('devCode').textContent = r.devCode;

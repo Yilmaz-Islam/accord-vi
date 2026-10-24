@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Accord Sponsors</title>
-<meta name="description" content="Sponsor Accord VI: reach 1,000+ students live and 25-50K on Instagram. Bronze through Platinum partnership tiers, Beaconhouse Cantt Campus, Multan.">
+<meta name="description" content="Sponsor Accord 6.0: reach 1,000+ students live and 25-50K on Instagram. Gold, Silver and Bronze sponsorship packages, Beaconhouse Cantt Campus, Askari Bypass Road, Multan.">
 <link rel="canonical" href="https://yilmaz-islam.github.io/accord-vi/sponsor.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Accord Sponsors">
-<meta property="og:description" content="Sponsor Accord VI: reach 1,000+ students live and 25-50K on Instagram. Bronze through Platinum partnership tiers, Beaconhouse Cantt Campus, Multan.">
+<meta property="og:description" content="Sponsor Accord 6.0: reach 1,000+ students live and 25-50K on Instagram. Gold, Silver and Bronze sponsorship packages, Beaconhouse Cantt Campus, Askari Bypass Road, Multan.">
 <meta property="og:url" content="https://yilmaz-islam.github.io/accord-vi/sponsor.html">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Accord Sponsors">
-<meta name="twitter:description" content="Sponsor Accord VI: reach 1,000+ students live and 25-50K on Instagram. Bronze through Platinum partnership tiers, Beaconhouse Cantt Campus, Multan.">
+<meta name="twitter:description" content="Sponsor Accord 6.0: reach 1,000+ students live and 25-50K on Instagram. Gold, Silver and Bronze sponsorship packages, Beaconhouse Cantt Campus, Askari Bypass Road, Multan.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link href="css/vendor/aos.css" rel="stylesheet">
 <link href="css/vendor/animate.min.css" rel="stylesheet">
@@ -59,8 +59,6 @@
   .tier-card[data-tier="bronze"]   { --tier-accent: #c17a45; }
   .tier-card[data-tier="silver"]   { --tier-accent: #b9c2cc; }
   .tier-card[data-tier="gold"]     { --tier-accent: #e0b455; }
-  .tier-card[data-tier="diamond"]  { --tier-accent: #7fd9e8; }
-  .tier-card[data-tier="platinum"] { --tier-accent: #f2f0ea; }
 
   .tier-card::after {
     content: "";
@@ -96,8 +94,6 @@
   .tier-card:nth-of-type(1)::before { animation-delay: 0s; }
   .tier-card:nth-of-type(2)::before { animation-delay: 0.7s; }
   .tier-card:nth-of-type(3)::before { animation-delay: 1.4s; }
-  .tier-card:nth-of-type(4)::before { animation-delay: 2.1s; }
-  .tier-card:nth-of-type(5)::before { animation-delay: 2.8s; }
   @keyframes tier-flash { 0%, 100% { opacity: 0; } 50% { opacity: 0.55; } }
   @media (prefers-reduced-motion: reduce) {
     .tier-card::after, .tier-card::before { animation: none; }
@@ -108,9 +104,8 @@
     z-index: 1;
   }
 
-  /* the dead grid cell (3-col desktop layout leaves one empty slot on the
-     last row) becomes a CTA into the sponsor-specific registration path
-     instead of empty space. */
+  /* the CTA sits beside the three packages: it fills the fourth cell of the
+     2x2 tablet grid and takes the whole second row of the 3-column desktop grid. */
   .tier-cta-card {
     position: relative;
     display: flex;
@@ -161,6 +156,9 @@
 
   @media (min-width: 768px) {
     .tier-cta-card { grid-column: span 1; }
+  }
+  @media (min-width: 1024px) {
+    .tier-cta-card { grid-column: 1 / -1; }
   }
 </style>
   <meta name="theme-color" content="#0e0f12">
@@ -243,79 +241,57 @@
     </div>
 
     <div class="tier-grid">
-      <div class="tier-card" data-tier="bronze" data-aos="fade-up" data-aos-delay="0">
+      <!-- Packages exactly as in the official ACCORD 6.0 sponsorship letter (Gold, Silver, Bronze) -->
+      <div class="tier-card tier-featured" data-tier="gold" data-aos="fade-up" data-aos-delay="0">
         <span class="tier-status">Available</span>
-        <span class="tier-name" role="heading" aria-level="3">Bronze</span>
-        <span class="tier-price">PKR 150,000</span>
-        <p class="tier-blurb">Marketing entitlements only.</p>
+        <span class="tier-name" role="heading" aria-level="3">Gold</span>
+        <span class="tier-price">PKR 500,000</span>
+        <p class="tier-blurb">The sponsoring brand gets:</p>
         <ul class="tier-list">
-          <li>Small logo on banners & backdrop</li>
-          <li>Logo on event website & social media posts</li>
-          <li>2 complimentary all-access event passes</li>
+          <li>Distribution of sponsor printed flyers</li>
+          <li>Logo displayed on social media advert of the event</li>
+          <li>Special mention of brand in opening and closing speech of the event</li>
+          <li>Logo on stage background SMD in intervals and external building dropdown (10×25 ft)</li>
+          <li>Continuous logo displayed on stage banners</li>
+          <li>A stall and 3 standees in the arena</li>
+          <li>Special invitation for the event (max 10 persons)</li>
+          <li>Special shield awarded to the brand personnel in front of the audience</li>
         </ul>
       </div>
 
       <div class="tier-card" data-tier="silver" data-aos="fade-up" data-aos-delay="100">
         <span class="tier-status">Available</span>
         <span class="tier-name" role="heading" aria-level="3">Silver</span>
-        <span class="tier-price">PKR 250,000</span>
-        <p class="tier-blurb">Marketing entitlements only.</p>
+        <span class="tier-price">PKR 300,000</span>
+        <p class="tier-blurb">The sponsoring brand gets:</p>
         <ul class="tier-list">
-          <li>Medium logo on backdrops & banners</li>
-          <li>Dedicated social media feature post</li>
-          <li>Product showcase slot (5 mins)</li>
-          <li>4 complimentary all-access event passes</li>
-          <li>Flyer insert in delegate welcome kits</li>
+          <li>Logo displayed on social media advert of the event</li>
+          <li>Special mention of brand in opening and closing speech</li>
+          <li>Logo on stage background SMD in intervals and external building dropdown (10×25 ft)</li>
+          <li>Continuous logo displayed on stage banners</li>
+          <li>A stall and 3 standees in the arena</li>
+          <li>Special invitation for the event (max 5 persons)</li>
+          <li>Special shield awarded to the brand personnel in front of the audience</li>
         </ul>
       </div>
 
-      <div class="tier-card tier-featured" data-tier="gold" data-aos="fade-up" data-aos-delay="200">
-        <span class="tier-badge animate__animated animate__pulse animate__infinite animate__slower">Most popular</span>
+      <div class="tier-card" data-tier="bronze" data-aos="fade-up" data-aos-delay="200">
         <span class="tier-status">Available</span>
-        <span class="tier-name" role="heading" aria-level="3">Gold</span>
-        <span class="tier-price">PKR 350,000</span>
-        <p class="tier-blurb">Marketing entitlements only.</p>
+        <span class="tier-name" role="heading" aria-level="3">Bronze</span>
+        <span class="tier-price">PKR 150,000</span>
+        <p class="tier-blurb">The sponsoring brand gets:</p>
         <ul class="tier-list">
-          <li>Prime logo on stage backdrop, photobooth & entrance arch</li>
-          <li>Dedicated social media video campaign spotlight</li>
-          <li>Exclusive promotional booth space (10×10 ft)</li>
-          <li>6 VIP all-access passes with reserved seating</li>
-          <li>5-minute brand presentation during Opening Ceremony</li>
-        </ul>
-      </div>
-
-      <div class="tier-card" data-tier="diamond" data-aos="fade-up" data-aos-delay="300">
-        <span class="tier-status">Available</span>
-        <span class="tier-name" role="heading" aria-level="3">Diamond</span>
-        <span class="tier-price">PKR 500,000</span>
-        <p class="tier-blurb">Marketing & on-stage recognition.</p>
-        <ul class="tier-list">
-          <li>Logo on all banners & panaflex standees at the venue</li>
-          <li>Exclusive branding on the event's online page + dedicated post</li>
-          <li>Commemorative shield presented on stage</li>
-          <li>Mention in Opening & Closing Ceremony speeches</li>
-          <li>8 VIP all-access passes with reserved seating</li>
-          <li>Promotional booth space at the venue</li>
-        </ul>
-      </div>
-
-      <div class="tier-card tier-title" data-tier="platinum" data-aos="fade-up" data-aos-delay="0">
-        <span class="tier-badge tier-badge-title animate__animated animate__pulse animate__infinite animate__slower">Title sponsor</span>
-        <span class="tier-status">Available</span>
-        <span class="tier-name" role="heading" aria-level="3">Platinum</span>
-        <span class="tier-price">PKR 750,000</span>
-        <p class="tier-blurb">"Accord VI Presented by [Your Brand]"</p>
-        <ul class="tier-list">
-          <li>Top-tier logo placement across all media (print, digital, broadcast)</li>
-          <li>Keynote speaker slot during Closing Ceremony & Award Presentation</li>
-          <li>10 VIP all-access passes with front-row seating & VIP lounge</li>
-          <li>Prime 15×15 ft interactive exhibition booth at the entrance</li>
+          <li>Logo displayed on social media advert of the event</li>
+          <li>Special mention of brand in opening and closing speech</li>
+          <li>Logo on stage background SMD in intervals and external building dropdown (10×25 ft)</li>
+          <li>Continuous logo displayed on stage banners</li>
+          <li>Special invitation for the event (max 2 persons)</li>
         </ul>
       </div>
 
       <!-- CTA fills the old dead grid cell; replaces the standalone banner further down the page -->
       <div class="tier-cta-card" data-aos="fade-up" data-aos-delay="100">
-        <h2>Ready to sponsor Accord VI?</h2>
+        <h2>Ready to sponsor Accord 6.0?</h2>
         <p>Tell us a bit about your brand and pick a tier — we'll follow up with a full sponsorship deck.</p>
         <a href="register.html?path=sponsor" class="btn btn-primary btn-block">Become a Sponsor</a>
       </div>
@@ -393,13 +369,19 @@
       <ul class="contact-details">
         <li>
           <span class="contact-label">Email</span>
-          <a href="mailto:hello@accordvi.example" class="contact-value">hello@accordvi.example</a>
-          <span class="ph-tag">placeholder</span>
+          <a href="mailto:accord22@bh.edu.pk" class="contact-value">accord22@bh.edu.pk</a>
+        </li>
+        <li>
+          <span class="contact-label">Phone</span>
+          <span class="contact-stack">
+            <a href="tel:+923027778889" class="contact-value">0302 7778889</a>
+            <a href="tel:+923032338989" class="contact-value">0303 2338989</a>
+          </span>
         </li>
         <li>
           <span class="contact-label">Venue</span>
-          <span class="contact-value">Beaconhouse Cantt Campus, Multan</span>
-          <a href="https://www.google.com/maps/search/?api=1&query=Beaconhouse+Cantt+Campus+Multan" target="_blank" rel="noopener" class="text-link" style="margin-left:0.5rem; font-size:0.85rem;">Get directions →</a>
+          <span class="contact-value">Beaconhouse Cantt Campus, Askari Bypass Road, Multan</span>
+          <a href="https://www.google.com/maps/search/?api=1&query=Beaconhouse+Cantt+Campus+Askari+Bypass+Road+Multan" target="_blank" rel="noopener" class="text-link" style="margin-left:0.5rem; font-size:0.85rem;">Get directions →</a>
         </li>
       </ul>
 
@@ -426,18 +408,16 @@
           <label for="tier">Tier you're interested in</label>
           <select id="tier" name="tier">
             <option value="">Not sure yet</option>
+            <option value="gold">Gold — PKR 500,000</option>
+            <option value="silver">Silver — PKR 300,000</option>
             <option value="bronze">Bronze — PKR 150,000</option>
-            <option value="silver">Silver — PKR 250,000</option>
-            <option value="gold">Gold — PKR 350,000</option>
-            <option value="diamond">Diamond — PKR 500,000</option>
-            <option value="platinum">Platinum — PKR 750,000</option>
-            <option value="custom">Custom / à la carte</option>
           </select>
         </div>
         <div class="form-row">
           <label for="sponsorMessage">Message</label>
           <textarea id="sponsorMessage" name="message" rows="4" placeholder="Tell us a little about your brand and what you're looking for"></textarea>
         </div>
+        <div class="human-check"></div>
         <button type="submit" class="btn btn-primary btn-block">Send verification code</button>
       </div>
       <div id="sponsorStage2" hidden>
@@ -459,10 +439,10 @@
       <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
       <span class="logo-text">Accord <span>VI</span></span>
     </span>
-    <p class="footer-tag">21–22 November · Beaconhouse Cantt Campus, Multan</p>
+    <p class="footer-tag">21–22 November · Beaconhouse Cantt Campus, Askari Bypass Road, Multan</p>
     <a href="https://instagram.com/" target="_blank" rel="noopener" class="footer-ig">Instagram</a>
     <p class="footer-legal"><a href="privacy-policy.html" class="text-link">Privacy Policy</a> · <a href="terms.html" class="text-link">Terms</a></p>
-    <p class="footer-copy">© <span id="year"></span> Accord VI. All rights reserved.</p>
+    <p class="footer-copy">© <span id="year"></span> Accord 6.0. All rights reserved.</p>
   </div>
 </footer>
 
@@ -471,6 +451,7 @@
 </div>
 
 <script src="js/vendor/aos.js"></script>
+<script src="js/human-check.js"></script>
 <script src="js/main.js"></script>
 <script src="js/marquee.js"></script>
 </body>

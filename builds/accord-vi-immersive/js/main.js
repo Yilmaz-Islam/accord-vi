@@ -21,6 +21,10 @@ function setNote(note, text, kind) {
 function wireEmailForm({ form, note, stage1, stage2, codeInput, verifyBtn, buildDetails }) {
   const emailField = form.querySelector('[name="email"]');
   const submitBtn = form.querySelector('button[type="submit"]');
+  // "Are you human" check (js/human-check.js), when the page has a slot for it
+  const humanBox = form.querySelector('.human-check');
+  const human = humanBox && window.AccordHumanCheck ? AccordHumanCheck.slot(humanBox) : null;
+  if (human) form.addEventListener('focusin', () => human.warm(), { once: true });
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -28,14 +32,17 @@ function wireEmailForm({ form, note, stage1, stage2, codeInput, verifyBtn, build
     if (detailsField && buildDetails) detailsField.value = buildDetails();
 
     const payload = Object.fromEntries(new FormData(form).entries());
+    delete payload['cf-turnstile-response'];
     setNote(note, 'Sending you a verification code…');
     submitBtn.disabled = true;
 
-    fetch(`${VERIFY_WORKER_URL}/request-code`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
+    Promise.resolve(human ? human.token() : '')
+      .then((turnstileToken) => fetch(`${VERIFY_WORKER_URL}/request-code`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...payload, turnstileToken })
+      }))
+      .finally(() => { if (human) human.reset(); })
       .then((res) => res.json())
       .then((data) => {
         if (!data.ok) throw new Error(data.error || 'Could not send code');

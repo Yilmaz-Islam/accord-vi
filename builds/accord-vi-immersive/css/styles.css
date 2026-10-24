@@ -571,7 +571,7 @@ ul { list-style: none; }
 
 .tier-badge-title { background: var(--color-primary); color: #0e0f12; } /* dark text on teal: 4.9:1 */
 
-/* Animated border-beam (turquoise; the Gold tier keeps gold), scaled by tier: Platinum (title sponsor) gets
+/* Animated border-beam (turquoise; the Gold tier keeps gold), scaled by tier (the Title sponsor rules are no longer used): Platinum gets
    the full treatment — a tighter, faster beam plus a light shimmer sweep,
    echoing the president/director card treatment on the immersive site.
    Gold gets a dimmer, slower beam only; Bronze/Silver/Diamond stay plain. */

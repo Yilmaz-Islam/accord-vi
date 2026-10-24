@@ -58,6 +58,8 @@ mindmap
 | Event dates in emails and ticket labels | worker repo src/accounts.js | `21 November` |
 | Site colours: deep teal leads, gold is the partner | css/styles.css (inner pages), style.css (home), artists.css, lineup.html + lineup-hint.html | `--color-primary` / `--color-gold`, `--sc-accent` / `--sc-gold`, `--lead` / `--partner` |
 | Email colours (button, header) | worker repo src/accounts.js | `#0f8f87` |
+| "Are you human" check on sign-up and the sponsor form | js/human-check.js (+ account.html, js/main.js, css/apple.css) | `@section human-check` |
+| Organisers' morning summary email (09:00 Pakistan) | worker repo src/accounts.js + wrangler.jsonc `triggers` | `sendDailySummary` |
 
 ## Settings the owner or Yilmaz fills in
 - Theme (client pick 23 Oct 2026): Turquoise & Gold, deep teal #0F8F87 leads, gold #E0B455 is the partner
@@ -66,8 +68,12 @@ mindmap
 - Event dates: text on every page (above) plus the countdown targets in app.js and js/main.js
   (`2026-11-21T00:00:00+05:00`, Pakistan time) and the worker's email text in src/accounts.js.
 - Loading screen timing: js/boot.js `MIN_MS` (900, animation length) and `MAX_MS` (1800, hard cap).
-- Sponsor contact email: still the placeholder `hello@accordvi.example` (sponsor, terms, privacy).
+- Contacts (from the official letter): accord22@bh.edu.pk, 0302 7778889, 0303 2338989 on sponsor, terms, privacy.
+- Name: visible text "Accord 6.0"; logo wordmark, loader and the bank account title stay "Accord VI".
+- Sponsor packages (letter): Gold 500k, Silver 300k, Bronze 150k in sponsor.html cards + form menu and register.html chips.
 - Real JazzCash / bank details: still placeholders on register.html.
+- Cloudflare Turnstile site key: `SITE_KEY` in js/human-check.js (empty = check off). The matching secret is the
+  worker's `TURNSTILE_SECRET`. Steps in the worker repo's ACCOUNTS.md.
 
 ## How to run and check it
 - Local preview: `.claude/launch.json` in the old "Accord website" folder, entry `accord-live-site` (port 4501).

@@ -238,3 +238,18 @@ a.logo::after { inset: -8px -4px; }
   .site-header { border-bottom-color: #6b6e80; }
   .site-header::after { display: none; }
 }
+
+/* @section human-check: the Cloudflare "are you human" box on sign-up and the sponsor form
+   (js/human-check.js). It is empty for most people and only takes space when Cloudflare
+   asks someone to tick it. */
+.human-check:empty { display: none; }
+.human-check { margin: 12px 0 4px; max-width: 100%; }
+.human-check iframe { max-width: 100%; }
+
+/* @section schedule-note: the line under the two schedule cards (info.html), e.g. the Formal Dinner */
+.schedule-note { margin-top: 1.25rem; text-align: center; color: var(--color-text-dim); font-size: 0.95rem; }
+
+/* @section contact-stack: two phone numbers side by side with their label (sponsor.html contact list),
+   one under the other, each a full-height tap target */
+.contact-stack { display: flex; flex-direction: column; gap: 0.15rem; }
+.contact-stack a { display: inline-flex; align-items: center; min-height: 44px; }
