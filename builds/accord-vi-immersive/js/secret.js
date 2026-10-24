@@ -27,18 +27,18 @@
       'background:rgba(8,9,12,.72);backdrop-filter:blur(4px);opacity:0;transition:opacity .2s ease}' +
       '.secret-overlay.is-open{opacity:1}' +
       '.secret-panel{position:relative;width:min(100%,24rem);text-align:center;padding:1.8rem 1.5rem 1.5rem;' +
-      'background:#14151a;color:#efece6;border:1px solid #e0b455;border-radius:16px;' +
+      'background:#14151a;color:#efece6;border:1px solid #0f8f87;border-radius:16px;' +
       'box-shadow:0 24px 70px rgba(0,0,0,.6);font:15px/1.45 system-ui,sans-serif;' +
       'transform:translateY(10px);transition:transform .25s ease}' +
       '.secret-overlay.is-open .secret-panel{transform:none}' +
-      '.secret-panel__eyebrow{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#e0b455;margin:0 0 .3rem}' +
+      '.secret-panel__eyebrow{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#0f8f87;margin:0 0 .3rem}' +
       '.secret-panel__title{font-size:1.3rem;font-weight:700;margin:0 0 .5rem}' +
       '.secret-panel__text{color:#9a9aa8;font-size:.92rem;margin:0 0 1.3rem}' +
       '.secret-panel__link{display:block;text-align:center;text-decoration:none;font-weight:600;color:#0e0f12;' +
-      'background:linear-gradient(135deg,#e0b455,#b8873a);border-radius:999px;padding:.8rem 1rem}' +
-      '.secret-panel__link--ghost{margin-top:.7rem;background:none;color:#e0b455;border:1px solid #e0b455}' +
+      'background:linear-gradient(135deg,#3aa39d,#0f8f87);border-radius:999px;padding:.8rem 1rem}' +
+      '.secret-panel__link--ghost{margin-top:.7rem;background:none;color:#0f8f87;border:1px solid #0f8f87}' +
       '.secret-panel__link{transition:transform .14s cubic-bezier(.22,1,.36,1),box-shadow .14s ease}' +
-      '.secret-panel__link:hover{box-shadow:0 8px 24px rgba(224,180,85,.35)}' +
+      '.secret-panel__link:hover{box-shadow:0 8px 24px rgba(15,143,135,.35)}' +
       '.secret-panel__link:active{transform:scale(.97)}' +
       '.secret-panel__link:focus-visible,.secret-panel__close:focus-visible{outline:2px solid #fff;outline-offset:3px}' +
       /* padding gives the close button a 44px touch area; top/right are trimmed so the x stays where it was */

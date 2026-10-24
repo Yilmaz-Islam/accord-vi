@@ -151,6 +151,80 @@ a.logo::after { inset: -8px -4px; }
   .disc-player { background: var(--canvas-deep); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
 
+/* @section button-scale: one size scale for every button on the public pages
+   Main actions are 52px tall, small pills and chips 44px (the minimum comfortable finger target).
+   `:root` in front raises specificity just enough to beat each page's own rules; padding-block is
+   zeroed so the height comes from min-height alone, which is why <a> and <button> versions of the
+   same style now come out identical (they used to differ by 5px because of line-height). */
+:root :is(.btn, .av-hero__cta, .av-close__links--buttons a, .av-team__toggle, .art-cta, .reveal-toggle) {
+  min-height: 52px;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  line-height: 1.2;
+  text-align: center;
+}
+:root .btn-block { display: flex; width: 100%; }
+:root :is(.av-team-card__info-toggle, .marquee-toggle, .art-btn, .wizard-back, .av-404 .av-close__links a, .hdr-back) {
+  min-height: 44px;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  line-height: 1.2;
+}
+:root .lineup-nav a { width: 44px; height: 44px; }
+:root .av-404 .av-close__links a { justify-content: flex-start; } /* the 404 links are a left-aligned list */
+:root .acct-tab { min-height: 48px; padding-top: 0; padding-bottom: 0; white-space: nowrap; }
+/* the home page's side-by-side closing buttons sit in a narrow column, so the long label wrapped to two
+   lines at every width. They now read "Register →" / "Sponsor →" on one line at the standard size;
+   the full wording ("Register for Accord VI") stays in the link for screen readers. */
+:root .av-close__links--buttons a { white-space: nowrap; font-size: var(--sc-t-sm, 0.875rem); letter-spacing: var(--sc-track-wide, 0.08em); }
+.lbl-long {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* @section back-button: the arrow at the top-left of every inner page's header
+   Goes to the previous page when the visitor came from this site, otherwise to the link's own
+   fallback (js/boot.js @section back-button). Icon only on phones, "Back" added from 768px. */
+.hdr-back {
+  min-width: 44px;
+  margin-right: 0.6rem;
+  padding: 0 0.7rem;
+  gap: 0.35rem;
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.14));
+  border-radius: 999px;
+  color: var(--color-text, #f2f2f5);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  flex: none;
+}
+.hdr-back:hover { border-color: var(--color-primary, #0f8f87); }
+.hdr-back:focus-visible { outline: 2px solid var(--color-primary, #0f8f87); outline-offset: 2px; }
+.hdr-back__icon { width: 18px; height: 18px; flex: none; }
+.hdr-back__label { display: none; }
+.hdr-back + .logo { margin-right: auto; }
+@media (min-width: 768px) {
+  .hdr-back { padding: 0 1rem 0 0.75rem; }
+  .hdr-back__label { display: inline; }
+}
+
+/* @section device-words: "Tap" on touch screens, "Click" / "Hover" with a mouse
+   Markup carries both: <span class="for-touch">Tap</span><span class="for-mouse">Click</span>.
+   Touch wording is the default, so it is what shows if anything goes wrong. */
+.for-mouse { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .for-touch { display: none; }
+  .for-mouse { display: inline; }
+}
+
 /* Increased contrast: stronger borders, brighter secondary text, and the header gets its line back. */
 @media (prefers-contrast: more) {
   :root {

@@ -6,16 +6,17 @@
 
 /* Self-hosted variable fonts, pulled from google/fonts on GitHub
    (github.com/google/fonts/tree/main/ofl) instead of Google's CDN. */
+/* @section fonts: Sora (headings), Inter (body), Fraunces (serif); compressed .woff2, Latin only */
 @font-face {
   font-family: 'Sora';
-  src: url('../assets/fonts/Sora-Variable.ttf') format('truetype-variations');
+  src: url('../assets/fonts/Sora-Variable.woff2') format('woff2');
   font-weight: 100 800;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Inter';
-  src: url('../assets/fonts/Inter-Variable.ttf') format('truetype-variations');
+  src: url('../assets/fonts/Inter-Variable.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -27,9 +28,12 @@
   --color-surface: #14151a;
   --color-border: #23252e;
 
-  --color-primary: #e0b455;
-  --color-primary-dark: #b8873a;
-  --color-accent: #e0b455;
+  /* Theme: Turquoise & Gold, Deep teal (client pick, 23 Oct 2026). Turquoise leads, gold is the partner. */
+  --color-primary: #0f8f87;
+  --color-primary-light: #3aa39d;   /* lighter start of button fades, so dark button text stays readable */
+  --color-primary-dark: #0b6b65;    /* shading in decorative beams only, never behind text */
+  --color-accent: #0f8f87;
+  --color-gold: #e0b455;            /* partner: the "VI" in the logo, badges and small tags */
 
   --color-text: #efece6;
   --color-text-dim: #9a9aa8;
@@ -88,11 +92,11 @@ ul { list-style: none; }
 .btn:active { transform: translateY(1px); }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
   color: var(--color-bg);
-  box-shadow: 0 8px 24px rgba(201, 162, 39, 0.35);
+  box-shadow: 0 8px 24px rgba(15, 143, 135, 0.35);
 }
-.btn-primary:hover { box-shadow: 0 10px 30px rgba(201, 162, 39, 0.5); }
+.btn-primary:hover { box-shadow: 0 10px 30px rgba(15, 143, 135, 0.5); }
 
 .btn-ghost {
   background: transparent;
@@ -136,7 +140,8 @@ ul { list-style: none; }
   font-size: 1.2rem;
   letter-spacing: 0.02em;
 }
-.logo span { color: var(--color-primary); }
+.logo-text { color: var(--color-text); }       /* "Accord" in the text colour */
+.logo-text span { color: var(--color-gold); }  /* "VI" in the gold partner colour */
 
 .logo-mark {
   width: 26px;
@@ -215,7 +220,7 @@ ul { list-style: none; }
   text-align: center;
   padding: 0.75rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
   color: var(--color-bg);
   font-weight: 600;
 }
@@ -270,7 +275,7 @@ ul { list-style: none; }
   width: 700px;
   height: 700px;
   transform: translateX(-50%);
-  background: radial-gradient(circle, rgba(201, 162, 39, 0.35) 0%, rgba(201, 162, 39, 0) 65%);
+  background: radial-gradient(circle, rgba(15, 143, 135, 0.35) 0%, rgba(15, 143, 135, 0) 65%);
   pointer-events: none;
 }
 
@@ -506,7 +511,7 @@ ul { list-style: none; }
   flex-direction: column;
   gap: 0.5rem;
   align-items: flex-start;
-  background: rgba(224, 180, 85, 0.08);
+  background: rgba(15, 143, 135, 0.08);
   border: 1px solid var(--color-primary);
   border-radius: var(--radius-md);
   padding: 1rem 1.25rem;
@@ -542,14 +547,14 @@ ul { list-style: none; }
 
 .tier-featured {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 1px var(--color-primary), 0 20px 40px rgba(201, 162, 39, 0.15);
+  box-shadow: 0 0 0 1px var(--color-primary), 0 20px 40px rgba(15, 143, 135, 0.15);
 }
 
 .tier-badge {
   position: absolute;
   top: -12px;
   right: 1.5rem;
-  background: var(--color-accent);
+  background: var(--color-gold);
   color: #211a05;
   font-size: 0.7rem;
   font-weight: 700;
@@ -564,9 +569,9 @@ ul { list-style: none; }
   background: linear-gradient(160deg, var(--color-surface), var(--color-bg-alt));
 }
 
-.tier-badge-title { background: var(--color-primary); color: #211a05; }
+.tier-badge-title { background: var(--color-primary); color: #0e0f12; } /* dark text on teal: 4.9:1 */
 
-/* Animated gold border-beam, scaled by tier: Platinum (title sponsor) gets
+/* Animated border-beam (turquoise; the Gold tier keeps gold), scaled by tier: Platinum (title sponsor) gets
    the full treatment — a tighter, faster beam plus a light shimmer sweep,
    echoing the president/director card treatment on the immersive site.
    Gold gets a dimmer, slower beam only; Bronze/Silver/Diamond stay plain. */
@@ -621,7 +626,7 @@ ul { list-style: none; }
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(100deg, transparent 42%, rgba(224, 180, 85, 0.3) 48%, rgba(224, 180, 85, 0.55) 50%, rgba(224, 180, 85, 0.3) 52%, transparent 58%);
+  background: linear-gradient(100deg, transparent 42%, rgba(15, 143, 135, 0.3) 48%, rgba(15, 143, 135, 0.55) 50%, rgba(15, 143, 135, 0.3) 52%, transparent 58%);
   transform: translateX(-130%);
   animation: tier-shimmer 7s ease-in-out infinite;
   pointer-events: none;
@@ -814,7 +819,7 @@ ul { list-style: none; }
 
 .cta-banner {
   margin-top: 3rem;
-  background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
   border-radius: var(--radius-lg);
   padding: 2rem;
   display: flex;
@@ -1022,8 +1027,8 @@ ul { list-style: none; }
 .contact-value { font-weight: 600; }
 .ph-tag {
   font-size: 0.68rem;
-  color: var(--color-accent);
-  border: 1px solid var(--color-accent);
+  color: var(--color-gold);
+  border: 1px solid var(--color-gold);
   border-radius: 999px;
   padding: 0.1rem 0.5rem;
 }
@@ -1045,6 +1050,7 @@ span.ph-tag {
 .form-row[hidden] { display: none; }
 .form-row label { font-size: 0.85rem; color: var(--color-text-dim); font-weight: 500; }
 
+/* @section form-fields: text boxes, dropdowns and message boxes on the forms */
 .form-row input,
 .form-row select,
 .form-row textarea {
@@ -1054,7 +1060,7 @@ span.ph-tag {
   padding: 0.75rem 0.9rem;
   color: var(--color-text);
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 1rem; /* 16px: anything smaller makes iPhones zoom in when the field is tapped */
   resize: vertical;
 }
 .form-row input:focus,

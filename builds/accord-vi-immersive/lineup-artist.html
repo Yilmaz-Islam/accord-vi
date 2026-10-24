@@ -4,22 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Accord Artist Reveal</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="css/styles.css">
 <style>
+  /* @section fonts: Sora, Inter, Fraunces as compressed .woff2 (Latin only) */
   @font-face {
     font-family: 'Sora';
-    src: url('assets/fonts/Sora-Variable.ttf') format('truetype-variations');
+    src: url('assets/fonts/Sora-Variable.woff2') format('woff2');
     font-weight: 100 800; font-style: normal; font-display: swap;
   }
   @font-face {
     font-family: 'Inter';
-    src: url('assets/fonts/Inter-Variable.ttf') format('truetype-variations');
+    src: url('assets/fonts/Inter-Variable.woff2') format('woff2');
     font-weight: 100 900; font-style: normal; font-display: swap;
   }
   @font-face {
     font-family: 'Fraunces';
-    src: url('assets/fonts/Fraunces-Variable.ttf') format('truetype-variations');
+    src: url('assets/fonts/Fraunces-Variable.woff2') format('woff2');
     font-weight: 300 700; font-style: normal; font-display: swap;
   }
 
@@ -28,9 +30,9 @@
     --ink-soft: #a9a6a0;
     --canvas: #0b0b0d;
     --canvas-deep: #060607;
-    --accent: #e0b455;
-    --accent-bright: #f3d38a;
-    --accent-dim: #6b5527;
+    --accent: #0f8f87;
+    --accent-bright: #7fe0d6;
+    --accent-dim: #0d6660;
     --sc-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   }
   * { box-sizing: border-box; }
@@ -582,6 +584,7 @@
   <link rel="stylesheet" href="css/apple.css">
 </head>
 <body>
+<script src="js/boot.js"></script>
 
 <a href="#main" class="skip-link">Skip to content</a>
 
@@ -603,6 +606,8 @@
 <!-- ============ NAV ============ -->
 <header class="site-header">
   <div class="container nav-inner">
+    <!-- @section back-button: header arrow, see css/apple.css and js/boot.js -->
+    <a href="lineup.html" class="hdr-back" data-back aria-label="Go back"><svg class="hdr-back__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="hdr-back__label">Back</span></a>
     <a href="index.html" class="logo">
       <span class="logo-mark-wrap">
         <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
@@ -634,12 +639,11 @@
 <div class="wrap" id="main">
 
 <h1 class="sr-only">Accord VI lineup reveal</h1>
-<a href="lineup.html" class="back-link" id="backLink">← Back to the lineup</a>
 
-<p class="reveal-caption" id="revealCaption">Click to reveal</p>
+<p class="reveal-caption" id="revealCaption"><span class="for-touch">Tap to reveal</span><span class="for-mouse">Click to reveal</span></p>
 
 <div class="flip-card-scene">
-  <div class="flip-card-3d" id="flipCard" role="button" tabindex="0" aria-label="Click to reveal">
+  <div class="flip-card-3d" id="flipCard" role="button" tabindex="0" aria-label="Reveal the artist">
     <div class="flip-card-face flip-card-face--front">
       <span class="flip-card-corner flip-card-corner--tl" id="flipCornerTl"></span>
       <div class="flip-card-mark" id="flipMark"></div>
@@ -707,6 +711,7 @@
   // a hidden 1x1 embed is the real, licensed audio engine, and everything
   // visible here (the disc, the pause button) is a custom skin on top of
   // that controller's state, not a rehosted audio file.
+  // @section artist-data: each artist's name, bio, photo, 30-second song clip and colour
   const ARTISTS = {
     '1': {
       numeral: 'I',
@@ -715,7 +720,7 @@
       // his own hometown + his own instrument, not a generic mark.
       motif: '<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 66 L25 34 L38 54 L52 20 L68 54 L80 36 L95 66"/><path d="M14 100 v-14 M26 100 v-24 M38 100 v-10 M50 100 v-30 M62 100 v-16 M74 100 v-22 M86 100 v-12"/></svg>',
       name: 'Hasan Raheem',
-      img: 'assets/lineup-real/hasan-raheem-portrait.png',
+      img: 'assets/lineup-real/hasan-raheem-portrait.jpg',
       genres: ['R&B', 'Hip Hop', 'Indie'],
       // Ring-announcer cadence (hometown callout, tale-of-the-tape stats,
       // name held for the finish) — real numbers only, and "Nashe Mein
@@ -738,7 +743,7 @@
       // A four-petal bloom — bright, pop, youthful.
       motif: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="50" cy="50" r="7"/><path d="M50 41 C41 22 31 17 21 22 C27 32 36 39 43 44"/><path d="M58 41 C67 22 77 17 87 22 C81 32 72 39 65 44"/><path d="M43 56 C22 61 17 71 22 81 C32 75 39 66 44 59"/><path d="M58 56 C79 61 84 71 79 81 C69 75 62 66 57 59"/><path d="M50 57 L50 78"/></svg>',
       name: 'Nehaal Naseem',
-      img: 'assets/lineup-real/nehaal-naseem-portrait.png',
+      img: 'assets/lineup-real/nehaal-naseem-portrait.jpg',
       genres: ['Urdu Pop', 'OST'],
       bio: 'Straight out of Islamabad, Pakistan — nearly a million monthly listeners, and she is not finished climbing. One hundred five million streams on the board. Spotify’s first EQUAL Pakistan Ambassador. Ladies and gentlemen — your Queen, Nehaal Naseem.',
       facts: [['Hometown', 'Islamabad, Pakistan'], ['Sound', 'Bright, hooky mainstream pop'], ['Monthly listeners', '~970K on Spotify'], ['Total streams', '105M+ and counting']],
@@ -754,7 +759,7 @@
       // A layered diamond lattice — bold, geometric, hard-hitting.
       motif: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M50 6 L72 50 L50 94 L28 50 Z"/><path d="M50 6 L50 94 M28 50 L72 50" stroke-width="1.5" opacity="0.55"/><path d="M50 28 L61 50 L50 72 L39 50 Z"/></svg>',
       name: 'Sabaat Batin',
-      img: 'assets/lineup-real/sabaat-batin-portrait.png',
+      img: 'assets/lineup-real/sabaat-batin-portrait.jpg',
       genres: ['Punjabi', 'Urdu/Hindi', 'Indie'],
       bio: 'Two-point-two million monthly listeners strong. The record-breaker behind <strong>"Gal Sun,"</strong> one hundred forty-six million streams and still climbing, charting on both sides of the border. Ladies and gentlemen — your Jack, Sabaat Batin.',
       facts: [['Sound', 'Punjabi / Urdu / Hindi indie'], ['Breakout', '"Gal Sun" ft. Rackstar'], ['Monthly listeners', '2.2M on Spotify'], ['"Gal Sun" streams', '146M+']],

@@ -4,22 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Accord Lineup</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="css/styles.css">
 <style>
+  /* @section fonts: Sora, Inter, Fraunces as compressed .woff2 (Latin only) */
   @font-face {
     font-family: 'Sora';
-    src: url('assets/fonts/Sora-Variable.ttf') format('truetype-variations');
+    src: url('assets/fonts/Sora-Variable.woff2') format('woff2');
     font-weight: 100 800; font-style: normal; font-display: swap;
   }
   @font-face {
     font-family: 'Inter';
-    src: url('assets/fonts/Inter-Variable.ttf') format('truetype-variations');
+    src: url('assets/fonts/Inter-Variable.woff2') format('woff2');
     font-weight: 100 900; font-style: normal; font-display: swap;
   }
   @font-face {
     font-family: 'Fraunces';
-    src: url('assets/fonts/Fraunces-Variable.ttf') format('truetype-variations');
+    src: url('assets/fonts/Fraunces-Variable.woff2') format('woff2');
     font-weight: 300 700; font-style: normal; font-display: swap;
   }
 
@@ -28,9 +30,10 @@
     --ink-soft: #a9a6a0;
     --canvas: #0b0b0d;
     --canvas-deep: #060607;
-    --gold: #e0b455;
-    --gold-bright: #f3d38a;
-    --gold-dim: #6b5527;
+    --lead: #0f8f87;        /* Turquoise & Gold theme: deep teal leads */
+    --lead-bright: #7fe0d6;
+    --lead-dim: #0d6660;
+    --partner: #e0b455;     /* gold partner: playing-card letters */
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -41,7 +44,7 @@
     min-height: 100svh;
     padding: 8rem 1.5rem 6rem;
     background-image:
-      radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in oklab, var(--gold) 10%, transparent), transparent 70%);
+      radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in oklab, var(--lead) 10%, transparent), transparent 70%);
   }
 
 
@@ -55,7 +58,7 @@
     text-transform: uppercase;
     letter-spacing: 0.22em;
     font-size: 0.72rem;
-    color: var(--gold);
+    color: var(--lead);
     margin-bottom: 0.9rem;
     display: flex;
     align-items: center;
@@ -66,9 +69,9 @@
     content: '';
     width: 2rem;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold-dim));
+    background: linear-gradient(90deg, transparent, var(--lead-dim));
   }
-  .lineup-kicker::after { background: linear-gradient(90deg, var(--gold-dim), transparent); }
+  .lineup-kicker::after { background: linear-gradient(90deg, var(--lead-dim), transparent); }
   .lineup-title {
     font-family: 'Fraunces', serif;
     font-weight: 400;
@@ -88,9 +91,9 @@
     max-width: 56rem;
     margin: 0 auto;
     border-radius: 20px;
-    border: 1px solid var(--gold-dim);
+    border: 1px solid var(--lead-dim);
     background:
-      radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklab, var(--gold) 6%, transparent), transparent 70%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklab, var(--lead) 6%, transparent), transparent 70%),
       linear-gradient(180deg, #000 0%, var(--canvas-deep) 55%, #050506 100%);
     overflow: hidden;
     padding: 3.5rem 3.5rem 1rem;
@@ -208,7 +211,7 @@
     transform: translateX(-50%);
     width: 78%;
     height: 67%;
-    background: radial-gradient(ellipse 45% 100% at 50% 0%, color-mix(in oklab, var(--gold) 16%, transparent), transparent 75%);
+    background: radial-gradient(ellipse 45% 100% at 50% 0%, color-mix(in oklab, var(--lead) 16%, transparent), transparent 75%);
     opacity: 0.3;
     transition: opacity 0.5s ease;
     pointer-events: none;
@@ -248,12 +251,12 @@
     display: flex;
     flex-direction: column;
     padding: 0.6rem;
-    border: 1px solid var(--gold-dim);
+    border: 1px solid var(--lead-dim);
     background: linear-gradient(180deg, var(--canvas-deep) 0%, #000 100%);
     box-shadow:
       0 0 0px 0px transparent,
       0 0 0px 0px transparent,
-      0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
+      0 20px 50px -20px color-mix(in oklab, var(--lead) 35%, transparent);
     transition: border-color 3.6s ease, box-shadow 3.6s ease;
   }
   .lineup-card-corner {
@@ -261,7 +264,7 @@
     font-family: 'Fraunces', serif;
     font-size: 0.95rem;
     line-height: 1;
-    color: var(--gold);
+    color: var(--partner);
     filter: drop-shadow(0 0 0px transparent);
     transition: color 2.4s ease, filter 2.4s ease;
   }
@@ -274,7 +277,7 @@
     align-items: center;
     justify-content: center;
     opacity: 0.85;
-    color: var(--gold);
+    color: var(--lead);
     filter: drop-shadow(0 0 0px transparent);
     transition: color 2.4s ease, filter 2.4s ease;
   }
@@ -285,7 +288,7 @@
     font-size: 0.58rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--gold-dim);
+    color: var(--lead-dim);
     margin: 0;
     transition: opacity 1.8s ease;
   }
@@ -305,13 +308,13 @@
       box-shadow:
         0 0 0px 0px transparent,
         0 0 0px 0px transparent,
-        0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
+        0 20px 50px -20px color-mix(in oklab, var(--lead) 35%, transparent);
     }
     16%, 68% {
       box-shadow:
-        0 0 4px 1px var(--gold-bright),
-        0 0 22px 5px color-mix(in oklab, var(--gold) 40%, transparent),
-        0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
+        0 0 4px 1px var(--lead-bright),
+        0 0 22px 5px color-mix(in oklab, var(--lead) 40%, transparent),
+        0 20px 50px -20px color-mix(in oklab, var(--lead) 35%, transparent);
     }
   }
   .stage.is-revealed .lineup-card-face {
@@ -347,17 +350,17 @@
     font-family: 'Fraunces', serif;
     font-size: 0.7rem;
     letter-spacing: 0.15em;
-    color: var(--gold-dim);
+    color: var(--lead-dim);
     text-transform: uppercase;
     transition: color 0.35s ease;
   }
-  .figure:hover .figure__numeral, .figure:focus-visible .figure__numeral { color: var(--gold); }
+  .figure:hover .figure__numeral, .figure:focus-visible .figure__numeral { color: var(--lead); }
   .figure__label {
     font-family: 'Sora', sans-serif;
     font-weight: 600;
     font-size: 1rem;
     letter-spacing: 0.03em;
-    color: var(--gold);
+    color: var(--lead);
     margin-top: 0.2rem;
     /* Both names sit in the same grid cell and the box is as wide as the longer one, so the
        label never changes size or has its text swapped: some phone browsers left the old, shorter
@@ -394,9 +397,9 @@
     margin: 0 auto 2.5rem;
     padding: 0.7rem 1.6rem;
     border-radius: 999px;
-    border: 1px solid var(--gold);
+    border: 1px solid var(--lead);
     background: transparent;
-    color: var(--gold);
+    color: var(--lead);
     font-family: 'Sora', sans-serif;
     font-weight: 600;
     font-size: 0.85rem;
@@ -404,10 +407,10 @@
     cursor: pointer;
     transition: background 0.25s ease, color 0.25s ease;
   }
-  .reveal-toggle:hover { background: var(--gold); color: #1a1305; }
+  .reveal-toggle:hover { background: var(--lead); color: #0e0f12; }
 
   .stage.is-revealed .figure__numeral,
-  .stage.is-revealed .figure__label { color: var(--gold-bright); }
+  .stage.is-revealed .figure__label { color: var(--lead-bright); }
   .stage.is-revealed .figure__cta { display: none; }
 </style>
   <meta name="theme-color" content="#0e0f12">
@@ -415,6 +418,7 @@
   <link rel="stylesheet" href="css/apple.css">
 </head>
 <body>
+<script src="js/boot.js"></script>
 
 <a href="#main" class="skip-link">Skip to content</a>
 
@@ -436,6 +440,8 @@
 <!-- ============ NAV ============ -->
 <header class="site-header">
   <div class="container nav-inner">
+    <!-- @section back-button: header arrow, see css/apple.css and js/boot.js -->
+    <a href="index.html" class="hdr-back" data-back aria-label="Go back"><svg class="hdr-back__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="hdr-back__label">Back</span></a>
     <a href="index.html" class="logo">
       <span class="logo-mark-wrap">
         <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
@@ -460,7 +466,7 @@
 <div class="lineup-head" id="main">
   <p class="lineup-kicker">Accord VI · Lineup</p>
   <h1 class="lineup-title" id="lineupTitle">Three names. The lights aren't on yet.</h1>
-  <p class="lineup-sub" id="lineupSub">Hover to catch a glimpse. Click one to start guessing, the spotlight comes on once it's confirmed.</p>
+  <p class="lineup-sub" id="lineupSub"><span class="for-touch">Tap a card to start guessing</span><span class="for-mouse">Hover to catch a glimpse. Click one to start guessing</span>, the spotlight comes on once it's confirmed.</p>
 </div>
 
 <button type="button" class="reveal-toggle" id="revealToggle">Reveal now (preview only)</button>
@@ -471,7 +477,7 @@
   <div class="stage-figures">
 
     <!-- Left -->
-    <a href="lineup-hint.html?artist=2" class="figure figure--left" data-artist="2" aria-label="Mystery artist one, tap for hints">
+    <a href="lineup-hint.html?artist=2" class="figure figure--left" data-artist="2" aria-label="Mystery artist one, see the hints">
       <div class="lineup-card-scene">
         <div class="lineup-card-3d">
           <div class="lineup-card-face" style="--card-accent:#a976b2; --card-accent-bright:#d2b7d7; --card-accent-dim:#55335b;">
@@ -485,12 +491,12 @@
       <span class="figure__meta">
         <span class="figure__numeral">II</span>
         <span class="figure__label"><span class="figure__name figure__name--mystery">Artist II</span><span class="figure__name figure__name--real">Nehaal Naseem</span></span>
-        <span class="figure__cta">Tap for hints →</span>
+        <span class="figure__cta"><span class="for-touch">Tap</span><span class="for-mouse">Click</span> for hints →</span>
       </span>
     </a>
 
     <!-- Center, the hero -->
-    <a href="lineup-hint.html?artist=1" class="figure figure--center" data-artist="1" aria-label="Mystery artist two, tap for hints">
+    <a href="lineup-hint.html?artist=1" class="figure figure--center" data-artist="1" aria-label="Mystery artist two, see the hints">
       <div class="lineup-card-scene">
         <div class="lineup-card-3d">
           <div class="lineup-card-face" style="--card-accent:#b57382; --card-accent-bright:#d8b6bd; --card-accent-dim:#5e313b;">
@@ -504,12 +510,12 @@
       <span class="figure__meta">
         <span class="figure__numeral">I</span>
         <span class="figure__label"><span class="figure__name figure__name--mystery">Artist I</span><span class="figure__name figure__name--real">Hasan Raheem</span></span>
-        <span class="figure__cta">Tap for hints →</span>
+        <span class="figure__cta"><span class="for-touch">Tap</span><span class="for-mouse">Click</span> for hints →</span>
       </span>
     </a>
 
     <!-- Right -->
-    <a href="lineup-hint.html?artist=3" class="figure figure--right" data-artist="3" aria-label="Mystery artist three, tap for hints">
+    <a href="lineup-hint.html?artist=3" class="figure figure--right" data-artist="3" aria-label="Mystery artist three, see the hints">
       <div class="lineup-card-scene">
         <div class="lineup-card-3d">
           <div class="lineup-card-face" style="--card-accent:#76a5b2; --card-accent-bright:#b7d0d7; --card-accent-dim:#33535b;">
@@ -523,7 +529,7 @@
       <span class="figure__meta">
         <span class="figure__numeral">III</span>
         <span class="figure__label"><span class="figure__name figure__name--mystery">Artist III</span><span class="figure__name figure__name--real">Sabaat Batin</span></span>
-        <span class="figure__cta">Tap for hints →</span>
+        <span class="figure__cta"><span class="for-touch">Tap</span><span class="for-mouse">Click</span> for hints →</span>
       </span>
     </a>
 
@@ -554,7 +560,7 @@
     const n = fig.dataset.artist;
     fig.dataset.revealHref = 'lineup-artist.html?artist=' + n;
     fig.dataset.hintLabel = fig.getAttribute('aria-label');
-    fig.dataset.revealLabel = fig.querySelector('.figure__name--real').textContent + ', tap to see their page';
+    fig.dataset.revealLabel = fig.querySelector('.figure__name--real').textContent + ', open their page';
   });
 
   // 3D tilt: rotate the card toward wherever the cursor is over it,
@@ -608,7 +614,7 @@
       toggle.textContent = 'Back to mystery (preview only)';
     } else {
       title.textContent = "Three names. The lights aren't on yet.";
-      sub.textContent = 'Hover to catch a glimpse. Click one to start guessing, the spotlight comes on once it\'s confirmed.';
+      sub.innerHTML = '<span class="for-touch">Tap a card to start guessing</span><span class="for-mouse">Hover to catch a glimpse. Click one to start guessing</span>, the spotlight comes on once it\'s confirmed.';
       toggle.textContent = 'Reveal now (preview only)';
     }
   });

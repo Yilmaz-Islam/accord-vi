@@ -60,7 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })();
 
-  // ---- Countdown to Accord VI (18 Oct 2026, local time) ----
+  // @section countdown: home hero countdown to the first night (21 Nov 2026, Pakistan time)
+  // ---- Countdown to Accord VI (21 Nov 2026, Pakistan time) ----
   // Flip-clock style: each unit is a hinged card. On a value change, the
   // back face (already holding the new number) is primed, the card flips,
   // and once the flip finishes the front face silently takes the new
@@ -104,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     unit.inner.addEventListener('transitionend', finish, { once: true });
     setTimeout(finish, 700);
   }
-  const target = new Date('2026-10-18T00:00:00');
+  const target = new Date('2026-11-21T00:00:00+05:00');
   function tick() {
     const diff = target - new Date();
     if (diff <= 0) {

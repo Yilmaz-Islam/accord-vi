@@ -4,22 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Accord Guess the Artist</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="css/styles.css">
 <style>
+  /* @section fonts: Sora, Inter, Fraunces as compressed .woff2 (Latin only) */
   @font-face {
     font-family: 'Sora';
-    src: url('assets/fonts/Sora-Variable.ttf') format('truetype-variations');
+    src: url('assets/fonts/Sora-Variable.woff2') format('woff2');
     font-weight: 100 800; font-style: normal; font-display: swap;
   }
   @font-face {
     font-family: 'Inter';
-    src: url('assets/fonts/Inter-Variable.ttf') format('truetype-variations');
+    src: url('assets/fonts/Inter-Variable.woff2') format('woff2');
     font-weight: 100 900; font-style: normal; font-display: swap;
   }
   @font-face {
     font-family: 'Fraunces';
-    src: url('assets/fonts/Fraunces-Variable.ttf') format('truetype-variations');
+    src: url('assets/fonts/Fraunces-Variable.woff2') format('woff2');
     font-weight: 300 700; font-style: normal; font-display: swap;
   }
 
@@ -28,9 +30,10 @@
     --ink-soft: #a9a6a0;
     --canvas: #0b0b0d;
     --canvas-deep: #060607;
-    --gold: #e0b455;
-    --gold-bright: #f3d38a;
-    --gold-dim: #6b5527;
+    --lead: #0f8f87;        /* Turquoise & Gold theme: deep teal leads */
+    --lead-bright: #7fe0d6;
+    --lead-dim: #0d6660;
+    --partner: #e0b455;     /* gold partner: playing-card letters */
     --sc-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   }
   * { box-sizing: border-box; }
@@ -45,7 +48,7 @@
     align-items: center;
     padding: 8rem 1.5rem 5rem;
     background-image:
-      radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in oklab, var(--gold) 10%, transparent), transparent 70%);
+      radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in oklab, var(--lead) 10%, transparent), transparent 70%);
   }
 
 
@@ -61,13 +64,13 @@
     align-items: center;
     gap: 0.4rem;
   }
-  .back-link:hover { color: var(--gold); }
+  .back-link:hover { color: var(--lead); }
 
   .numeral {
     font-family: 'Fraunces', serif;
     font-size: 0.75rem;
     letter-spacing: 0.18em;
-    color: var(--gold-dim);
+    color: var(--lead-dim);
     text-transform: uppercase;
   }
   .hint-title {
@@ -100,7 +103,7 @@
     animation-delay: 0.05s;
   }
   @keyframes cardArrive {
-    60% { opacity: 1; transform: translateY(0) scale(1.015); filter: drop-shadow(0 0 22px color-mix(in oklab, var(--gold) 55%, transparent)); }
+    60% { opacity: 1; transform: translateY(0) scale(1.015); filter: drop-shadow(0 0 22px color-mix(in oklab, var(--lead) 55%, transparent)); }
     100% { opacity: 1; transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 transparent); }
   }
   .card-face {
@@ -109,8 +112,8 @@
     height: 100%;
     border-radius: 14px;
     background: linear-gradient(180deg, var(--canvas-deep) 0%, #000 100%);
-    border: 1px solid var(--gold-dim);
-    box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--gold) 35%, transparent);
+    border: 1px solid var(--lead-dim);
+    box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--lead) 35%, transparent);
     padding: 0.7rem;
     display: flex;
     flex-direction: column;
@@ -121,16 +124,16 @@
     align-items: center;
     gap: 0.22rem;
     font-family: 'Fraunces', serif;
-    color: var(--gold);
+    color: var(--partner);
     font-size: 1.05rem;
     line-height: 1;
     flex: none;
   }
-  .card-corner svg { width: 0.8rem; height: 0.8rem; fill: var(--gold); }
+  .card-corner svg { width: 0.8rem; height: 0.8rem; fill: var(--partner); }
   /* The index letters sit in the card's real corners, like a playing card, not inside its padding. */
   .card-corner--tl { position: absolute; top: 0.38rem; left: 0.5rem; }
   .card-corner--br { position: absolute; bottom: 0.38rem; right: 0.5rem; transform: rotate(180deg); }
-  .card-mark { flex: 1; display: flex; align-items: center; justify-content: center; opacity: 0.85; color: var(--gold); }
+  .card-mark { flex: 1; display: flex; align-items: center; justify-content: center; opacity: 0.85; color: var(--lead); }
   .card-mark svg { width: 58%; }
   .card-rank-word {
     text-align: center;
@@ -138,7 +141,7 @@
     font-size: 0.62rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--gold-dim);
+    color: var(--lead-dim);
     margin: 0;
   }
 
@@ -153,7 +156,7 @@
     gap: 0.8rem;
   }
   .hint-list li {
-    border: 1px solid var(--gold-dim);
+    border: 1px solid var(--lead-dim);
     border-radius: 10px;
     padding: 0.85rem 1.1rem;
     display: flex;
@@ -165,8 +168,8 @@
     font-family: 'Sora', sans-serif;
     font-weight: 700;
     font-size: 0.8rem;
-    color: var(--gold);
-    border: 1px solid var(--gold-dim);
+    color: var(--lead);
+    border: 1px solid var(--lead-dim);
     border-radius: 999px;
     width: 1.7rem;
     height: 1.7rem;
@@ -189,7 +192,7 @@
   .lineup-nav a {
     width: 2.4rem; height: 2.4rem;
     border-radius: 999px;
-    border: 1px solid var(--gold-dim);
+    border: 1px solid var(--lead-dim);
     display: flex; align-items: center; justify-content: center;
     color: var(--ink-soft);
     text-decoration: none;
@@ -197,8 +200,8 @@
     font-size: 0.85rem;
     transition: border-color 0.2s ease, color 0.2s ease;
   }
-  .lineup-nav a:hover { border-color: var(--gold); color: var(--gold); }
-  .lineup-nav a[aria-current="true"] { border-color: var(--gold); color: var(--gold); background: color-mix(in oklab, var(--gold) 12%, transparent); }
+  .lineup-nav a:hover { border-color: var(--lead); color: var(--lead); }
+  .lineup-nav a[aria-current="true"] { border-color: var(--lead); color: var(--lead); background: color-mix(in oklab, var(--lead) 12%, transparent); }
 
   @media (prefers-reduced-motion: reduce) {
     .card-scene { animation: none; opacity: 1; transform: none; }
@@ -209,6 +212,7 @@
   <link rel="stylesheet" href="css/apple.css">
 </head>
 <body>
+<script src="js/boot.js"></script>
 
 <a href="#main" class="skip-link">Skip to content</a>
 
@@ -230,6 +234,8 @@
 <!-- ============ NAV ============ -->
 <header class="site-header">
   <div class="container nav-inner">
+    <!-- @section back-button: header arrow, see css/apple.css and js/boot.js -->
+    <a href="lineup.html" class="hdr-back" data-back aria-label="Go back"><svg class="hdr-back__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="hdr-back__label">Back</span></a>
     <a href="index.html" class="logo">
       <span class="logo-mark-wrap">
         <svg class="logo-mark" viewBox="0 0 120 120" aria-hidden="true"><use href="#resonance-mark"></use></svg>
@@ -251,7 +257,6 @@
   </div>
 </header>
 
-<a href="lineup.html" class="back-link" id="backLink">← Back to the lineup</a>
 
 <div class="card-scene" id="main">
   <div class="card-face">

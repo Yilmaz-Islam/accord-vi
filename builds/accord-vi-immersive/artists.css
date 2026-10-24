@@ -9,16 +9,17 @@
      engine's --sc-p on #drum (pure CSS math, no per-frame JS layout).
    ============================================================ */
 
+/* @section fonts: Sora (headings), Inter (body), Fraunces (serif); compressed .woff2, Latin only */
 @font-face {
   font-family: 'Sora';
-  src: url('assets/fonts/Sora-Variable.ttf') format('truetype-variations');
+  src: url('assets/fonts/Sora-Variable.woff2') format('woff2');
   font-weight: 100 800;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Inter';
-  src: url('assets/fonts/Inter-Variable.ttf') format('truetype-variations');
+  src: url('assets/fonts/Inter-Variable.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -29,8 +30,9 @@
   --sc-surface:    #17181d;
   --sc-ink:        #efece6;
   --sc-ink-soft:   #a9a6a0;
-  --sc-accent:     #e0b455;
-  --sc-accent-ink: #211a05;
+  --sc-accent:     #0f8f87;   /* Turquoise & Gold theme: deep teal leads */
+  --sc-accent-ink: #0e0f12;
+  --sc-gold:       #e0b455;   /* partner colour */
   --sc-font-display: 'Sora', system-ui, sans-serif;
   --sc-font-text:    'Inter', system-ui, sans-serif;
 }
@@ -39,7 +41,7 @@
 @property --front-theme {
   syntax: '<color>';
   inherits: true;
-  initial-value: #e0b455;
+  initial-value: #0f8f87;
 }
 
 html { background: var(--sc-canvas); }
@@ -378,7 +380,7 @@ html.is-3d .art-stage {
   position: sticky;
   top: 0;
   --pw: min(70vw, 42vh);
-  --front-theme: #e0b455;
+  --front-theme: #0f8f87;
   padding: 0;
   transition: --front-theme 700ms var(--sc-ease-out);
   background:

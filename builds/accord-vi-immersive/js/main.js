@@ -113,14 +113,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Countdown to Accord VI (18 Oct 2026, local time) — index.html and register.html
+  // @section countdown: inner-page countdown to the first night (21 Nov 2026, Pakistan time)
+  // Countdown to Accord VI (21 Nov 2026, Pakistan time) — index.html and register.html
   const cdDays = document.getElementById('cdDays');
   const cdHours = document.getElementById('cdHours');
   const cdMins = document.getElementById('cdMins');
   const cdSecs = document.getElementById('cdSecs');
 
   if (cdDays && cdHours && cdMins && cdSecs) {
-    const countdownTarget = new Date('2026-10-18T00:00:00');
+    const countdownTarget = new Date('2026-11-21T00:00:00+05:00');
 
     function updateCountdown() {
       const diff = countdownTarget - new Date();
